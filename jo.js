@@ -170,7 +170,6 @@ a:focus {outline:0;}
   function ofl_ph(i) {return '<li id="ofl_'+i+'"><a class="myroom"></a></li>';}
 
   var uid_names={};
-  var uid_avs={};
   var favs;
   var unknown_uids=[];
 
@@ -196,18 +195,16 @@ a:focus {outline:0;}
       } else {
         console.log("UNKONOW:"+uid);
         a.find(".idolook span").text("？？？");
+        if(unknown_uids.indexOf(uid)<0)
+          unknown_uids.push(uid);
       }
-      if(unknown_uids.indexOf(uid)<0)unknown_uids.push(uid);
     }
-    var av=null;
-    if(uid in uid_avs) {
-      av=uid_avs[uid];
-    } else {
-      av=localStorage["av_"+uid];
-    }
+    av=localStorage["av_"+uid];
     if(av) {
-      uid_avs[uid]=av;
       a.find(".load_image img").attr("src",av);
+    } else {
+      if(unknown_uids.indexOf(uid)<0)
+        unknown_uids.push(uid);
     }
     return a;
   }
@@ -250,10 +247,8 @@ a:focus {outline:0;}
       $(".cls_"+uid+" > a > .ph_offer").replaceWith("<span class='ph_offer img_offer'>Offer</span>");
       console.log(li.find(".idolook span").text());
       uid_names[uid]=li.find(".idolook span").text();
-      uid_avs[uid]=li.find(".load_image img").attr("src");
       localStorage["name_"+uid]=uid_names[uid];
-      localStorage["av_"+uid]=uid_avs[uid];
-      console.log(uid_avs[uid]);
+      localStorage["av_"+uid]=li.find(".load_image img").attr("src");
       fav_upd(uid);
     }
     console.log(orig_uids);
@@ -297,17 +292,111 @@ a:focus {outline:0;}
       if(--fr_n>0) return;
       console.log("UNRESOLVED UIDS:");
       console.log(unknown_uids);
+      load_uids();
+    }
+  }
+
+  function set_av_from_large(uid,a) {
+    var ava=a.split("_");
+    var avs=[];
+    if(ava.length==22) {
+      avs.push("/img/avaters/"+ava[2]+"_ibody_"+ava[4]+"_"+ava[6]+".png");
+      avs.push("/img/avaters/"+ava[2]+"_ibody_"+ava[4]+".png");
+    } else if(ava.length==5)
+      avs.push("/img/avaters/"+ava[2]+"_ibody_"+ava[4]+".png");
+    else if(ava.length==6) {
+      avs.push("/img/avaters/"+ava[2]+"_ibody_"+ava[4]+".png");
+      avs.push("/img/avaters/"+ava[2]+"_ibody_"+ava[4]+"_"+ava[5]+".png");
+    } else if(ava.length>=7) {
+      avs.push("/img/avaters/"+ava[2]+"_ibody_"+ava[4]+".png");
+      avs.push("/img/avaters/"+ava[2]+"_ibody_"+ava[4]+"_"+ava[5]+".png");
+      avs.push("/img/avaters/"+ava[2]+"_ibody_"+ava[4]+"_"+ava[6]+".png");
+    }else{
+      console.log(uid+":UNKNOWN AV URL");
+      console.log(ava);
+      return;
+    }
+    fetch_avs();
+
+    function fetch_avs() {
+      if(avs.length==0)return;
+      var av=avs.shift();
+      $.ajax(av,{
+        success:function(){
+            localStorage["av_"+uid]=av;
+            $(".cls_"+uid+" .load_image img").attr("src",av);
+          },
+            error:fetch_avs
+            });
+    }
+  }
+
+  function load_uids() {
+    var r_uids=3;
+    for(var i=r_uids-1;i>=0;i--) {
+      load_uid();
+    }
+
+    function load_uid() {
+      var uid;
+      if(unknown_uids.length>0)
+        uid=unknown_uids.shift();
+      else
+        return load_uids_comp();
+
+      $.get("/idolooks/index/"+uid+"/", load_uid_comp);
+
+      function load_uid_comp(a) {
+        var t=$($.parseHTML(a)).find(".leftCol");
+        if(t.length){
+          uid_names[uid]=t.find(".profData dd.nickname span").text().replace(/\s/g,"");
+          var ar=t.find(".profData dd.state").text().replace(/\s/g,"").replace(/[都府県]$/,"");
+          console.log(uid+":"+uid_names[uid]+"("+ar+")");
+          localStorage["name_"+uid]=uid_names[uid];
+          localStorage["state_"+uid]=ar;
+
+          set_av_from_large(uid,t.find(".profImg img").attr("src"));
+          unknown_uids.push(uid); // dummy
+          upd_unk_av(uid);
+          load_uid();
+        } else {
+          console.log("FAILED(非公開?):"+uid);
+          $.get("/offer_members/offer/"+uid+"/",load_uid_offer_comp);
+        }
+      }
+
+      function load_uid_offer_comp(a) {
+        var t=$($.parseHTML(a)).find(".profImg img,.offerCol p span");
+        console.log(t);
+        if(t.length>=2) {
+          uid_names[uid]=t.eq(1).text().replace(/\s/g,"");
+          localStorage["name_"+uid]=uid_names[uid];
+          set_av_from_large(uid,t.eq(0).attr("src"));
+          unknown_uids.push(uid); // dummy
+          upd_unk_av(uid);
+        }
+        load_uid();
+      }
+    }
+
+    function load_uids_comp() {
+      console.log("load_uids_comp:"+r_uids);
+      if(--r_uids>0)return;
+      console.log("load_uids_comp COMP");
     }
   }
 
   function upd_unk_av(uid) {
     var i=unknown_uids.indexOf(uid);
     if(i<0)return;
-    a=$("#favorites .cls_"+uid);
-    console.log("FOUND:"+uid_names[uid]);
-    a.find(".idolook span").text(uid_names[uid]);
-    a.find(".load_image img").attr("src",uid_avs[uid]);
     unknown_uids.splice(i,1);
+    a=$(".cls_"+uid);
+    console.log("FOUND:"+uid_names[uid]);
+    var ar=localStorage["state_"+uid];
+    if(!ar)ar="ひみつ";
+    a.find(".idolook").html("<span>"+uid_names[uid]+"</span>("+ar+")");
+    var av=localStorage["av_"+uid];
+    if(av)a.find(".load_image img").attr("src",av);
   }
 
   function add_nice(a) {
@@ -320,9 +409,8 @@ a:focus {outline:0;}
         var name=texts.eq(0).text();
         name=name.substr(2,name.length-17);
         uid_names[uid]=name;
-        uid_avs[uid]=dl.find("img:first").attr("src");
         localStorage["name_"+uid]=uid_names[uid];
-        localStorage["av_"+uid]=uid_avs[uid];
+        localStorage["av_"+uid]=dl.find("img:first").attr("src");
         upd_unk_av(uid);
         var a=create_fav(uid);
         $(".ph_nice").append(a);
@@ -355,9 +443,8 @@ a:focus {outline:0;}
           li.find("> a").append("<span class='ph_offer'></span>");
         }
         uid_names[uid]=li.find(".idolook span").text();
-        uid_avs[uid]=li.find(".load_image img").attr("src");
         localStorage["name_"+uid]=uid_names[uid];
-        localStorage["av_"+uid]=uid_avs[uid];
+        localStorage["av_"+uid]=li.find(".load_image img").attr("src");
         upd_unk_av(uid);
         if(f=="ph_team") {
           $("#favorites .cls_"+uid).hide();
@@ -499,5 +586,7 @@ a:focus {outline:0;}
     localStorage["favorites"]=favs.join("/");
     $("#xacc").show();
     $("#ximp").hide();
+
+    load_uids();
   }
 })()
