@@ -181,20 +181,26 @@ a:focus {outline:0;}
   }
 
   function create_fav(uid) {
-    var a=$($.parseHTML('<li><a href=""><div class="load_image"><img src="" width=161></div><div class="idolook"><span></span>(ひみつ)</div><span class="ph_offer"></span></a></li>'));
+    var a=$($.parseHTML('<li><a href=""><div class="load_image"><img src="" width=161></div><div class="idolook"></div><span class="ph_offer"></span></a></li>'));
     a.addClass("cls_"+uid);
     a.find("a").attr("href","/idolooks/index/"+uid+"/").click(sel_uid);
     if(uid in uid_names){
       console.log("FAV_UPD("+uid_names[uid]+"):"+uid);
-      a.find(".idolook span").text(uid_names[uid]);
+      var state=localStorage["state_"+uid];
+      if(!state)state="ひみつ";
+      a.find(".idolook").html("<span>"+uid_names[uid]+"</span>("+state+")");
+      $(".cls_"+uid+" .idolook").html("<span>"+uid_names[uid]+"</span>("+state+")");
     } else {
       var name=localStorage["name_"+uid];
+      var state=localStorage["state_"+uid];
+      if(!state)state="ひみつ";
       if(name) {
         console.log("UNKONOW("+name+"):"+uid);
-        a.find(".idolook span").text(name);
+        a.find(".idolook").html("<span>"+name+"</span>("+state+")");
+        $(".cls_"+uid+" .idolook").html("<span>"+name+"</span>("+state+")");
       } else {
         console.log("UNKONOW:"+uid);
-        a.find(".idolook span").text("？？？");
+        a.find(".idolook").html("<span>？？？</span>");
         if(unknown_uids.indexOf(uid)<0)
           unknown_uids.push(uid);
       }
