@@ -71,6 +71,11 @@
       <input type="button" id="imp_cancel" value="キャンセル"/>
     </div>
     <textarea id="imp_text"></textarea>
+    <div id="xifn">
+      <iframe id="xif0"></iframe>
+      <iframe id="xif1"></iframe>
+      <iframe id="xif2"></iframe>
+    </div>
   </div>
 </div>
 */});
@@ -141,6 +146,7 @@ a:focus {outline:0;}
   height:95%;
   margin-top:8px;
 }
+#xifn {display:none;}
 #xcol input {font-size:24pt;margin-left:3em;}
 .list-teammate ul {
   padding-left:240px;
@@ -158,7 +164,7 @@ a:focus {outline:0;}
     $("#mode_imp").click(function(){
         $("#xacc").hide();
         $("#ximp").show();
-        $("#imp_text").val("URLもしくはICカード番号を貼れ!\n");
+        $("#imp_text").val("URLもしくはICカード番号を貼れ!\n例) XXXX-XXXX-XXXX-XXXX-XXXX\n");
       });
     $("#imp_sub").click(do_imp);
     $("#imp_cancel").click(function(){
@@ -338,6 +344,85 @@ a:focus {outline:0;}
   }
 
   function load_uids() {
+    var sn24=[];
+    for(var i=unknown_uids.length-1;i>=0;i--)
+      if(unknown_uids[i].length==24)
+        sn24.unshift(unknown_uids.splice(i,1)[0]);
+    console.log("====sn24");
+    console.log(sn24);
+    console.log("====uids");
+    console.log(unknown_uids);
+    load_sn24();
+
+    function load_sn24() {
+      if(sn24.length==0)
+        return load_3uids();
+      var sn=sn24.shift();
+      // POST後に302によりUIDが得られるが, XHRでは
+      // リダイレクト後のURLを得られないため hidden iframe にて
+      // 処理を進行させる。
+      var xn="#xif0";
+      $(xn).load(function(){
+          var i=$(xn).contents();
+          console.log(xn+": "+i.get(0).location.href);
+          var uids=i.get(0).location.href.match(/\b[0-9A-Z_a-z]{16}$/);
+          console.log(i);
+          console.log(uids);
+          if(!uids){
+            var s=i.find("#fromOfferMemberSerial");
+            if(s.length>0) {
+              s.attr("value",sn);
+              console.log("POST UID:"+sn);
+              i.find("#fromOfferMember").submit();
+              return;
+            }else{
+              console.log("error");
+            }
+          } else {
+            uid=uids[0];
+            console.log("FOUND "+uid+" via "+sn);
+            var t=i.find(".profImg img,.offerCol p span");
+            console.log(t.length);
+            console.log(t);
+            if(t.length>=2) {
+              uid_names[uid]=t.eq(1).text().replace(/\s/g,"");
+              console.log("name("+uid_names[uid]+")");
+              localStorage["name_"+uid]=uid_names[uid];
+              set_av_from_large(uid,t.eq(0).attr("src"));
+            }else{
+              console.log("failed");
+            }
+            var j=favs.indexOf(sn);
+            if(j>=0){
+              favs.splice(j,1);
+              localStorage["favorites"]=favs.join("/");
+            }
+            console.log($(".cls_"+sn));
+            if(favs.indexOf(uid)>=0){
+              console.log("Trying to prune .cls_"+sn);
+              $(".cls_"+sn).remove();
+            }else{
+              console.log("Inserting .cls_"+sn);
+              if(j>=0)
+                favs.splice(j,0,uid);
+              else
+                favs.push(uid);
+              var a=create_fav(uid);
+              $(".cls_"+sn).replaceWith(a);
+            }
+            unknown_uids.push(uid); // 全情報を得る
+            if($(".ph_team .cls_"+uid).length>0)
+              $("#favorites .cls_"+uid).hide();
+          }
+          $(xn).replaceWith('<iframe id="xif0"></iframe>');
+          console.log("FIN");
+          console.log(unknown_uids);
+          load_sn24();
+        }).attr("src","/offer_members/");
+    }
+  }
+
+  function load_3uids() {
     var r_uids=3;
     for(var i=r_uids-1;i>=0;i--) {
       load_uid();
@@ -579,11 +664,15 @@ a:focus {outline:0;}
   function do_imp() {
     var t=$("#imp_text").val();
     console.log(t);
-    var uids=t.match(/idolook\.aikatsu.com\/[-/0-9A-Z_a-z]+\/([0-9A-Z_a-z]{16})\b/gm);
+    var s=t.match(/\b[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}/gm);
+    var u=t.match(/idolook\.aikatsu.com\/[-/0-9A-Z_a-z]+\/([0-9A-Z_a-z]{16})\b/gm);
+    var uids=[];
+    if(s)uids=s;
+    if(u)for(var i=0;i<u.length;i++)uids.push(u[i].substr(u[i].length-16,16));
     console.log(uids);
     console.log(uids.length);
     for(var i=0;i<uids.length;i++){
-      var uid=uids[i].substr(uids[i].length-16,16);
+      var uid=uids[i];
       if(favs.indexOf(uid)<0) {
         favs.push(uid);
         var a=create_fav(uid);
