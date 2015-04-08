@@ -266,6 +266,7 @@ a:focus {outline:0;}
   }
 
   $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
+  $(".btn_offer").hide();
   $(".btn_offer").click(do_offer);
 
   function rrr() {
@@ -273,6 +274,7 @@ a:focus {outline:0;}
     $.get("/my_datas/teammate/",function(a) {
         var a = $($.parseHTML(a)).find(".list-teammate ul");
         adduid("ph_team",a);
+        $(".btn_offer").show();
         rrr_comp();
       });
 
