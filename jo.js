@@ -584,10 +584,14 @@ a:focus {outline:0;}
     console.log(uids.length);
     for(var i=0;i<uids.length;i++){
       var uid=uids[i].substr(uids[i].length-16,16);
-      $("#favorites .cls_"+uid).remove();
-      var a=create_fav(uid);
-      favs.push(uid);
-      $("#favorites").append(a);
+      if(favs.indexOf(uid)<0) {
+        favs.push(uid);
+        if($(".ph_team .cls_"+uid).length==0) {
+          var a=create_fav(uid);
+          $("#favorites").append(a);
+        }
+      }
+      if(unknown_uids.indexOf(uid)<0)unknown_uids.push(uid);
     }
     localStorage["favorites"]=favs.join("/");
     $("#xacc").show();
