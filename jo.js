@@ -586,10 +586,10 @@ a:focus {outline:0;}
       var uid=uids[i].substr(uids[i].length-16,16);
       if(favs.indexOf(uid)<0) {
         favs.push(uid);
-        if($(".ph_team .cls_"+uid).length==0) {
-          var a=create_fav(uid);
-          $("#favorites").append(a);
-        }
+        var a=create_fav(uid);
+        $("#favorites").append(a);
+        if($(".ph_team .cls_"+uid).length>0)
+          $("#favorites .cls_"+uid).hide();
       }
       if(unknown_uids.indexOf(uid)<0)unknown_uids.push(uid);
     }
