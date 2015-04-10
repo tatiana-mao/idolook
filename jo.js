@@ -43,9 +43,6 @@
       <h3>Favorites</h3>
       <ul id="favorites">
       </ul>
-      <br/>
-      <br/>
-      <br/>
       <div class="xix">
         <input type="button" id="mode_imp" value="インポート"/>
       </div>
