@@ -442,10 +442,10 @@ a:focus {outline:0;}
   function load_3uids() {
     var r_uids=3;
     for(var i=r_uids-1;i>=0;i--) {
-      load_uid();
+      load_uid_job();
     }
 
-    function load_uid() {
+    function load_uid_job() {
       var uid;
       if(unknown_uids.length>0)
         uid=unknown_uids.shift();
@@ -466,7 +466,7 @@ a:focus {outline:0;}
           set_av_from_large(uid,t.find(".profImg img").attr("src"));
           unknown_uids.push(uid); // dummy
           upd_unk_av(uid);
-          load_uid();
+          load_uid_job();
         } else {
           console.log("FAILED(非公開?):"+uid);
           $.get("/offer_members/offer/"+uid+"/",load_uid_offer_comp);
@@ -483,7 +483,7 @@ a:focus {outline:0;}
           unknown_uids.push(uid); // dummy
           upd_unk_av(uid);
         }
-        load_uid();
+        load_uid_job();
       }
     }
 
