@@ -249,9 +249,18 @@ a:focus {outline:0;}
     return li;
   }
 
+  function append_li(sel,uid,prepend){
+    var li=cre_li(uid);
+    if(prepend)
+      $(sel).prepend(li);
+    else
+      $(sel).append(li);
+    upd_li(uid);
+  }
+
   for(var i=0;i<favs.length;i++){
-    var li=cre_li(favs[i]);
-    $("#favorites").append(li);
+    var uid=favs[i];
+    append_li("#favorites", uid);
   }
 
   hide_self();
@@ -261,12 +270,8 @@ a:focus {outline:0;}
     var i=favs.indexOf(uid);
     if(i>=0)favs.splice(i,1);
     favs.unshift(uid);
-    var li=cre_li(uid);
-    li.find(".ph_offer").addClass("img_offer");
-    console.log($("#favorites .cls_"+uid));
     $("#favorites .cls_"+uid).remove();
-    $("#favorites").prepend(li);
-    $("#favorites .cls_"+uid).hide();
+    append_li("#favorites",uid,true);
   }
 
   var ofl_uids=[];
@@ -530,9 +535,7 @@ a:focus {outline:0;}
         uid_names[uid]=name;
         localStorage["name_"+uid]=uid_names[uid];
         localStorage["av_"+uid]=dl.find("img:first").attr("src");
-        upd_unk_av(uid);
-        var li=cre_li(uid);
-        $(".ph_nice").append(li);
+        append_li(".ph_nice",uid);
       });
   }
 
@@ -704,8 +707,7 @@ a:focus {outline:0;}
       var uid=uids[i];
       if(favs.indexOf(uid)<0) {
         favs.push(uid);
-        var li=cre_li(uid);
-        $("#favorites").append(li);
+        append_li("#favorites",uid);
         if($(".ph_team .cls_"+uid).length>0)
           $("#favorites .cls_"+uid).hide();
       }
