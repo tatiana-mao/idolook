@@ -201,6 +201,19 @@ a:focus {outline:0;}
     favs=[];
   }
 
+  function upd_li(uid){
+    var name=localStorage["name_"+uid];
+    if(name){
+      var state=localStorage["state_"+uid];
+      if(!state)state="ひみつ";
+      $(".cls_"+uid+" .idolook").html("<span>"+localStorage["name_"+uid]+"</span>("+state+")");
+    }
+    var av=localStorage["av_"+uid];
+    if(av){
+      $(".cls_"+uid+" .load_image img").attr("src",av);
+    }
+  }
+
   function cre_li(uid) {
     var li=$($.parseHTML('<li><a href=""><div class="load_image"><img src="" width=161></div><div class="idolook"></div><span class="ph_offer"></span></a></li>'));
     li.addClass("cls_"+uid);
@@ -464,8 +477,7 @@ a:focus {outline:0;}
           localStorage["state_"+uid]=ar;
 
           set_av_from_large(uid,t.find(".profImg img").attr("src"));
-          unknown_uids.push(uid); // dummy
-          upd_unk_av(uid);
+          upd_li(uid);
           load_uid_job();
         } else {
           console.log("FAILED(非公開?):"+uid);
@@ -480,8 +492,7 @@ a:focus {outline:0;}
           uid_names[uid]=t.eq(1).text().replace(/\s/g,"");
           localStorage["name_"+uid]=uid_names[uid];
           set_av_from_large(uid,t.eq(0).attr("src"));
-          unknown_uids.push(uid); // dummy
-          upd_unk_av(uid);
+          upd_li(uid);
         }
         load_uid_job();
       }
@@ -553,7 +564,7 @@ a:focus {outline:0;}
         uid_names[uid]=li.find(".idolook span").text();
         localStorage["name_"+uid]=uid_names[uid];
         localStorage["av_"+uid]=li.find(".load_image img").attr("src");
-        upd_unk_av(uid);
+        upd_li(uid);
         if(f=="ph_team") {
           $("#favorites .cls_"+uid).hide();
         }
