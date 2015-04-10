@@ -201,7 +201,7 @@ a:focus {outline:0;}
     favs=[];
   }
 
-  function create_li(uid) {
+  function cre_li(uid) {
     var li=$($.parseHTML('<li><a href=""><div class="load_image"><img src="" width=161></div><div class="idolook"></div><span class="ph_offer"></span></a></li>'));
     li.addClass("cls_"+uid);
     li.find("a").attr("href","/idolooks/index/"+uid+"/").click(sel_uid);
@@ -237,7 +237,7 @@ a:focus {outline:0;}
   }
 
   for(var i=0;i<favs.length;i++){
-    var li=create_li(favs[i]);
+    var li=cre_li(favs[i]);
     $("#favorites").append(li);
   }
 
@@ -248,7 +248,7 @@ a:focus {outline:0;}
     var i=favs.indexOf(uid);
     if(i>=0)favs.splice(i,1);
     favs.unshift(uid);
-    var li=create_li(uid);
+    var li=cre_li(uid);
     li.find(".ph_offer").addClass("img_offer");
     console.log($("#favorites .cls_"+uid));
     $("#favorites .cls_"+uid).remove();
@@ -424,7 +424,7 @@ a:focus {outline:0;}
                 favs.splice(j,0,uid);
               else
                 favs.push(uid);
-              var li=create_li(uid);
+              var li=cre_li(uid);
               $(".cls_"+sn).replaceWith(li);
             }
             unknown_uids.push(uid); // 全情報を得る
@@ -520,7 +520,7 @@ a:focus {outline:0;}
         localStorage["name_"+uid]=uid_names[uid];
         localStorage["av_"+uid]=dl.find("img:first").attr("src");
         upd_unk_av(uid);
-        var li=create_li(uid);
+        var li=cre_li(uid);
         $(".ph_nice").append(li);
       });
   }
@@ -693,7 +693,7 @@ a:focus {outline:0;}
       var uid=uids[i];
       if(favs.indexOf(uid)<0) {
         favs.push(uid);
-        var li=create_li(uid);
+        var li=cre_li(uid);
         $("#favorites").append(li);
         if($(".ph_team .cls_"+uid).length>0)
           $("#favorites .cls_"+uid).hide();
