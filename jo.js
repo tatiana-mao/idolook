@@ -22,6 +22,12 @@
     document.cookie=k+"="+v+"; path=/; expires="+xp.toUTCString();
   }
 
+  var my_uid=null;
+  function hide_self(){
+    if(my_uid)
+      $(".cls_"+my_uid).hide();
+  }
+
   var cookies=load_cookies();
 
   var cssLink = $("<link>");
@@ -32,6 +38,18 @@
     href: "/css/myfriend.css"
   });
   upd_css();
+  $.get("/m_members/edit/",function(a){
+      my_uid=$($.parseHTML(a)).find("#fe_text").val().match(/\/([0-9A-Z_a-z]{16})\//);
+      if(my_uid) {
+        my_uid=my_uid[1];
+        hide_self();
+        $(".cls_"+my_uid).hide();
+      }else{
+        console.log("error getting my uid");
+        console.log(my_uid);
+        console.log(a);
+      }
+    });
 
   add_ht('#wrapCol', function(){/*
 <div id="xcol" class="list-teammate">
@@ -223,6 +241,8 @@ a:focus {outline:0;}
     var a=create_fav(favs[i]);
     $("#favorites").append(a);
   }
+
+  hide_self();
 
   function fav_upd(uid) {
     console.log("FAV:"+uid);
@@ -539,6 +559,7 @@ a:focus {outline:0;}
           $("#favorites .cls_"+uid).hide();
         }
       });
+    hide_self();
   }
 
   function sel_uid() {
@@ -683,6 +704,7 @@ a:focus {outline:0;}
     localStorage["favorites"]=favs.join("/");
     $("#xacc").show();
     $("#ximp").hide();
+    hide_self();
 
     load_uids();
   }
