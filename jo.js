@@ -166,7 +166,10 @@ a:focus {outline:0;}
 .list-teammate ul {
   padding-left:240px;
 }
-.half_offer {opacity:0.4;}
+
+.ph_offer {display:none}
+.half_offer {display:block;opacity:0.4;}
+.img_offer {display:block;}
 .list-offerlist .offerlistWrap a.btn_offer-cancel {display:none;}
 </style>*/});
   }
@@ -277,6 +280,20 @@ a:focus {outline:0;}
   var ofl_uids=[];
   var orig_uids=[];
   do_ofl();
+
+  function upd_sel_offer(uid,f){
+    var t=$(".cls_"+uid+" .ph_offer");
+    if(f){
+      t.addClass("img_offer");
+      if(orig_uids.indexOf(uid)>=0)
+        t.removeClass("half_offer");
+      else
+        t.addClass("half_offer");
+    }else{
+      t.removeClass("img_offer");
+    }
+  }
+
   function do_ofl() {
     ofl_uids.length=0;
     orig_uids.length=0;
@@ -291,12 +308,8 @@ a:focus {outline:0;}
       li.attr("id","ofl_"+i);
       var uid=li.find("a:first").attr("href").split("/")[3];
       orig_uids.push(ofl_uids[i]=uid);
-      $(".cls_"+uid+" > a > .ph_offer").replaceWith("<span class='ph_offer img_offer'>Offer</span>");
-      console.log(li.find(".idolook span").text());
-      uid_names[uid]=li.find(".idolook span").text();
-      localStorage["name_"+uid]=uid_names[uid];
-      localStorage["av_"+uid]=li.find(".load_image img").attr("src");
       fav_prepend(uid);
+      upd_sel_offer(uid,true);
     }
     console.log(orig_uids);
     for(;i<3;i++) {
@@ -548,7 +561,7 @@ a:focus {outline:0;}
         li.find("img").attr("width",161);
         li.addClass("cls_"+uid);
         a.click(sel_uid);
-        if(li.find("> a > .img_offer").length==0) {
+        if(li.find("> a > span.img_offer").addClass("ph_offer").length==0) {
           li.find("> a").append("<span class='ph_offer'></span>");
         }
         uid_names[uid]=li.find(".idolook span").text();
@@ -559,6 +572,7 @@ a:focus {outline:0;}
           $("#favorites .cls_"+uid).hide();
         }
       });
+    // FIXME: Update ph_offer.
     hide_self();
   }
 
@@ -567,8 +581,8 @@ a:focus {outline:0;}
     var i=ofl_uids.indexOf(uid);
     if(i>=0) {
       $("#ofl_"+i).replaceWith(ofl_ph(i));
-      $(".cls_"+uid+" .img_offer").replaceWith("<span class='ph_offer'></span>");
       ofl_uids[i]=undefined;
+      upd_sel_offer(uid,false);
       return false;
     }
     i=ofl_uids.indexOf(undefined);
@@ -579,7 +593,7 @@ a:focus {outline:0;}
     tmpl.find("a").addClass("myroom").click(sel_uid);
     $("#ofl_"+i).replaceWith(tmpl);
     console.log(orig_uids);
-    $(".cls_"+uid+" > a > .ph_offer").replaceWith("<span class='ph_offer img_offer"+(orig_uids.indexOf(uid)>=0?"":" half_offer")+"'>Offer</span>");
+    upd_sel_offer(uid,true);
     return false;
   }
 
