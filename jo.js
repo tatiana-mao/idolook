@@ -510,19 +510,6 @@ a:focus {outline:0;}
     }
   }
 
-  function upd_unk_av(uid) {
-    var i=unknown_uids.indexOf(uid);
-    if(i<0)return;
-    unknown_uids.splice(i,1);
-    a=$(".cls_"+uid);
-    console.log("FOUND:"+uid_names[uid]);
-    var ar=localStorage["state_"+uid];
-    if(!ar)ar="ひみつ";
-    a.find(".idolook").html("<span>"+uid_names[uid]+"</span>("+ar+")");
-    var av=localStorage["av_"+uid];
-    if(av)a.find(".load_image img").attr("src",av);
-  }
-
   function add_nice(a) {
     $(".ph_nice").replaceWith('<ul class="ph_nice clearfix">');
     a.find("dl.topics-aktphone").each(function(){
