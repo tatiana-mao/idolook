@@ -256,7 +256,7 @@ a:focus {outline:0;}
 
   hide_self();
 
-  function fav_upd(uid) {
+  function fav_prepend(uid){
     console.log("FAV:"+uid);
     var i=favs.indexOf(uid);
     if(i>=0)favs.splice(i,1);
@@ -291,7 +291,7 @@ a:focus {outline:0;}
       uid_names[uid]=li.find(".idolook span").text();
       localStorage["name_"+uid]=uid_names[uid];
       localStorage["av_"+uid]=li.find(".load_image img").attr("src");
-      fav_upd(uid);
+      fav_prepend(uid);
     }
     console.log(orig_uids);
     for(;i<3;i++) {
