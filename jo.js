@@ -66,7 +66,7 @@
   <div id="ximp">
     <div>
       <input type="button" id="imp_sub" value="インポート"/>
-      <input type="button" id="imp_cancel" value="キャンセル"/>
+      <input type="button" id="imp_cancel" value="もどる"/>
     </div>
     <textarea id="imp_text"></textarea>
     <div id="xifn">
