@@ -258,8 +258,8 @@ a:focus {outline:0;}
 
   var ofl_uids=[];
   var orig_uids=[];
-  ofl();
-  function ofl() {
+  do_ofl();
+  function do_ofl() {
     ofl_uids.length=0;
     orig_uids.length=0;
     $(".offerlistWrap > div").replaceWith("<div></div>");
@@ -664,7 +664,7 @@ a:focus {outline:0;}
             var a=$($.parseHTML(a));
             console.log(a.find(".offerlistWrap"));
             $(".offerlistWrap").replaceWith(a.find(".offerlistWrap"));
-            ofl();
+            do_ofl();
           });
         $.get("/my_datas/teammate/",
               function(a) {
