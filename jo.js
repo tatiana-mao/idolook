@@ -43,7 +43,6 @@
       if(my_uid) {
         my_uid=my_uid[1];
         hide_self();
-        $(".cls_"+my_uid).hide();
       }else{
         console.log("error getting my uid");
         console.log(my_uid);
