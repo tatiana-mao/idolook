@@ -62,7 +62,7 @@
       <ul id="favorites">
       </ul>
       <div class="xix">
-        <input type="button" id="mode_imp" value="インポート"/>
+        <input type="button" id="mode_favs_imp" value="インポート"/>
       </div>
     </div>
     <h2>マイフレンド</h2>
@@ -78,7 +78,7 @@
     </div>
     <h2>History</h2>
     <div>
-      <ul class="ph_history"><li>Loading...</li></ul>
+      <ul id="hists"></ul>
     </div>
   </div>
   <div id="ximp">
@@ -177,7 +177,7 @@ a:focus {outline:0;}
     console.log($('#wrapCol').innerHeight());
     $('#xcol').height($('#wrapCol').innerHeight()-338-110);
     $('#xacc').accordion({fillSpace:true,icons:{}});
-    $("#mode_imp").click(function(){
+    $("#mode_favs_imp").click(function(){
         $("#xacc").hide();
         $("#ximp").show();
         $("#imp_text").val("URLもしくはICカード番号を貼れ!\n例) XXXX-XXXX-XXXX-XXXX-XXXX\n");
