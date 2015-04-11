@@ -173,6 +173,10 @@ a:focus {outline:0;}
   padding-left:240px;
 }
 
+#container .idolook {font-weight:normal;}
+#container .idolook span {font-weight:bold;}
+#xcol .ui-widget {font-family:inherit;}
+
 .ph_offer {display:none}
 .half_offer {display:block;opacity:0.4;}
 .img_offer {display:block;}
