@@ -195,7 +195,6 @@ a:focus {outline:0;}
 
   var uid_names={};
   var favs;
-  var unknown_uids=[];
 
   favs=localStorage["favorites"];
   if(favs) {
@@ -217,38 +216,10 @@ a:focus {outline:0;}
     }
   }
 
-  function cre_li(uid) {
-    var li=$($.parseHTML('<li><a href=""><div class="load_image"><img src="" width=161></div><div class="idolook"></div><span class="ph_offer"></span></a></li>'));
+  function cre_li(uid){
+    var li=$('<li><a href=""><div class="load_image"><img src="" width=161></div><div class="idolook"><span>？？？</span></div><span class="ph_offer"></span></a></li>');
     li.addClass("cls_"+uid);
     li.find("a").attr("href","/idolooks/index/"+uid+"/").click(sel_uid);
-    if(uid in uid_names){
-      console.log("FAV_UPD("+uid_names[uid]+"):"+uid);
-      var state=localStorage["state_"+uid];
-      if(!state)state="ひみつ";
-      li.find(".idolook").html("<span>"+uid_names[uid]+"</span>("+state+")");
-      $(".cls_"+uid+" .idolook").html("<span>"+uid_names[uid]+"</span>("+state+")");
-    } else {
-      var name=localStorage["name_"+uid];
-      var state=localStorage["state_"+uid];
-      if(!state)state="ひみつ";
-      if(name) {
-        console.log("UNKONOW("+name+"):"+uid);
-        li.find(".idolook").html("<span>"+name+"</span>("+state+")");
-        $(".cls_"+uid+" .idolook").html("<span>"+name+"</span>("+state+")");
-      } else {
-        console.log("UNKONOW:"+uid);
-        li.find(".idolook").html("<span>？？？</span>");
-        if(unknown_uids.indexOf(uid)<0)
-          unknown_uids.push(uid);
-      }
-    }
-    av=localStorage["av_"+uid];
-    if(av) {
-      li.find(".load_image img").attr("src",av);
-    } else {
-      if(unknown_uids.indexOf(uid)<0)
-        unknown_uids.push(uid);
-    }
     return li;
   }
 
@@ -259,6 +230,13 @@ a:focus {outline:0;}
     else
       $(sel).append(li);
     upd_li(uid);
+  }
+
+  var f_load_uids=false;
+  var unknown_uids=[];
+  function load_uid(uid) {
+    if(unknown_uids.indexOf(uid)<0)unknown_uids.push(uid);
+    if(!f_load_uids&&unknown_uids.length>0)load_uids();
   }
 
   for(var i=0;i<favs.length;i++){
@@ -310,6 +288,7 @@ a:focus {outline:0;}
       orig_uids.push(ofl_uids[i]=uid);
       fav_prepend(uid);
       upd_sel_offer(uid,true);
+      load_uid(uid);
     }
     console.log(orig_uids);
     for(;i<3;i++) {
@@ -352,7 +331,6 @@ a:focus {outline:0;}
       if(--fr_n>0) return;
       console.log("UNRESOLVED UIDS:");
       console.log(unknown_uids);
-      load_uids();
     }
   }
 
@@ -392,6 +370,9 @@ a:focus {outline:0;}
   }
 
   function load_uids() {
+    if(f_load_uids||unknown_uids.length==0)
+      return;
+    f_load_uids=true;
     var sn24=[];
     for(var i=unknown_uids.length-1;i>=0;i--)
       if(unknown_uids[i].length==24)
@@ -478,7 +459,9 @@ a:focus {outline:0;}
 
     function load_uid_job() {
       var uid;
-      if(unknown_uids.length>0)
+      if(r_uids<3&&unknown_uids.length>r_uids)
+        return load_uids_comp();
+      if(unknown_uids.length>0&&unknown_uids[0].length==16)
         uid=unknown_uids.shift();
       else
         return load_uids_comp();
@@ -519,7 +502,13 @@ a:focus {outline:0;}
     function load_uids_comp() {
       console.log("load_uids_comp:"+r_uids);
       if(--r_uids>0)return;
-      console.log("load_uids_comp COMP");
+      f_load_uids=false;
+      if(unknown_uids.length){
+        console.log("load_uids_comp CONT("+unknown_uids.length+")");
+        load_uids();
+      }else{
+        console.log("load_uids_comp COMP");
+      }
     }
   }
 
@@ -536,6 +525,7 @@ a:focus {outline:0;}
         localStorage["name_"+uid]=uid_names[uid];
         localStorage["av_"+uid]=dl.find("img:first").attr("src");
         append_li(".ph_nice",uid);
+        load_uid(uid);
       });
   }
 
@@ -569,6 +559,7 @@ a:focus {outline:0;}
         localStorage["av_"+uid]=li.find(".load_image img").attr("src");
         upd_li(uid);
         if(f=="ph_team") {
+          load_uid(uid);
           $("#favorites .cls_"+uid).hide();
         }
       });
@@ -712,13 +703,11 @@ a:focus {outline:0;}
         if($(".ph_team .cls_"+uid).length>0)
           $("#favorites .cls_"+uid).hide();
       }
-      if(unknown_uids.indexOf(uid)<0)unknown_uids.push(uid);
+      load_uid(uid);
     }
     localStorage["favorites"]=favs.join("/");
     $("#xacc").show();
     $("#ximp").hide();
     hide_self();
-
-    load_uids();
   }
 })()
