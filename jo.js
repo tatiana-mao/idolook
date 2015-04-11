@@ -62,6 +62,8 @@
       </ul>
       <div class="xix">
         <input type="button" id="mode_favs_imp" value="インポート"/>
+        <input type="button" id="mode_favs_exp" value="エクスポート"/>
+        <input type="button" id="mode_favs_del" value="全削除"/>
       </div>
     </div>
     <h2>マイフレンド</h2>
@@ -78,6 +80,10 @@
     <h2>History</h2>
     <div>
       <ul id="hists"></ul>
+      <div class="xix">
+        <input type="button" id="mode_hists_exp" value="エクスポート"/>
+        <input type="button" id="mode_hists_del" value="全削除"/>
+      </div>
     </div>
   </div>
   <div id="ximp">
@@ -189,18 +195,30 @@ a:focus {outline:0;}
         $("#xacc").show();
         $("#ximp").hide();
       });
+    $("#mode_favs_exp").click(do_favs_exp);
+    $("#mode_hists_exp").click(do_hists_exp);
+    $("#mode_favs_del").click(do_favs_del);
+    $("#mode_hists_del").click(do_hists_del);
   }
 
   function ofl_ph(i) {return '<li id="ofl_'+i+'"><a class="myroom"></a></li>';}
 
   var uid_names={};
   var favs;
+  var hists;
 
   favs=localStorage["favorites"];
   if(favs) {
     favs=favs.split("/");
   } else {
     favs=[];
+  }
+
+  hists=localStorage["histories"];
+  if(hists) {
+    hists=hists.split("/");
+  } else {
+    hists=[];
   }
 
   function upd_li(uid){
@@ -244,6 +262,22 @@ a:focus {outline:0;}
     append_li("#favorites", uid);
   }
 
+  function hists_prune(uid){
+    var i=hists.indexOf(uid);
+    if(i<0)return;
+    hists.splice(i,1);
+    $("#hists .cls_"+uid).remove();
+  }
+
+  for(var i=0;i<hists.length;++i){
+    var uid=hists[i];
+    if(favs.indexOf(uid)>=0){
+      hists.splice(i,1);
+    }else{
+      append_li("#hists",uid);
+    }
+  }
+
   hide_self();
 
   function fav_prepend(uid){
@@ -253,6 +287,7 @@ a:focus {outline:0;}
     favs.unshift(uid);
     $("#favorites .cls_"+uid).remove();
     append_li("#favorites",uid,true);
+    hists_prune(uid);
   }
 
   var ofl_uids=[];
@@ -439,6 +474,7 @@ a:focus {outline:0;}
               var li=cre_li(uid);
               $(".cls_"+sn).replaceWith(li);
             }
+            hists_prune(uid);
             unknown_uids.push(uid); // 全情報を得る
             if($(".ph_team .cls_"+uid).length>0)
               $("#favorites .cls_"+uid).hide();
@@ -532,6 +568,7 @@ a:focus {outline:0;}
   function adduid(f,a) {
     if(f=="ph_team") {
       $("#favorites li").show();
+      $("#hists li").show();
       a.html(a.find("li").detach().sort(function(a,b){
           var ai=favs.indexOf($(a).find("a").attr("href").split("/")[3]);
           var bi=favs.indexOf($(b).find("a").attr("href").split("/")[3]);
@@ -560,9 +597,15 @@ a:focus {outline:0;}
         upd_li(uid);
         if(f=="ph_team") {
           load_uid(uid);
+          if(favs.indexOf(uid)<0&&hists.indexOf(uid)<0) {
+            hists.unshift(uid);
+            append_li("#hists",uid,true);
+          }
           $("#favorites .cls_"+uid).hide();
+          $("#hists .cls_"+uid).hide();
         }
       });
+    localStorage["histories"]=hists.join("/");
     // FIXME: Update ph_offer.
     hide_self();
   }
@@ -703,11 +746,59 @@ a:focus {outline:0;}
         if($(".ph_team .cls_"+uid).length>0)
           $("#favorites .cls_"+uid).hide();
       }
+      hists_prune(uid);
       load_uid(uid);
     }
     localStorage["favorites"]=favs.join("/");
+    localStorage["histories"]=hists.join("/");
     $("#xacc").show();
     $("#ximp").hide();
     hide_self();
+  }
+
+  function do_favs_exp() {
+    do_exp("Favorites",favs);
+  }
+
+  function do_hists_exp() {
+    do_exp("History",hists);
+  }
+
+  function do_exp(hdr,uids) {
+    var s="";
+    for(var i=0;i<uids.length;i++){
+      var uid=uids[i];
+      var name=localStorage["name_"+uid];
+      if(!name)name="？？？";
+      s+=name+" https://idolook.aikatsu.com/idolooks/index/"+uid+"/\n";
+    }
+    $("#imp_text").val(hdr+"("+uids.length+")\n"+s);
+    $("#xacc").hide();
+    $("#ximp").show();
+  }
+
+  function do_favs_del(){
+    if(!window.confirm("Favoritesを全削除します。\n削除前の内容はHistoryに移動します。"))
+      return;
+    for(var i=favs.length-1;i>=0;--i){
+      var uid=favs[i];
+      if(hists.indexOf(uid)<0){
+        hists.unshift(uid);
+        append_li("#hists",uid,true);
+      }
+    }
+    favs=[];
+    $("#favorites").html("");
+    localStorage["favorites"]=favs.join("/");
+    localStorage["histories"]=hists.join("/");
+  }
+
+  function do_hists_del(){
+    do_hists_exp();
+    if(!window.confirm("Historyを全削除します。\n削除前の内容はエクスポートされています。"))
+      return;
+    $("#hists").html("");
+    hists=[];
+    localStorage["histories"]="";
   }
 })()
