@@ -63,6 +63,7 @@
       <div class="xix">
         <input type="button" id="mode_favs_imp" value="インポート"/>
         <input type="button" id="mode_favs_exp" value="エクスポート"/>
+        <input type="button" id="do_new_as_read" value="全既読"/>
         <input type="button" id="mode_favs_del" value="全削除"/>
       </div>
     </div>
@@ -204,6 +205,7 @@ a:focus {outline:0;}
     $("#mode_hists_exp").click(do_hists_exp);
     $("#mode_favs_del").click(do_favs_del);
     $("#mode_hists_del").click(do_hists_del);
+    $("#do_new_as_read").click(do_new_as_read);
   }
 
   function ofl_ph(i) {return '<li id="ofl_'+i+'"><a class="myroom"></a></li>';}
@@ -218,9 +220,16 @@ a:focus {outline:0;}
 
   new_favs=localStorage["favorites_new"];
   new_favs=(new_favs!=null?new_favs.split("/"):favs.slice(0));
+  if(new_favs.length==0)$("#do_new_as_read").hide();
 
   hists=localStorage["histories"];
   hists=hists?hists.split("/"):[];
+
+  function do_new_as_read(){
+    new_favs=[];
+    $("#xcol span.new").remove();
+    $("#do_new_as_read").hide();
+  }
 
   function upd_li(uid){
     var name=localStorage["name_"+uid];
@@ -235,7 +244,8 @@ a:focus {outline:0;}
     }
     $(".cls_"+uid+" span.new").remove();
     if(new_favs.indexOf(uid)>=0){
-      $(".cls_"+uid+" a").append('<span class="new">NEW</span>')
+      $(".cls_"+uid+" a").append('<span class="new">NEW</span>');
+      $("#do_new_as_read").show();
     }
   }
 
