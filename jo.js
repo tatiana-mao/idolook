@@ -51,7 +51,7 @@
     });
 
   add_ht('#wrapCol', function(){/*
-<div id="xcol" class="list-teammate">
+<div id="xcol" class="list-myfriend list-teammate">
   <div id="xacc">
     <h2>Favorites</h2>
     <div>
@@ -181,6 +181,7 @@ a:focus {outline:0;}
 .half_offer {display:block;opacity:0.4;}
 .img_offer {display:block;}
 .list-offerlist .offerlistWrap a.btn_offer-cancel {display:none;}
+.list-offerlist span.new {display:none;}
 </style>*/});
   }
 
@@ -209,10 +210,14 @@ a:focus {outline:0;}
 
   var uid_names={};
   var favs;
+  var new_favs;
   var hists;
 
   favs=localStorage["favorites"];
   favs=favs?favs.split("/"):[];
+
+  new_favs=localStorage["favorites_new"];
+  new_favs=(new_favs!=null?new_favs.split("/"):favs.slice(0));
 
   hists=localStorage["histories"];
   hists=hists?hists.split("/"):[];
@@ -227,6 +232,10 @@ a:focus {outline:0;}
     var av=localStorage["av_"+uid];
     if(av){
       $(".cls_"+uid+" .load_image img").attr("src",av);
+    }
+    $(".cls_"+uid+" span.new").remove();
+    if(new_favs.indexOf(uid)>=0){
+      $(".cls_"+uid+" a").append('<span class="new">NEW</span>')
     }
   }
 
@@ -317,9 +326,12 @@ a:focus {outline:0;}
       li.attr("id","ofl_"+i);
       var uid=li.find("a:first").attr("href").split("/")[3];
       orig_uids.push(ofl_uids[i]=uid);
+      var j=new_favs.indexOf(uid);
+      if(j>=0)new_favs.splice(j,1);
       fav_prepend(uid);
       upd_sel_offer(uid,true);
       load_uid(uid);
+      $(".cls_"+uid+" span.new").remove();
     }
     console.log(orig_uids);
     for(;i<3;i++) {
@@ -327,6 +339,7 @@ a:focus {outline:0;}
       ofl_uids[i]=undefined;
     }
     localStorage["favorites"]=favs.join("/");
+    localStorage["favorites_new"]=new_favs.join("/");
     $(".btn_offer").show();
   }
 
@@ -745,6 +758,7 @@ a:focus {outline:0;}
     console.log(uids.length);
     for(var i=0;i<uids.length;i++){
       var uid=uids[i];
+      if(new_favs.indexOf(uid)<0)new_favs.push(uid);
       if(favs.indexOf(uid)<0) {
         favs.push(uid);
         append_li("#favorites",uid);
@@ -755,6 +769,7 @@ a:focus {outline:0;}
       load_uid(uid);
     }
     localStorage["favorites"]=favs.join("/");
+    localStorage["favorites_new"]=new_favs.join("/");
     localStorage["histories"]=hists.join("/");
     $("#xacc").show();
     $("#ximp").hide();
@@ -785,6 +800,7 @@ a:focus {outline:0;}
   function do_favs_del(){
     if(!window.confirm("Favoritesを全削除します。\n削除前の内容はHistoryに移動します。"))
       return;
+    new_favs=[];
     for(var i=favs.length-1;i>=0;--i){
       var uid=favs[i];
       if(hists.indexOf(uid)<0){
@@ -795,6 +811,7 @@ a:focus {outline:0;}
     favs=[];
     $("#favorites").html("");
     localStorage["favorites"]=favs.join("/");
+    localStorage["favorites_new"]=new_favs.join("/");
     localStorage["histories"]=hists.join("/");
   }
 
