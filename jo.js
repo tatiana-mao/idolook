@@ -560,10 +560,13 @@ a:focus {outline:0;}
         console.log(uid);
         var texts=dl.find(".title").contents();
         var name=texts.eq(0).text();
+        var av=dl.find("img:first").attr("src");
+        // 非プレイヤキャラは一覧から除外(すまん)
+        if(av.match(/chara|iface_imouth/))return;
         name=name.substr(2,name.length-17);
         uid_names[uid]=name;
         localStorage["name_"+uid]=uid_names[uid];
-        localStorage["av_"+uid]=dl.find("img:first").attr("src");
+        localStorage["av_"+uid]=av;
         append_li(".ph_nice",uid);
         load_uid(uid);
       });
@@ -587,6 +590,12 @@ a:focus {outline:0;}
     $("."+f+" .denial").remove();
     $("."+f+" li").each(function() {
         var li=$(this);
+        var av=li.find(".load_image img").attr("src");
+        if(av.match(/chara|iface_imouth/)){
+          // 非プレイヤキャラを選択不能にする
+          li.find("a").click(function(e){e.preventDefault();});
+          return;
+        }
         var a=li.find("a:first");
         var uid=a.attr("href").split("/")[3];
         li.find("img").attr("width",161);
@@ -597,7 +606,7 @@ a:focus {outline:0;}
         }
         uid_names[uid]=li.find(".idolook span").text();
         localStorage["name_"+uid]=uid_names[uid];
-        localStorage["av_"+uid]=li.find(".load_image img").attr("src");
+        localStorage["av_"+uid]=av;
         upd_li(uid);
         if(f=="ph_team") {
           load_uid(uid);
