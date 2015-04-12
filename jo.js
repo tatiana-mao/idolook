@@ -212,18 +212,10 @@ a:focus {outline:0;}
   var hists;
 
   favs=localStorage["favorites"];
-  if(favs) {
-    favs=favs.split("/");
-  } else {
-    favs=[];
-  }
+  favs=favs?favs.split("/"):[];
 
   hists=localStorage["histories"];
-  if(hists) {
-    hists=hists.split("/");
-  } else {
-    hists=[];
-  }
+  hists=hists?hists.split("/"):[];
 
   function upd_li(uid){
     var name=localStorage["name_"+uid];
