@@ -297,6 +297,11 @@ a:focus {outline:0;}
 
   var ofl_uids=[];
   var orig_uids=[];
+
+  $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
+  $(".btn_offer").hide();
+  $(".btn_offer").click(do_offer);
+
   do_ofl();
 
   function upd_sel_offer(uid,f){
@@ -342,10 +347,6 @@ a:focus {outline:0;}
     localStorage["favorites_new"]=new_favs.join("/");
     $(".btn_offer").show();
   }
-
-  $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
-  $(".btn_offer").hide();
-  $(".btn_offer").click(do_offer);
 
   function rrr() {
     var fr_n=4;
