@@ -615,7 +615,6 @@ a:focus {outline:0;}
         localStorage["av_"+uid]=av;
         upd_li(uid);
         if(f=="ph_team") {
-          load_uid(uid);
           if(favs.indexOf(uid)<0&&hists.indexOf(uid)<0) {
             hists.unshift(uid);
             append_li("#hists",uid,true);
