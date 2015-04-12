@@ -292,6 +292,7 @@ a:focus {outline:0;}
     favs.unshift(uid);
     $("#favorites .cls_"+uid).remove();
     append_li("#favorites",uid,true);
+    if($(".ph_team .cls_"+uid).length>0)$("#favorites .cls_"+uid).hide();
     hists_prune(uid);
   }
 
