@@ -687,10 +687,12 @@ a:focus {outline:0;}
         uid_names[uid]=li.find(".idolook span").text();
         localStorage["name_"+uid]=uid_names[uid];
         localStorage["av_"+uid]=av;
+        var wf=li.find("span.img_webfriend").detach();
         replace_li(li, uid);
         if(f=="offerlistWrap"){
           $(".offerlistWrap "+cuid+" a:first").addClass("myroom");
         }
+        if(wf.length>0)$(cuid+" a").append(wf);
         if(f=="ph_team") {
           if(favs.indexOf(uid)<0&&hists.indexOf(uid)<0) {
             hists.unshift(uid);
