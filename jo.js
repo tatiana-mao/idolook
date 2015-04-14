@@ -692,7 +692,10 @@ a:focus {outline:0;}
         if(f=="offerlistWrap"){
           $(".offerlistWrap "+cuid+" a:first").addClass("myroom");
         }
-        if(wf.length>0)$(cuid+" a").append(wf);
+        if(wf.length>0){
+          $(cuid+" .img_webfriend").remove();
+          $(cuid+" .idolook").after(wf);
+        }
         if(f=="ph_team") {
           if(favs.indexOf(uid)<0&&hists.indexOf(uid)<0) {
             hists.unshift(uid);
