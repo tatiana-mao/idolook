@@ -264,10 +264,23 @@ a:focus {outline:0;}
       $(cuid+" a").append('<span class="new">NEW</span>');
       $("#do_new_as_read").show();
     }
+    upd_sel_offer(uid,(ofl_uids.indexOf(uid)>=0));
   }
 
   function cre_li(uid){
-    var li=$('<li><a href=""><div class="load_image"><img src="" width=161></div><div class="idolook"><span>？？？</span></div><span class="ph_offer"></span></a></li>');
+    var li=$($.parseHTML(hd(function(){/*
+<li>
+  <a href="">
+    <div class="load_image">
+      <img src="" width=161>
+    </div>
+    <div class="idolook">
+      <span>？？？</span>
+    </div>
+    <span class="ph_offer"></span>
+  </a>
+</li>
+                                       */})));
     li.addClass("cls_"+uid);
     li.find("a").attr("href","/idolooks/index/"+uid+"/").click(sel_uid);
     return li;
@@ -279,6 +292,11 @@ a:focus {outline:0;}
       $(sel).prepend(li);
     else
       $(sel).append(li);
+    upd_li(uid);
+  }
+
+  function replace_li(sel,uid){
+    sel.replaceWith(cre_li(uid));
     upd_li(uid);
   }
 
@@ -493,8 +511,7 @@ a:focus {outline:0;}
                 favs.splice(j,0,uid);
               else
                 favs.push(uid);
-              var li=cre_li(uid);
-              $(".cls_"+sn).replaceWith(li);
+              replace_li($(".cls_"+sn),uid);
             }
             hists_prune(uid);
             unknown_uids.push(uid); // 全情報を得る
@@ -527,8 +544,8 @@ a:focus {outline:0;}
       $.get("/idolooks/index/"+uid+"/", load_uid_comp);
 
       function load_uid_comp(a) {
-        var t=$($.parseHTML(a)).find(".leftCol");
-        if(t.length){
+        var t=$($.parseHTML(a));
+        if(t.find(".leftCol").length){
           uid_names[uid]=t.find(".profData dd.nickname span").text().replace(/\s/g,"");
           var ar=t.find(".profData dd.state").text().replace(/\s/g,"").replace(/[都府県]$/,"");
           console.log(uid+":"+uid_names[uid]+"("+ar+")");
@@ -604,8 +621,6 @@ a:focus {outline:0;}
     }
     a.addClass(f);
     $("."+f).replaceWith(a);
-    $("."+f+" .recognition").remove();
-    $("."+f+" .denial").remove();
     $("."+f+" li").each(function() {
         var li=$(this);
         var av=li.find(".load_image img").attr("src");
@@ -616,16 +631,14 @@ a:focus {outline:0;}
         }
         var a=li.find("a:first");
         var uid=a.attr("href").split("/")[3];
-        li.find("img").attr("width",161);
         li.addClass("cls_"+uid);
-        a.click(sel_uid);
-        if(li.find("> a > span.img_offer").addClass("ph_offer").length==0) {
-          li.find("> a").append("<span class='ph_offer'></span>");
-        }
         uid_names[uid]=li.find(".idolook span").text();
         localStorage["name_"+uid]=uid_names[uid];
         localStorage["av_"+uid]=av;
-        upd_li(uid);
+        replace_li(li, uid);
+        if(f=="offerlistWrap"){
+          $(".offerlistWrap .cls_"+uid+" a:first").addClass("myroom");
+        }
         if(f=="ph_team") {
           if(favs.indexOf(uid)<0&&hists.indexOf(uid)<0) {
             hists.unshift(uid);
@@ -652,12 +665,10 @@ a:focus {outline:0;}
     i=ofl_uids.indexOf(undefined);
     if(i<0) {console.log(uid+":full"); console.log(ofl_uids);return false;}
     ofl_uids[i]=uid;
-    var tmpl=$(".cls_"+uid+":first").clone();
-    tmpl.attr("id","ofl_"+i);
-    tmpl.find("a").addClass("myroom").click(sel_uid);
-    $("#ofl_"+i).replaceWith(tmpl);
+    replace_li($("#ofl_"+i),uid);
+    $(".offerlistWrap .cls_"+uid).attr("id","ofl_"+i);
+    $(".offerlistWrap .cls_"+uid+" a:first").addClass("myroom");
     console.log(orig_uids);
-    upd_sel_offer(uid,true);
     return false;
   }
 
