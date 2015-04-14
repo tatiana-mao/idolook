@@ -682,21 +682,22 @@ a:focus {outline:0;}
         }
         var a=li.find("a:first");
         var uid=a.attr("href").split("/")[3];
+        var cuid=".cls_"+uid;
         li.addClass("cls_"+uid);
         uid_names[uid]=li.find(".idolook span").text();
         localStorage["name_"+uid]=uid_names[uid];
         localStorage["av_"+uid]=av;
         replace_li(li, uid);
         if(f=="offerlistWrap"){
-          $(".offerlistWrap .cls_"+uid+" a:first").addClass("myroom");
+          $(".offerlistWrap "+cuid+" a:first").addClass("myroom");
         }
         if(f=="ph_team") {
           if(favs.indexOf(uid)<0&&hists.indexOf(uid)<0) {
             hists.unshift(uid);
             append_li("#hists",uid,true);
           }
-          $("#favorites .cls_"+uid).hide();
-          $("#hists .cls_"+uid).hide();
+          $("#favorites "+cuid).hide();
+          $("#hists "+cuid).hide();
         }
       });
     localStorage["histories"]=hists.join("/");
