@@ -231,6 +231,22 @@ a:focus {outline:0;}
     $("#do_new_as_read").hide();
   }
 
+  var ofl_uids=[];
+  var orig_uids=[];
+
+  function upd_sel_offer(uid,f){
+    var t=$(".cls_"+uid+" .ph_offer");
+    if(f){
+      t.addClass("img_offer");
+      if(orig_uids.indexOf(uid)>=0)
+        t.removeClass("half_offer");
+      else
+        t.addClass("half_offer");
+    }else{
+      t.removeClass("img_offer");
+    }
+  }
+
   function upd_li(uid){
     var cuid=".cls_"+uid;
     var name=localStorage["name_"+uid];
@@ -307,27 +323,11 @@ a:focus {outline:0;}
     hists_prune(uid);
   }
 
-  var ofl_uids=[];
-  var orig_uids=[];
-
   $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
   $(".btn_offer").hide();
   $(".btn_offer").click(do_offer);
 
   do_ofl();
-
-  function upd_sel_offer(uid,f){
-    var t=$(".cls_"+uid+" .ph_offer");
-    if(f){
-      t.addClass("img_offer");
-      if(orig_uids.indexOf(uid)>=0)
-        t.removeClass("half_offer");
-      else
-        t.addClass("half_offer");
-    }else{
-      t.removeClass("img_offer");
-    }
-  }
 
   function do_ofl() {
     ofl_uids.length=0;
