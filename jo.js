@@ -232,19 +232,20 @@ a:focus {outline:0;}
   }
 
   function upd_li(uid){
+    var cuid=".cls_"+uid;
     var name=localStorage["name_"+uid];
     if(name){
       var state=localStorage["state_"+uid];
       if(!state)state="ひみつ";
-      $(".cls_"+uid+" .idolook").html("<span>"+localStorage["name_"+uid]+"</span>("+state+")");
+      $(cuid+" .idolook").html("<span>"+localStorage["name_"+uid]+"</span>("+state+")");
     }
     var av=localStorage["av_"+uid];
     if(av){
-      $(".cls_"+uid+" .load_image img").attr("src",av);
+      $(cuid+" .load_image img").attr("src",av);
     }
-    $(".cls_"+uid+" span.new").remove();
+    $(cuid+" span.new").remove();
     if(new_favs.indexOf(uid)>=0){
-      $(".cls_"+uid+" a").append('<span class="new">NEW</span>');
+      $(cuid+" a").append('<span class="new">NEW</span>');
       $("#do_new_as_read").show();
     }
   }
