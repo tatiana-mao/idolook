@@ -178,6 +178,25 @@ a:focus {outline:0;}
 #container .idolook span {font-weight:bold;}
 #xcol .ui-widget {font-family:inherit;}
 
+.charmArea {
+  position:absolute;
+  top:24px;
+  left:0px;
+  width:160px;
+}
+.charmArea img {width:36px;}
+
+.coord {
+  position:absolute;
+  width:160px;
+  height:auto;
+  padding-left:0px;
+  left:0px;
+  bottom:26px;
+}
+.coord img   {width:30px;height:auto;}
+.coord img.A {width:auto;height:30px;}
+
 .ph_offer {display:none}
 .half_offer {display:block;opacity:0.4;}
 .img_offer {display:block;}
@@ -265,6 +284,24 @@ a:focus {outline:0;}
       $("#do_new_as_read").show();
     }
     upd_sel_offer(uid,(ofl_uids.indexOf(uid)>=0));
+    var c=localStorage["charms_"+uid];
+    if(c){
+      $(cuid+" .charmArea").html(c.split("/").map(function(a){
+            return '<img src="/images/charm/'+a+'.png"/>';
+          }).join(""));
+    }
+    c=localStorage["coord_"+uid];
+    if(c){
+      $(cuid+" .coord").html(c.split("/").map(function(a){
+            return '<img src="/images/cardlist/cardimg/'+a+'.png"/>';
+          }).join(""));
+    }
+    c=localStorage["acc_"+uid];
+    if(c){
+      $(cuid+" .coord").append(c.split("/").map(function(a){
+            return '<img class="A" src="/images/cardlist/cardimg/'+a+'.png"/>';
+          }).join(""));
+    }
   }
 
   function cre_li(uid){
@@ -278,6 +315,12 @@ a:focus {outline:0;}
       <span>？？？</span>
     </div>
     <span class="ph_offer"></span>
+    <div class="data">
+      <div class="charmArea">
+      </div>
+      <div class="coord">
+      </div>
+    </div>
   </a>
 </li>
                                        */})));
@@ -551,7 +594,15 @@ a:focus {outline:0;}
           console.log(uid+":"+uid_names[uid]+"("+ar+")");
           localStorage["name_"+uid]=uid_names[uid];
           localStorage["state_"+uid]=ar;
-
+          localStorage["charms_"+uid]=t.find(".charmArea img").map(function(){
+              return $(this).attr("src").split("/")[3].match(/(.+)\.\w+$/)[1];
+            }).get().join("/");
+          localStorage["coord_"+uid]=t.find(".mycoordinate .vertically img").map(function(){
+              return $(this).attr("src").split("/")[4].match(/(.+)\.\w+$/)[1];
+            }).get().join("/");
+          localStorage["acc_"+uid]=t.find(".mycoordinate .horizontally img").map(function(){
+              return $(this).attr("src").split("/")[4].match(/(.+)\.\w+$/)[1];
+            }).get().join("/");
           set_av_from_large(uid,t.find(".profImg img").attr("src"));
           upd_li(uid);
           load_uid_job();
