@@ -272,7 +272,8 @@ a:focus {outline:0;}
     if(name){
       var state=localStorage["state_"+uid];
       if(!state)state="ひみつ";
-      $(cuid+" .idolook").html("<span>"+localStorage["name_"+uid]+"</span>("+state+")");
+      state=state.match(/(^[^都府県]+)([都府県]?)$/);
+      $(cuid+" .idolook").html("<span>"+localStorage["name_"+uid]+"</span>("+state[1]+")");
     }
     var av=localStorage["av_"+uid];
     if(av){
@@ -590,7 +591,7 @@ a:focus {outline:0;}
         var t=$($.parseHTML(a));
         if(t.find(".leftCol").length){
           uid_names[uid]=t.find(".profData dd.nickname span").text().replace(/\s/g,"");
-          var ar=t.find(".profData dd.state").text().replace(/\s/g,"").replace(/[都府県]$/,"");
+          var ar=t.find(".profData dd.state").text().replace(/\s/g,"");
           console.log(uid+":"+uid_names[uid]+"("+ar+")");
           localStorage["name_"+uid]=uid_names[uid];
           localStorage["state_"+uid]=ar;
