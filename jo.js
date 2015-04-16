@@ -394,8 +394,7 @@ a:focus {outline:0;}
   function do_ofl() {
     ofl_uids.length=0;
     orig_uids.length=0;
-    $(".offerlistWrap > div").replaceWith("<div></div>");
-    adduid("offerlistWrap",$(".offerlistWrap"));
+    adduid("offerlistWrap",$(".offerlistWrap").clone());
     var ofl=$(".offerlistWrap li");
     console.log(ofl);
     var i;
@@ -640,7 +639,7 @@ a:focus {outline:0;}
   }
 
   function add_nice(a) {
-    $(".ph_nice").replaceWith('<ul class="ph_nice clearfix">');
+    $(".ph_nice").html("");
     a.find("dl.topics-aktphone").each(function(){
         var dl=$(this);
         var uid=dl.find("a:first").attr("href").split("/")[3];
@@ -671,9 +670,8 @@ a:focus {outline:0;}
           return bi-ai;
           }));
     }
-    a.addClass(f);
-    $("."+f).replaceWith(a);
-    $("."+f+" li").each(function() {
+    $("."+f).html("");
+    a.find("li").each(function() {
         var li=$(this);
         var av=li.find(".load_image img").attr("src");
         if(av.match(/chara|iface_imouth/)){
@@ -684,16 +682,11 @@ a:focus {outline:0;}
         var a=li.find("a:first");
         var uid=a.attr("href").split("/")[3];
         var cuid=".cls_"+uid;
-        li.addClass("cls_"+uid);
         uid_names[uid]=li.find(".idolook span").text();
         localStorage["name_"+uid]=uid_names[uid];
         localStorage["av_"+uid]=av;
-        var wf=li.find("span.img_webfriend").detach();
-        replace_li(li, uid);
-        if(f=="offerlistWrap"){
-          $(".offerlistWrap "+cuid+" a:first").addClass("myroom");
-        }
-        if(wf.length>0){
+        append_li("."+f, uid);
+        if(li.find("span.img_webfriend").length>0){
           $(cuid+" .img_webfriend").remove();
           $(cuid+" .idolook").after(wf);
         }
