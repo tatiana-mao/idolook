@@ -51,7 +51,7 @@
     });
 
   add_ht('#wrapCol', function(){/*
-<div id="xcol" class="list-myfriend list-teammate">
+<div id="xcol">
   <div id="xacc">
     <h2>Favorites</h2>
     <div>
@@ -72,14 +72,15 @@
       <h3>チームメイト</h3>
       <ul class="ph_team"><li>Loading...</li></ul>
       <h3>マイフレンド</h3>
-      <ul class="ph_myfriends"><li>Loading...</li></ul>
+      <ul class="ph_myfriends small"><li>Loading...</li></ul>
       <h3>いいね!</h3>
-      <ul class="ph_nice"><li>Loading...</li></ul>
+      <ul class="ph_nice verbose"><li>Loading...</li></ul>
       <h3>ウェブとも候補</h3>
       <ul class="ph_requested"><li>Loading...</li></ul>
     </div>
     <h2>History</h2>
     <div>
+      <h3>History</h3>
       <ul id="hists"></ul>
       <div class="xix">
         <input type="button" id="mode_hists_exp" value="エクスポート"/>
@@ -143,19 +144,20 @@ a:focus {outline:0;}
   padding-top:4px;
   padding-left:0px;
 }
+#xcol ul {margin-left:4em;}
 #xcol h2+div {
   background:white;
-}
-#xcol li {
-  display: block;
-  float: left;
 }
 #xcol h2 {
   font-size:3.5em;
 }
 #xcol h3 {
+  font-size:28pt;
+  padding-top:10px;
+}
+#xcol ul+h3 {
   clear: both;
-  font-size:2em;
+  padding-top:1em;
 }
 .xix {
   clear:both;
@@ -170,39 +172,191 @@ a:focus {outline:0;}
 }
 #xifn {display:none;}
 #xcol input {font-size:24pt;margin-left:3em;}
-.list-teammate ul {
-  padding-left:240px;
-}
 
-#container .idolook {font-weight:normal;}
-#container .idolook span {font-weight:bold;}
 #xcol .ui-widget {font-family:inherit;}
 
-.charmArea {
-  position:absolute;
-  top:24px;
-  left:0px;
-  width:160px;
+.uid .name {
+  font-weight:bold;
 }
-.charmArea img {width:36px;}
 
+.uid .pref span {
+  display:inline;
+}
+.uid .pref span.state {
+  display:inline;
+}
+.uid .pref span.suf {
+  display:none;
+}
+
+.charms img {width:36px;}
+
+a:link {text-decoration:none;}
+
+.uid {
+  display:block;
+  float:left;
+}
+
+.av {
+  display:block;
+  width: 208px;
+  height: 221px;
+  background: url("/images/myfriend/bg_icon.png") no-repeat center top;
+  background-size: cover;
+}
+
+.av img {
+  width: 100%;
+  height: auto;
+  margin-top: 17%;
+}
+
+.ph_new  {
+  width: 1em;
+  position: relative;
+  display: block;
+  width: 35px;
+  height: 17px;
+  bottom: 112%;
+  left: 4%;
+}
+
+.new {
+  background: url("/images/myfriend/img_new.png") no-repeat center top;
+}
+
+.ph_offer  {
+  background: url("/images/myfriend/img_offer-now.png") no-repeat center top;
+  background-size: cover;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 27%;
+  left: 0px;
+  top: -211px;
+  opacity:0;
+}
+
+.uid .img_offer {
+  opacity:1;
+}
+
+.uid .half_offer {
+  opacity:0.4;
+}
+
+.uid .img_webfriend {
+  display: block;
+  width: 28%;
+  height: 28%;
+  background: url("/images/myfriend/img_webfriend.png") no-repeat center top;
+  background-size: cover;
+  position: relative;
+  left: 66%;
+  bottom:58%;
+}
+
+.name_row {
+  font-size:18pt;
+  display:block;
+  text-align:center;
+}
+.name_row .name+span {font-size:12pt;}
+.pref {display:none}
+.charms {
+  position:relative;
+  display:block;
+  height:0px;
+  top:-225px;
+  left:17%;
+}
+.charms img {width:45px;}
 .coord {
-  position:absolute;
-  width:160px;
-  height:auto;
-  padding-left:0px;
-  left:0px;
-  bottom:26px;
+  position: relative;
+  display: block;
+  height: 0px;
+  top: -95px;
+  left: 6%;
 }
-.coord img   {width:30px;height:auto;}
-.coord img.A {width:auto;height:30px;}
+.coord .TBS img {width:auto;height:60px;}
+.coord .A img {width:60px;height:auto;}
 
-.ph_offer {display:none}
-.half_offer {display:block;opacity:0.4;}
-.img_offer {display:block;}
-.list-offerlist .offerlistWrap a.btn_offer-cancel {display:none;}
-.list-offerlist span.new {display:none;}
+.list-offerlist li {
+  margin-right:-51px;
+  margin-left:95px;
+  margin-top:13px;
+  width:auto;
+  height:auto;
+  line-height:1.3;
+}
+
+.small .av {width:104px;height:118px;}
+.small .av img {margin-top:26%;}
+.small .ph_offer {top:-114px;}
+.small .img_webfriend {}
+.small .name_row {font-size:12pt;line-height:0.9;}
+.small .name+span {display:none;}
+.small .charms {display:none;}
+.small .coord {display:none;}
+
+.verbose ul {
+  margin-bottom:3em;
+}
+
+.verbose .uid:nth-child(2n-1) {background: floralwhite;}
+.verbose .uid:nth-child(2n)   {background: antiquewhite;}
+
+.verbose .uid {
+  display:block;
+  float:none;
+  margin-left:2em;
+  font-size: 24pt;
+}
+
+.verbose .uid span {display:inline-block;}
+
+.verbose .av {
+  width: 80px;
+  height:85px;
+  background: url("/images/myfriend/bg_icon.png") no-repeat center top;
+  background-size: cover;
+}
+.verbose .av img {
+  width: 100%;
+  height: auto;
+  margin-top: 17%;
+}
+.verbose span.ph_new  {display:block;}
+.verbose span.ph_offer {
+  display: block;
+  top: -80px;
+}
+.verbose span.img_webfriend {display:block;}
+.verbose .name_row {width:144pt;text-align:initial;font-size:24pt;}
+.verbose .name+span {display:none;}
+.verbose .pref {width:100pt;font-size:20pt;}
+.verbose .pref span.suf {display:inline;}
+.verbose .charms {position:static;width:6.5em;}
+.verbose .charms img {width:60px;}
+.verbose .coord {position:static;}
+.verbose .coord .TBS img {width:auto;height:64px;}
+.verbose .coord .A img {width:64px;height:auto;}
+
 </style>*/});
+  }
+
+  function change_view(){
+    var ul=$(this).next("ul");
+    var cs=ul.attr("class");
+    if(!cs)cs="";
+    if(cs.match(/small/)){
+      ul.removeClass("small").addClass("verbose");
+    }else if(cs.match(/verbose/)){
+      ul.removeClass("verbose");
+    }else{
+      ul.addClass("small");
+    }
   }
 
   function xp_acc() {
@@ -225,9 +379,10 @@ a:focus {outline:0;}
     $("#mode_favs_del").click(do_favs_del);
     $("#mode_hists_del").click(do_hists_del);
     $("#do_new_as_read").click(do_new_as_read);
+    $("#xcol h3").click(change_view);
   }
 
-  function ofl_ph(i) {return '<li id="ofl_'+i+'"><a class="myroom"></a></li>';}
+  function ofl_ph(i) {return '<li id="ofl_'+i+'"><a><span class="av"></span></a></li>';}
 
   var uid_names={};
   var favs;
@@ -253,81 +408,79 @@ a:focus {outline:0;}
   var ofl_uids=[];
   var orig_uids=[];
 
-  function upd_sel_offer(uid,f){
-    var t=$(".cls_"+uid+" .ph_offer");
-    if(f){
-      t.addClass("img_offer");
-      if(orig_uids.indexOf(uid)>=0)
-        t.removeClass("half_offer");
-      else
-        t.addClass("half_offer");
-    }else{
-      t.removeClass("img_offer");
-    }
-  }
-
-  function upd_li(uid){
-    var cuid=".cls_"+uid;
-    var name=localStorage["name_"+uid];
-    if(name){
-      var state=localStorage["state_"+uid];
-      if(!state)state="ひみつ";
-      state=state.match(/(^[^都府県]+)([都府県]?)$/);
-      $(cuid+" .idolook").html("<span>"+localStorage["name_"+uid]+"</span>("+state[1]+")");
-    }
-    var av=localStorage["av_"+uid];
-    if(av){
-      $(cuid+" .load_image img").attr("src",av);
-    }
-    $(cuid+" span.new").remove();
-    if(new_favs.indexOf(uid)>=0){
-      $(cuid+" a").append('<span class="new">NEW</span>');
-      $("#do_new_as_read").show();
-    }
-    upd_sel_offer(uid,(ofl_uids.indexOf(uid)>=0));
-    var c=localStorage["charms_"+uid];
-    if(c){
-      $(cuid+" .charmArea").html(c.split("/").map(function(a){
-            return '<img src="/images/charm/'+a+'.png"/>';
-          }).join(""));
-    }
-    c=localStorage["coord_"+uid];
-    if(c){
-      $(cuid+" .coord").html(c.split("/").map(function(a){
-            return '<img src="/images/cardlist/cardimg/'+a+'.png"/>';
-          }).join(""));
-    }
-    c=localStorage["acc_"+uid];
-    if(c){
-      $(cuid+" .coord").append(c.split("/").map(function(a){
-            return '<img class="A" src="/images/cardlist/cardimg/'+a+'.png"/>';
-          }).join(""));
-    }
-  }
-
   function cre_li(uid){
     var li=$($.parseHTML(hd(function(){/*
-<li>
+<li class="uid">
   <a href="">
-    <div class="load_image">
-      <img src="" width=161>
-    </div>
-    <div class="idolook">
-      <span>？？？</span>
-    </div>
-    <span class="ph_offer"></span>
-    <div class="data">
-      <div class="charmArea">
-      </div>
-      <div class="coord">
-      </div>
-    </div>
+    <span class="av">
+      <img/>
+      <span class="ph_offer"></span>
+      <span class="ph_new"></span>
+    </span>
+    <span class="name_row">
+      <span class="name">？？？</span><span>(<span class="state">---</span>)</span>
+      </span>
+    </span>
+    <span class="pref">
+      <span class="state">---</span><span class="suf">県</span>
+    </span>
+    <span class="data charms"></span>
+    <span class="data coord">
+      <span class="TBS"></span><span class="A"></span>
+    </span>
   </a>
 </li>
                                        */})));
     li.addClass("cls_"+uid);
     li.find("a").attr("href","/idolooks/index/"+uid+"/").click(sel_uid);
     return li;
+  }
+
+  function upd_sel_offer(uid,f){
+    var t=$(".cls_"+uid+" .ph_offer");
+    t.removeClass("img_offer").removeClass("half_offer");
+    if(f)t.addClass(orig_uids.indexOf(uid)>=0?"img_offer":"half_offer");
+  }
+
+  function upd_li(uid){
+    var cuid=".cls_"+uid;
+    var name=localStorage["name_"+uid];
+    if(name){
+      $(cuid+" .name").text(name);
+      var state=localStorage["state_"+uid];
+      if(!state)state="ひみつ";
+      state=state.match(/(^[^都府県]+)([都府県]?)$/);
+      $(cuid+" .state").text(state[1]);
+      $(cuid+" .suf").text(state[2]);
+    }
+    var av=localStorage["av_"+uid];
+    if(av){
+      $(cuid+" .av img").attr("src",av);
+    }
+    $(cuid+" .ph_new").removeClass("new").text("");
+    if(new_favs.indexOf(uid)>=0){
+      $(cuid+" .ph_new").addClass("new");
+      $("#do_new_as_read").show();
+    }
+    upd_sel_offer(uid,(ofl_uids.indexOf(uid)>=0));
+    var c=localStorage["charms_"+uid];
+    if(c){
+      $(cuid+" .charms").html(c.split("/").map(function(a){
+            return '<img src="/images/charm/'+a+'.png"/>';
+          }).join(""));
+    }
+    c=localStorage["coord_"+uid];
+    if(c){
+      $(cuid+" .coord .TBS").html(c.split("/").map(function(a){
+            return '<img src="/images/cardlist/cardimg/'+a+'.png"/>';
+          }).join(""));
+    }
+    c=localStorage["acc_"+uid];
+    if(c){
+      $(cuid+" .coord .A").html(c.split("/").map(function(a){
+            return '<img src="/images/cardlist/cardimg/'+a+'.png"/>';
+          }).join(""));
+    }
   }
 
   function append_li(sel,uid,prepend){
@@ -480,7 +633,7 @@ a:focus {outline:0;}
       $.ajax(av,{
         success:function(){
             localStorage["av_"+uid]=av;
-            $(".cls_"+uid+" .load_image img").attr("src",av);
+            $(".cls_"+uid+" .av img").attr("src",av);
           },
             error:fetch_avs
             });
@@ -688,7 +841,7 @@ a:focus {outline:0;}
         append_li("."+f, uid);
         if(li.find("span.img_webfriend").length>0){
           $(cuid+" .img_webfriend").remove();
-          $(cuid+" .idolook").after(wf);
+          $(cuid+" .av").append('<span class="img_webfriend"></span>');
         }
         if(f=="ph_team") {
           if(favs.indexOf(uid)<0&&hists.indexOf(uid)<0) {
@@ -718,7 +871,6 @@ a:focus {outline:0;}
     ofl_uids[i]=uid;
     replace_li($("#ofl_"+i),uid);
     $(".offerlistWrap .cls_"+uid).attr("id","ofl_"+i);
-    $(".offerlistWrap .cls_"+uid+" a:first").addClass("myroom");
     console.log(orig_uids);
     return false;
   }
