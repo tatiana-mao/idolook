@@ -30,13 +30,6 @@
 
   var cookies=load_cookies();
 
-  var cssLink = $("<link>");
-  $("head").append(cssLink);
-  cssLink.attr({
-    rel:  "stylesheet",
-    type: "text/css",
-    href: "/css/myfriend.css"
-  });
   upd_css();
   $.get("/m_members/edit/",function(a){
       my_uid=$($.parseHTML(a)).find("#fe_text").val().match(/\/([0-9A-Z_a-z]{16})\//);
@@ -103,8 +96,7 @@
 </div>
 */});
   $("#ximp").hide();
-  var xp_acc_n=2;
-  cssLink.ready(xp_acc);
+  var xp_acc_n=1;
   $.getScript("https://code.jquery.com/jquery-migrate-1.2.1.js", xp_acc);
 
   rrr();
