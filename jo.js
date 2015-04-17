@@ -405,7 +405,7 @@ a:link {text-decoration:none;}
 <li class="uid">
   <a href="">
     <span class="av">
-      <img/>
+      <img src="/images/icon/chara/1.png"/>
       <span class="ph_offer"></span>
       <span class="ph_new"></span>
     </span>
@@ -414,7 +414,7 @@ a:link {text-decoration:none;}
       </span>
     </span>
     <span class="pref">
-      <span class="state">---</span><span class="suf">県</span>
+      <span class="state">---</span><span class="suf"></span>
     </span>
     <span class="data charms"></span>
     <span class="data coord">
