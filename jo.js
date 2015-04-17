@@ -271,8 +271,8 @@ a:link {text-decoration:none;}
   top: -95px;
   left: 6%;
 }
-.coord .TBS img {width:auto;height:60px;}
-.coord .A img {width:60px;height:auto;}
+.coord .TBS img {width:42px;height:auto;}
+.coord .A img {width:auto;height:42px;}
 
 .list-offerlist li {
   margin-right:-51px;
@@ -332,8 +332,8 @@ a:link {text-decoration:none;}
 .verbose .charms {position:static;width:6.5em;}
 .verbose .charms img {width:60px;}
 .verbose .coord {position:static;}
-.verbose .coord .TBS img {width:auto;height:64px;}
-.verbose .coord .A img {width:64px;height:auto;}
+.verbose .coord .TBS img {width:54px;height:auto;}
+.verbose .coord .A img {width:auto;height:54px;}
 
 </style>*/});
   }
