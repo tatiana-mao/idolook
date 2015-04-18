@@ -541,6 +541,7 @@ a:link {text-decoration:none;}
   for(var i=0;i<favs.length;i++){
     var uid=favs[i];
     append_li("#favorites", uid);
+    load_uid(uid,23*3600);
   }
 
   function hists_prune(uid){
@@ -581,7 +582,7 @@ a:link {text-decoration:none;}
   function do_ofl() {
     ofl_uids.length=0;
     orig_uids.length=0;
-    adduid("offerlistWrap",$(".offerlistWrap").clone());
+    adduid("offerlistWrap",$(".offerlistWrap").clone(),1*60);
     var ofl=$(".offerlistWrap li");
     console.log(ofl);
     var i;
@@ -595,7 +596,6 @@ a:link {text-decoration:none;}
       if(j>=0)new_favs.splice(j,1);
       fav_prepend(uid);
       upd_sel_offer(uid,true);
-      load_uid(uid);
       $(".cls_"+uid+" span.new").remove();
     }
     console.log(orig_uids);
@@ -613,19 +613,19 @@ a:link {text-decoration:none;}
     var fr_n=4;
     $.get("/my_datas/teammate/",function(a) {
         var a = $($.parseHTML(a)).find(".list-teammate ul");
-        adduid("ph_team",a);
+        adduid("ph_team",a,3*60);
         $(".btn_offer").show();
         rrr_comp();
       });
 
     $.get("/my_datas/bds_frend_lists/", function(a) {
         var a = $($.parseHTML(a)).find(".list-myfriend ul");
-        adduid("ph_myfriends",a);
+        adduid("ph_myfriends",a,23*3600);
         rrr_comp();
       });
     $.get("/my_datas/pend_lists/", function(a) {
         var a = $($.parseHTML(a)).find(".list-from_request ul");
-        adduid("ph_requested",a);
+        adduid("ph_requested",a,6*86400);
         rrr_comp();
       });
     $.get("/t_infos/nice/", function(a) {
@@ -782,7 +782,7 @@ a:link {text-decoration:none;}
             localStorage["favorites"]=favs.join("/");
             localStorage["favorites_new"]=new_favs.join("/");
             localStorage["histories"]=hists.join("/");
-            load_uid(uid);
+            load_uid(uid,5*60);
           }
           $(xn).replaceWith('<iframe id="xif0"></iframe>');
           console.log("FIN");
@@ -905,11 +905,12 @@ a:link {text-decoration:none;}
         localStorage[uid+".name"]=name.substr(2,name.length-17);
         set_av(uid,av);
         append_li(".ph_nice",uid);
-        load_uid(uid);
+        load_uid(uid,12*3600);
       });
   }
 
-  function adduid(f,a) {
+  function adduid(f,a,sec) {
+    if(!sec)sec=5*60;
     if(f=="ph_team") {
       $("#favorites li").show();
       $("#hists li").show();
@@ -940,12 +941,12 @@ a:link {text-decoration:none;}
           $(cuid+" .img_webfriend").remove();
           $(cuid+" .av").append('<span class="img_webfriend"></span>');
         }
+        load_uid(uid,sec);
         if(f=="ph_team") {
           if(favs.indexOf(uid)<0&&hists.indexOf(uid)<0) {
             hists.unshift(uid);
             append_li("#hists",uid,true);
           }
-          load_uid(uid);
           $("#favorites "+cuid).hide();
           $("#hists "+cuid).hide();
         }
@@ -957,6 +958,7 @@ a:link {text-decoration:none;}
 
   function sel_uid() {
     var uid=$(this).attr("href").split("/")[3];
+    load_uid(uid,60);
     var i=ofl_uids.indexOf(uid);
     if(i>=0) {
       $("#ofl_"+i).replaceWith(ofl_ph(i));
@@ -1036,7 +1038,7 @@ a:link {text-decoration:none;}
         $.get("/my_datas/teammate/",
               function(a) {
                 var a = $($.parseHTML(a)).find(".list-teammate ul");
-                adduid("ph_team",a);
+                adduid("ph_team",a,3*60);
               });
   }
 
@@ -1060,7 +1062,7 @@ a:link {text-decoration:none;}
           $("#favorites .cls_"+uid).hide();
       }
       hists_prune(uid);
-      load_uid(uid);
+      load_uid(uid,5*60);
     }
     localStorage["favorites"]=favs.join("/");
     localStorage["favorites_new"]=new_favs.join("/");
