@@ -827,7 +827,14 @@ a:link {text-decoration:none;}
         var t=$($.parseHTML(a)).find(".profImg img,.offerCol p span");
         if(t.length>=2) {
           console.log(t);
-          localStorage[uid+".name"]=t.eq(1).text().replace(/\s/g,"");
+          name=t.eq(1).text().replace(/\s/g,"");
+          if(name=="ななし"&&localStorage[uid+".name"]!=name){
+            console.log("OBSOLETED(ななし):"+uid);
+            console.log(a);
+            return;
+          }
+          if(!localStorage[uid+".name"])
+            localStorage[uid+".name"]=name;
           set_av_from_large(uid,t.eq(0).attr("src"));
           upd_li(uid);
         }else{
