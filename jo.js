@@ -374,6 +374,9 @@ a:link {text-decoration:none;}
     $("#xcol h3").click(change_view);
   }
 
+  var uid_data={};
+  var uid_avs={};
+
   var offer_state="";
   var offer_workers=new Array(3);
   for(var i=0;i<offer_workers.length;i++){
@@ -445,46 +448,40 @@ a:link {text-decoration:none;}
   function upd_li(uid){
     var cuid=".cls_"+uid;
     var name=localStorage[uid+".name"];
+    var d=uid_data[uid];
+    if(!d){
+      d=localStorage[uid+".data"];
+      if(d)d=JSON.parse(d);
+    }
     if(name){
       $(cuid+" .name").text(name);
-      var state=localStorage["state_"+uid];
-      if(!state)state="ひみつ";
+      var state="ひみつ";
+      if(d&&d.st)state=d.st;
       state=state.match(/(^[^都府県]+)([都府県]?)$/);
       $(cuid+" .state").text(state[1]);
       $(cuid+" .suf").text(state[2]);
-    }else{
-      if(hidden_uids.indexOf(uid)<0){
-        hidden_uids.push(uid);
-        offer_job();
-      }
     }
-    var av=localStorage["av_"+uid];
-    if(av){
-      $(cuid+" .av img").attr("src",av);
-    }
+    var av=get_av(uid);
+    if(av)$(cuid+" .av img").attr("src",av);
     $(cuid+" .ph_new").removeClass("new").text("");
     if(new_favs.indexOf(uid)>=0){
       $(cuid+" .ph_new").addClass("new");
       $("#do_new_as_read").show();
     }
     upd_sel_offer(uid,(ofl_uids.indexOf(uid)>=0));
-    var c=localStorage["charms_"+uid];
-    if(c){
-      $(cuid+" .charms").html(c.split("/").map(function(a){
-            return '<img src="/images/charm/'+a+'.png"/>';
-          }).join(""));
-    }
-    c=localStorage["coord_"+uid];
-    if(c){
-      $(cuid+" .coord .TBS").html(c.split("/").map(function(a){
-            return '<img src="/images/cardlist/cardimg/'+a+'.png"/>';
-          }).join(""));
-    }
-    c=localStorage["acc_"+uid];
-    if(c){
-      $(cuid+" .coord .A").html(c.split("/").map(function(a){
-            return '<img src="/images/cardlist/cardimg/'+a+'.png"/>';
-          }).join(""));
+    if(d){
+      if(d.ch)
+        $(cuid+" .charms").html(d.ch.map(function(a){
+              return '<img src="/images/charm/'+a+'.png"/>';
+            }).join(""));
+      if(d.co)
+        $(cuid+" .coord .TBS").html(d.co.map(function(a){
+              return '<img src="/images/cardlist/cardimg/'+a+'.png"/>';
+            }).join(""));
+      if(d.ac)
+        $(cuid+" .coord .A").html(d.ac.split("/").map(function(a){
+              return '<img src="/images/cardlist/cardimg/'+a+'.png"/>';
+            }).join(""));
     }
   }
 
@@ -509,9 +506,36 @@ a:link {text-decoration:none;}
   }
 
   var unknown_uids=[];
-  function load_uid(uid) {
-    if(unknown_uids.indexOf(uid)<0)unknown_uids.push(uid);
+  function load_uid(uid,sec) {
+    if(unknown_uids.indexOf(uid)>=0)return;
+    var d=uid_data[uid];
+    if(!d){
+      d=localStorage[uid+".data"];
+      if(d)d=JSON.parse(d);
+    }
+    if(!sec)sec=10;
+    if(localStorage[uid+".name"]
+       &&d&&(new Date).getTime()-d.mt*1000<sec*1000)return;
+
+    unknown_uids.push(uid);
     load_uids_job();
+  }
+
+  function set_av(uid,av){
+    uid_avs[uid]={};
+    uid_avs[uid]["mt"]=Math.floor((new Date).getTime()/1000);
+    uid_avs[uid]["img"]=av;
+    localStorage[uid+".av"]=JSON.stringify(uid_avs[uid]);
+  }
+
+  function get_av(uid){
+    var av=uid_avs[uid];
+    if(!av){
+      av=localStorage[uid+".av"];
+      if(av)av=JSON.parse(av);
+    }
+    if(!av)return av;
+    return av.img;
   }
 
   for(var i=0;i<favs.length;i++){
@@ -617,6 +641,12 @@ a:link {text-decoration:none;}
   }
 
   function set_av_from_large(uid,a) {
+    var av=uid_avs[uid];
+    if(!av){
+      av=localStorage[uid+".av"];
+      if(av)av=JSON.parse(av);
+    }
+    if(av&&(new Date).getTime()-av.mt*1000<7*86400*1000)return;
     var ava=a.split("_");
     var avs=[];
     if(ava.length==22) {
@@ -643,7 +673,7 @@ a:link {text-decoration:none;}
       var av=avs.shift();
       $.ajax(av,{
         success:function(){
-            localStorage["av_"+uid]=av;
+            set_av(uid,av);
             $(".cls_"+uid+" .av img").attr("src",av);
           },
             error:fetch_avs
@@ -795,27 +825,44 @@ a:link {text-decoration:none;}
   function kick_load_uid(uid){
     return $.get("/idolooks/index/"+uid+"/", function(a){
         var t=$($.parseHTML(a));
+        var d={mt:Math.floor((new Date).getTime()/1000)};
         if(t.find(".leftCol").length){
           localStorage[uid+".name"]=t.find(".profData dd.nickname span").text().replace(/\s/g,"");
           var ar=t.find(".profData dd.state").text().replace(/\s/g,"");
           console.log(uid+":"+localStorage[uid+".name"]+"("+ar+")");
-          localStorage["state_"+uid]=ar;
-          localStorage["charms_"+uid]=t.find(".charmArea img").map(function(){
+          d["st"]=ar;
+          d["ch"]=t.find(".charmArea img").map(function(){
               return $(this).attr("src").split("/")[3].match(/(.+)\.\w+$/)[1];
-            }).get().join("/");
-          localStorage["coord_"+uid]=t.find(".mycoordinate .vertically img").map(function(){
+            }).get();
+          d["co"]=t.find(".mycoordinate .vertically img").map(function(){
               return $(this).attr("src").split("/")[4].match(/(.+)\.\w+$/)[1];
-            }).get().join("/");
-          localStorage["acc_"+uid]=t.find(".mycoordinate .horizontally img").map(function(){
+            }).get();
+          d["ac"]=t.find(".mycoordinate .horizontally img").map(function(){
               return $(this).attr("src").split("/")[4].match(/(.+)\.\w+$/)[1];
             }).get().join("/");
           set_av_from_large(uid,t.find(".profImg img").attr("src"));
+          localStorage[uid+".data"]=JSON.stringify(uid_data[uid]=d);
           upd_li(uid);
         } else {
           console.log("FAILED(非公開?):"+uid);
+          localStorage[uid+".data"]=JSON.stringify(uid_data[uid]=d);
           if(hidden_uids.indexOf(uid)<0){
-            hidden_uids.push(uid);
-            offer_job();
+            var av=uid_avs[uid];
+            if(!av){
+              av=localStorage[uid+".av"];
+              if(av)av=JSON.parse(av);
+            }
+            if(!localStorage[uid+".name"]
+               ||!av
+               ||((new Date).getTime()-av.mt*1000>=7*86400*1000)) {
+              console.log("NAME:"+localStorage[uid+".name"]);
+              if(av){
+                console.log("av:"+av);
+                console.log((new Date).getTime()-av.mt*1000);
+              }
+              hidden_uids.push(uid);
+              offer_job();
+            }
           }
         }
         return load_uids_job();
@@ -856,7 +903,7 @@ a:link {text-decoration:none;}
         // 非プレイヤキャラは一覧から除外(すまん)
         if(av.match(/chara|iface_imouth/))return;
         localStorage[uid+".name"]=name.substr(2,name.length-17);
-        localStorage["av_"+uid]=av;
+        set_av(uid,av);
         append_li(".ph_nice",uid);
         load_uid(uid);
       });
@@ -887,7 +934,7 @@ a:link {text-decoration:none;}
         var uid=a.attr("href").split("/")[3];
         var cuid=".cls_"+uid;
         localStorage[uid+".name"]=li.find(".idolook span").text();
-        localStorage["av_"+uid]=av;
+        set_av(uid,av);
         append_li("."+f, uid);
         if(li.find("span.img_webfriend").length>0){
           $(cuid+" .img_webfriend").remove();
