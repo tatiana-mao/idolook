@@ -374,6 +374,13 @@ a:link {text-decoration:none;}
     $("#xcol h3").click(change_view);
   }
 
+  var offer_state="";
+  var offer_workers=new Array(3);
+  for(var i=0;i<offer_workers.length;i++){
+    offer_workers[i]=$.Deferred();
+    offer_workers[i].resolve();
+  }
+
   function ofl_ph(i) {return '<li id="ofl_'+i+'"><a><span class="av"></span></a></li>';}
 
   var uid_names={};
@@ -542,13 +549,6 @@ a:link {text-decoration:none;}
     hists_prune(uid);
   }
 
-  var offer_state="";
-  var offer_workers=new Array(3);
-  for(var i=0;i<offer_workers.length;i++){
-    offer_workers[i]=$.Deferred();
-    offer_workers[i].resolve();
-  }
-
   $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
   $(".btn_offer").hide();
   $(".btn_offer").click(do_offer);
@@ -653,6 +653,7 @@ a:link {text-decoration:none;}
   }
 
   function offer_job(){
+    if(!offer_workers)return;
     var n=0;
     for(var i=0;i<offer_workers.length;i++)
       if(offer_workers[i].state()=="pending")n++;
