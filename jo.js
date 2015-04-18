@@ -383,7 +383,6 @@ a:link {text-decoration:none;}
 
   function ofl_ph(i) {return '<li id="ofl_'+i+'"><a><span class="av"></span></a></li>';}
 
-  var uid_names={};
   var favs;
   var new_favs;
   var hists;
@@ -445,7 +444,7 @@ a:link {text-decoration:none;}
 
   function upd_li(uid){
     var cuid=".cls_"+uid;
-    var name=localStorage["name_"+uid];
+    var name=localStorage[uid+".name"];
     if(name){
       $(cuid+" .name").text(name);
       var state=localStorage["state_"+uid];
@@ -736,9 +735,8 @@ a:link {text-decoration:none;}
             console.log(t.length);
             console.log(t);
             if(t.length>=2) {
-              uid_names[uid]=t.eq(1).text().replace(/\s/g,"");
-              console.log("name("+uid_names[uid]+")");
-              localStorage["name_"+uid]=uid_names[uid];
+              localStorage[uid+".name"]=t.eq(1).text().replace(/\s/g,"");
+              console.log("name("+localStorage[uid+".name"]+")");
               set_av_from_large(uid,t.eq(0).attr("src"));
             }else{
               console.log("failed");
@@ -798,10 +796,9 @@ a:link {text-decoration:none;}
     return $.get("/idolooks/index/"+uid+"/", function(a){
         var t=$($.parseHTML(a));
         if(t.find(".leftCol").length){
-          uid_names[uid]=t.find(".profData dd.nickname span").text().replace(/\s/g,"");
+          localStorage[uid+".name"]=t.find(".profData dd.nickname span").text().replace(/\s/g,"");
           var ar=t.find(".profData dd.state").text().replace(/\s/g,"");
-          console.log(uid+":"+uid_names[uid]+"("+ar+")");
-          localStorage["name_"+uid]=uid_names[uid];
+          console.log(uid+":"+localStorage[uid+".name"]+"("+ar+")");
           localStorage["state_"+uid]=ar;
           localStorage["charms_"+uid]=t.find(".charmArea img").map(function(){
               return $(this).attr("src").split("/")[3].match(/(.+)\.\w+$/)[1];
@@ -830,8 +827,7 @@ a:link {text-decoration:none;}
         var t=$($.parseHTML(a)).find(".profImg img,.offerCol p span");
         if(t.length>=2) {
           console.log(t);
-          uid_names[uid]=t.eq(1).text().replace(/\s/g,"");
-          localStorage["name_"+uid]=uid_names[uid];
+          localStorage[uid+".name"]=t.eq(1).text().replace(/\s/g,"");
           set_av_from_large(uid,t.eq(0).attr("src"));
           upd_li(uid);
         }else{
@@ -852,9 +848,7 @@ a:link {text-decoration:none;}
         var av=dl.find("img:first").attr("src");
         // 非プレイヤキャラは一覧から除外(すまん)
         if(av.match(/chara|iface_imouth/))return;
-        name=name.substr(2,name.length-17);
-        uid_names[uid]=name;
-        localStorage["name_"+uid]=uid_names[uid];
+        localStorage[uid+".name"]=name.substr(2,name.length-17);
         localStorage["av_"+uid]=av;
         append_li(".ph_nice",uid);
         load_uid(uid);
@@ -885,8 +879,7 @@ a:link {text-decoration:none;}
         var a=li.find("a:first");
         var uid=a.attr("href").split("/")[3];
         var cuid=".cls_"+uid;
-        uid_names[uid]=li.find(".idolook span").text();
-        localStorage["name_"+uid]=uid_names[uid];
+        localStorage[uid+".name"]=li.find(".idolook span").text();
         localStorage["av_"+uid]=av;
         append_li("."+f, uid);
         if(li.find("span.img_webfriend").length>0){
@@ -1035,7 +1028,7 @@ a:link {text-decoration:none;}
     var s="";
     for(var i=0;i<uids.length;i++){
       var uid=uids[i];
-      var name=localStorage["name_"+uid];
+      var name=localStorage[uid+".name"];
       if(!name)name="？？？";
       s+=name+" https://idolook.aikatsu.com/idolooks/index/"+uid+"/\n";
     }
