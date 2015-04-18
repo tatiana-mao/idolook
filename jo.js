@@ -246,7 +246,7 @@ a:link {text-decoration:none;}
   background-size: cover;
   position: relative;
   left: 66%;
-  bottom:58%;
+  bottom:60%;
 }
 
 .name_row {
@@ -286,7 +286,7 @@ a:link {text-decoration:none;}
 .small .av {width:104px;height:118px;}
 .small .av img {margin-top:26%;}
 .small .ph_offer {top:-114px;}
-.small .img_webfriend {}
+.small .img_webfriend {bottom:67%;}
 .small .name_row {font-size:12pt;line-height:0.9;}
 .small .name+span {display:none;}
 .small .charms {display:none;}
@@ -324,7 +324,7 @@ a:link {text-decoration:none;}
   display: block;
   top: -80px;
 }
-.verbose span.img_webfriend {display:block;}
+.verbose span.img_webfriend {display:block;bottom:73%;}
 .verbose .name_row {width:144pt;text-align:initial;font-size:24pt;}
 .verbose .name+span {display:none;}
 .verbose .pref {width:100pt;font-size:20pt;}
