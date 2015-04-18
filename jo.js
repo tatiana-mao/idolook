@@ -557,6 +557,7 @@ a:link {text-decoration:none;}
       hists.splice(i,1);
     }else{
       append_li("#hists",uid);
+      if(!localStorage[uid+".name"])load_uid(uid);
     }
   }
 
