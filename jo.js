@@ -404,6 +404,16 @@ a:link {text-decoration:none;}
     $("#do_new_as_read").hide();
   }
 
+  function save_favs(){
+    localStorage["favorites"]=favs.join("/");
+    for(var i=new_favs.length-1;i>=0;i--)
+      if(favs.indexOf(new_favs[i])<0)new_favs.splice(i,1);
+    localStorage["favorites_new"]=new_favs.join("/");
+    for(var i=new_favs.length-1;i>=0;i--)
+      if(favs.indexOf(hists[i])>=0)hists.splice(i,1);
+    localStorage["histories"]=hists.join("/");
+  }
+
   var ofl_uids=[];
   var orig_uids=[];
   var hidden_uids=[];
@@ -601,8 +611,7 @@ a:link {text-decoration:none;}
       $(".offerlistWrap").append(ofl_ph(i));
       ofl_uids[i]=undefined;
     }
-    localStorage["favorites"]=favs.join("/");
-    localStorage["favorites_new"]=new_favs.join("/");
+    save_favs();
     $(".btn_offer").show();
     offer_job();
   }
@@ -761,9 +770,7 @@ a:link {text-decoration:none;}
                 $("#favorites .cls_"+uid).hide();
             }
             hists_prune(uid);
-            localStorage["favorites"]=favs.join("/");
-            localStorage["favorites_new"]=new_favs.join("/");
-            localStorage["histories"]=hists.join("/");
+            save_favs();
             load_uid(uid,5*60);
           }
           $(xn).replaceWith('<iframe id="xif0"></iframe>');
@@ -929,7 +936,7 @@ a:link {text-decoration:none;}
           $("#hists "+cuid).hide();
         }
       });
-    localStorage["histories"]=hists.join("/");
+    save_favs();
     // FIXME: Update ph_offer.
     hide_self();
   }
@@ -1042,9 +1049,7 @@ a:link {text-decoration:none;}
       hists_prune(uid);
       load_uid(uid,5*60);
     }
-    localStorage["favorites"]=favs.join("/");
-    localStorage["favorites_new"]=new_favs.join("/");
-    localStorage["histories"]=hists.join("/");
+    save_favs();
     $("#xacc").show();
     $("#ximp").hide();
     hide_self();
@@ -1084,9 +1089,7 @@ a:link {text-decoration:none;}
     }
     favs=[];
     $("#favorites").html("");
-    localStorage["favorites"]=favs.join("/");
-    localStorage["favorites_new"]=new_favs.join("/");
-    localStorage["histories"]=hists.join("/");
+    save_favs();
   }
 
   function do_hists_del(){
@@ -1095,6 +1098,6 @@ a:link {text-decoration:none;}
       return;
     $("#hists").html("");
     hists=[];
-    localStorage["histories"]="";
+    save_favs();
   }
 })()
