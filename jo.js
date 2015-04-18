@@ -460,7 +460,7 @@ a:link {text-decoration:none;}
       $(cuid+" .suf").text(state[2]);
     }
     var av=get_av(uid);
-    if(av)$(cuid+" .av img").attr("src",av);
+    if(av)$(cuid+" .av img").attr("src",av.img);
     $(cuid+" .ph_new").removeClass("new").text("");
     if(new_favs.indexOf(uid)>=0){
       $(cuid+" .ph_new").addClass("new");
@@ -532,8 +532,7 @@ a:link {text-decoration:none;}
       av=localStorage[uid+".av"];
       if(av)av=JSON.parse(av);
     }
-    if(!av)return av;
-    return av.img;
+    return av;
   }
 
   for(var i=0;i<favs.length;i++){
@@ -628,11 +627,7 @@ a:link {text-decoration:none;}
       }));
 
   function set_av_from_large(uid,a) {
-    var av=uid_avs[uid];
-    if(!av){
-      av=localStorage[uid+".av"];
-      if(av)av=JSON.parse(av);
-    }
+    var av=get_av(uid);
     if(av&&(new Date).getTime()-av.mt*1000<7*86400*1000)return;
     var ava=a.split("_");
     var avs=[];
@@ -834,11 +829,7 @@ a:link {text-decoration:none;}
           console.log("FAILED(非公開?):"+uid);
           localStorage[uid+".data"]=JSON.stringify(uid_data[uid]=d);
           if(hidden_uids.indexOf(uid)<0){
-            var av=uid_avs[uid];
-            if(!av){
-              av=localStorage[uid+".av"];
-              if(av)av=JSON.parse(av);
-            }
+            var av=get_av(uid);
             if(!localStorage[uid+".name"]
                ||!av
                ||((new Date).getTime()-av.mt*1000>=7*86400*1000)) {
