@@ -399,6 +399,8 @@ a:link {text-decoration:none;}
 
   var ofl_uids=[];
   var orig_uids=[];
+  var hidden_uids=[];
+  var offer_sers=[];
 
   function cre_li(uid){
     var li=$($.parseHTML(hd(function(){/*
@@ -444,6 +446,11 @@ a:link {text-decoration:none;}
       state=state.match(/(^[^都府県]+)([都府県]?)$/);
       $(cuid+" .state").text(state[1]);
       $(cuid+" .suf").text(state[2]);
+    }else{
+      if(hidden_uids.indexOf(uid)<0){
+        hidden_uids.push(uid);
+        offer_job();
+      }
     }
     var av=localStorage["av_"+uid];
     if(av){
@@ -489,11 +496,16 @@ a:link {text-decoration:none;}
     upd_li(uid);
   }
 
-  var f_load_uids=false;
+  var load_uids_workers=new Array(4);
+  for(var i=0;i<load_uids_workers.length;i++){
+    load_uids_workers[i]=$.Deferred();
+    load_uids_workers[i].resolve();
+  }
+
   var unknown_uids=[];
   function load_uid(uid) {
     if(unknown_uids.indexOf(uid)<0)unknown_uids.push(uid);
-    if(!f_load_uids&&unknown_uids.length>0)load_uids();
+    load_uids_job();
   }
 
   for(var i=0;i<favs.length;i++){
@@ -530,6 +542,13 @@ a:link {text-decoration:none;}
     hists_prune(uid);
   }
 
+  var offer_state="";
+  var offer_workers=new Array(3);
+  for(var i=0;i<offer_workers.length;i++){
+    offer_workers[i]=$.Deferred();
+    offer_workers[i].resolve();
+  }
+
   $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
   $(".btn_offer").hide();
   $(".btn_offer").click(do_offer);
@@ -564,6 +583,7 @@ a:link {text-decoration:none;}
     localStorage["favorites"]=favs.join("/");
     localStorage["favorites_new"]=new_favs.join("/");
     $(".btn_offer").show();
+    offer_job();
   }
 
   function rrr() {
@@ -632,27 +652,60 @@ a:link {text-decoration:none;}
     }
   }
 
-  function load_uids() {
-    if(f_load_uids||unknown_uids.length==0)
-      return;
-    f_load_uids=true;
-    var sn24=[];
-    for(var i=unknown_uids.length-1;i>=0;i--)
-      if(unknown_uids[i].length==24)
-        sn24.unshift(unknown_uids.splice(i,1)[0]);
-    console.log("====sn24");
-    console.log(sn24);
-    console.log("====uids");
-    console.log(unknown_uids);
-    load_sn24();
+  function offer_job(){
+    var n=0;
+    for(var i=0;i<offer_workers.length;i++)
+      if(offer_workers[i].state()=="pending")n++;
+    console.log(n+"--STATE: "+offer_state);
 
-    function load_sn24() {
-      if(sn24.length==0)
-        return load_3uids();
-      var sn=sn24.shift();
+    if(offer_state=="do_rm"){
+      if(n>0)return;
+
+      /* Remove -- serialized */
+      for(var i=0;i<orig_uids.length;i++){
+        var uid=orig_uids[i];
+        if(ofl_uids.indexOf(uid)>=0)continue;
+        console.log("Removing: "+uid);
+        orig_uids.splice(i,1);
+        offer_workers[0]=kick_offer_cancel(uid);
+        return;
+      }
+      offer_state="do_offer";
+      console.log(n+"--NEXT:  "+offer_state);
+    }
+
+    if(offer_state=="do_offer"){
+      if(n>0)return;
+      /* Add (3-parallel) */
+      for(var i=0;i<ofl_uids.length;i++){
+        var uid=ofl_uids[i];
+        if(uid==undefined)continue;
+        console.log("OFFERING["+i+"]:"+uid);
+        orig_uids.push(uid);
+        offer_workers[i]=kick_offer(uid);
+        n++;
+      }
+      offer_state="do_offer_comp";
+      console.log(n+"--NEXT:  "+offer_state);
+      /*thru*/
+    }
+
+    if(offer_state=="do_offer_comp"){
+      if(n>0)return;
+      do_offer_comp();
+      offer_state="";
+      console.log(n+"--NEXT:  (IDLE)");
+      /*thru*/
+    }
+
+    if(n==0&&orig_uids.length<3&&offer_sers.length>0){
       // POST後に302によりUIDが得られるが, XHRでは
       // リダイレクト後のURLを得られないため hidden iframe にて
       // 処理を進行させる。
+      console.log(offer_sers);
+      var sn=offer_sers.shift();
+      var rcnt=6;
+      offer_workers[0]=$.Deferred(); /* "pending" */
       var xn="#xif0";
       $(xn).load(function(){
           var i=$(xn).contents();
@@ -662,13 +715,18 @@ a:link {text-decoration:none;}
           console.log(uids);
           if(!uids){
             var s=i.find("#fromOfferMemberSerial");
-            if(s.length>0) {
+            if(rcnt--&&s.length>0) {
               s.attr("value",sn);
-              console.log("POST UID:"+sn);
+              console.log(rcnt+":POST UID:"+sn);
               i.find("#fromOfferMember").submit();
               return;
             }else{
-              console.log("error");
+              console.log(i.html());
+              console.log(rcnt+":error");
+              if(rcnt>0){
+                $(xn).attr("src","/offer_members/");
+                return;
+              }
             }
           } else {
             uid=uids[0];
@@ -684,54 +742,59 @@ a:link {text-decoration:none;}
             }else{
               console.log("failed");
             }
-            var j=favs.indexOf(sn);
-            if(j>=0){
-              favs.splice(j,1);
-              localStorage["favorites"]=favs.join("/");
-            }
-            console.log($(".cls_"+sn));
-            if(favs.indexOf(uid)>=0){
-              console.log("Trying to prune .cls_"+sn);
-              $(".cls_"+sn).remove();
-            }else{
-              console.log("Inserting .cls_"+sn);
-              if(j>=0)
-                favs.splice(j,0,uid);
-              else
-                favs.push(uid);
-              replace_li($(".cls_"+sn),uid);
+            if(new_favs.indexOf(uid)<0)new_favs.push(uid);
+            if(favs.indexOf(uid)<0) {
+              favs.push(uid);
+              append_li("#favorites",uid);
+              if($(".ph_team .cls_"+uid).length>0)
+                $("#favorites .cls_"+uid).hide();
             }
             hists_prune(uid);
-            unknown_uids.push(uid); // 全情報を得る
-            if($(".ph_team .cls_"+uid).length>0)
-              $("#favorites .cls_"+uid).hide();
+            localStorage["favorites"]=favs.join("/");
+            localStorage["favorites_new"]=new_favs.join("/");
+            localStorage["histories"]=hists.join("/");
+            load_uid(uid);
           }
           $(xn).replaceWith('<iframe id="xif0"></iframe>');
           console.log("FIN");
           console.log(unknown_uids);
-          load_sn24();
+          offer_workers[0].resolve();
+          load_uids_job();
+          offer_job();
         }).attr("src","/offer_members/");
     }
-  }
 
-  function load_3uids() {
-    var r_uids=3;
-    for(var i=r_uids-1;i>=0;i--) {
-      load_uid_job();
+    if(n<3&&orig_uids.length<3&&hidden_uids.length>0){
+      var m=orig_uids.length;
+      for(var i=0;i<offer_workers.length;i++){
+        if(offer_workers[i].state()=="pending")continue;
+        var uid=hidden_uids.shift();
+        offer_workers[i]=kick_load_uid_offer(uid);
+        if(hidden_uids.length==0||!--m)break;
+      }
     }
 
-    function load_uid_job() {
-      var uid;
-      if(r_uids<3&&unknown_uids.length>r_uids)
-        return load_uids_comp();
-      if(unknown_uids.length>0&&unknown_uids[0].length==16)
-        uid=unknown_uids.shift();
-      else
-        return load_uids_comp();
+    return;
+  }
 
-      $.get("/idolooks/index/"+uid+"/", load_uid_comp);
+  function load_uids_job(){
+    var n=0;
+    for(var i=0;i<load_uids_workers.length;i++){
+      var s=load_uids_workers[i].state();
+      if(s=="pending")n++;
+      else if(unknown_uids.length>0){
+        var uid=unknown_uids.shift();
+        load_uids_workers[i]=kick_load_uid(uid);
+        n++;
+      }
+    }
+    console.log("NEW_LOAD:"+n);
+    console.log("UNK_UIDS:"+unknown_uids.length);
+    return $.Deferred().resolve();
+  }
 
-      function load_uid_comp(a) {
+  function kick_load_uid(uid){
+    return $.get("/idolooks/index/"+uid+"/", function(a){
         var t=$($.parseHTML(a));
         if(t.find(".leftCol").length){
           uid_names[uid]=t.find(".profData dd.nickname span").text().replace(/\s/g,"");
@@ -750,37 +813,31 @@ a:link {text-decoration:none;}
             }).get().join("/");
           set_av_from_large(uid,t.find(".profImg img").attr("src"));
           upd_li(uid);
-          load_uid_job();
         } else {
           console.log("FAILED(非公開?):"+uid);
-          $.get("/offer_members/offer/"+uid+"/",load_uid_offer_comp);
+          if(hidden_uids.indexOf(uid)<0){
+            hidden_uids.push(uid);
+            offer_job();
+          }
         }
-      }
+        return load_uids_job();
+      });
+  }
 
-      function load_uid_offer_comp(a) {
+  function kick_load_uid_offer(uid) {
+    return $.get("/offer_members/offer/"+uid+"/",function(a){
         var t=$($.parseHTML(a)).find(".profImg img,.offerCol p span");
-        console.log(t);
         if(t.length>=2) {
+          console.log(t);
           uid_names[uid]=t.eq(1).text().replace(/\s/g,"");
           localStorage["name_"+uid]=uid_names[uid];
           set_av_from_large(uid,t.eq(0).attr("src"));
           upd_li(uid);
+        }else{
+          console.log(a);
         }
-        load_uid_job();
-      }
-    }
-
-    function load_uids_comp() {
-      console.log("load_uids_comp:"+r_uids);
-      if(--r_uids>0)return;
-      f_load_uids=false;
-      if(unknown_uids.length){
-        console.log("load_uids_comp CONT("+unknown_uids.length+")");
-        load_uids();
-      }else{
-        console.log("load_uids_comp COMP");
-      }
-    }
+        offer_job();
+      });
   }
 
   function add_nice(a) {
@@ -840,6 +897,7 @@ a:link {text-decoration:none;}
             hists.unshift(uid);
             append_li("#hists",uid,true);
           }
+          load_uid(uid);
           $("#favorites "+cuid).hide();
           $("#hists "+cuid).hide();
         }
@@ -869,27 +927,14 @@ a:link {text-decoration:none;}
 
   function do_offer() {
     $(".btn_offer").hide();
-    console.log(orig_uids);
-    console.log(ofl_uids);
-    var i;
-    var uids_ary=[];
-    for(i=0;i<orig_uids.length;i++)
-      if(ofl_uids.indexOf(orig_uids[i])<0)
-        uids_ary.push(orig_uids[i]);
-    console.log(uids_ary);
+    offer_state="do_rm";
+    offer_job();
+    return false;
+  }
 
-    function remove_uids() {
-      if(uids_ary.length==0) {
-        console.log("RM COMPLETED");
-        add_uids();
-        return;
-      }
-      var uid=uids_ary.shift();
-      console.log("REMOVE: "+uid);
-      $.get("/offer_members/offer_cancel/"+uid+"/",offer_cancel_commit);
-    }
-
-    function offer_cancel_commit(a) {
+  function kick_offer_cancel(uid){
+    var a=$.get("/offer_members/offer_cancel/"+uid+"/");
+    a.then(function(a){
       var a=$(a);
       var id=a.find("#fromOfferMemberMemberId");
       var tk=a.find("#fromOfferMemberToken");
@@ -897,33 +942,21 @@ a:link {text-decoration:none;}
       if(id.length>0&&tk.length>0) {
         form[id.attr("name")] = id.val();
         form[tk.attr("name")] = tk.val();
-        $.post("/offer_members/cancel_comp",
-               form,
-               remove_uids,
-               "html");
+        return $.post("/offer_members/cancel_comp",
+                      form,
+                      offer_job,
+                      "html");
       } else {
         console.log("EMPTY");
-        remove_uids();
+        return offer_job();
       }
-    }
+      });
+    return a;
+  }
 
-    function add_uids() {
-      var uids_ary=[];
-      var i;
-      for(i=0;i<ofl_uids.length;i++)
-        if(ofl_uids[i]!=undefined)
-          uids_ary.push(ofl_uids[i]);
-      console.log(uids_ary);
-      var f_uids=uids_ary.length;
-      if(f_uids==0) {
-        console.log("ADD EMPTY");
-        add_completed();
-        return;
-      }
-      for(i=0;i<f_uids;i++)
-        $.get("/offer_members/offer/"+uids_ary[i]+"/",offer_commit);
-
-      function offer_commit(a) {
+  function kick_offer(uid){
+    var a=$.get("/offer_members/offer/"+uid+"/");
+    a.then(function(a){
         var a=$(a);
         var id=a.find("#fromOfferMemberMemberId");
         var tk=a.find("#fromOfferMemberToken");
@@ -931,19 +964,20 @@ a:link {text-decoration:none;}
         if(id.length>0&&tk.length>0) {
           form[id.attr("name")] = id.val();
           form[tk.attr("name")] = tk.val();
-          $.post("/offer_members/comp",
+          return $.post("/offer_members/comp",
                  form,
-                 add_completed,
+                 offer_job,
                  "html");
         } else {
-          console.log("EMPTY");
-          add_completed();
+          console.log("ERROR");
+          console.log($(".txt_offer-error01").html());
+          return offer_job();
         }
-      }
+      });
+    return a;
+  }
 
-      function add_completed() {
-        console.log(f_uids);
-        if(f_uids&&--f_uids) return;
+  function do_offer_comp(){
         console.log("ADD COMPLETED");
         $.get("/offers/", function(a) {
             var a=$($.parseHTML(a));
@@ -956,12 +990,6 @@ a:link {text-decoration:none;}
                 var a = $($.parseHTML(a)).find(".list-teammate ul");
                 adduid("ph_team",a);
               });
-      }
-    }
-
-    remove_uids();
-
-    return false;
   }
 
   function do_imp() {
@@ -970,7 +998,7 @@ a:link {text-decoration:none;}
     var s=t.match(/\b[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{4}/gm);
     var u=t.match(/idolook\.aikatsu.com\/[-/0-9A-Z_a-z]+\/([0-9A-Z_a-z]{16})\b/gm);
     var uids=[];
-    if(s)uids=s;
+    if(s){offer_sers=s;offer_job();}
     if(u)for(var i=0;i<u.length;i++)uids.push(u[i].substr(u[i].length-16,16));
     console.log(uids);
     console.log(uids.length);
