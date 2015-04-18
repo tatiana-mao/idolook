@@ -99,8 +99,6 @@
   var xp_acc_n=1;
   $.getScript("https://code.jquery.com/jquery-migrate-1.2.1.js", xp_acc);
 
-  rrr();
-
   function upd_css() {
     add_ht("head", function(){/*<style type="text/css">
 a:focus {outline:0;}
@@ -610,36 +608,24 @@ a:link {text-decoration:none;}
     offer_job();
   }
 
-  function rrr() {
-    var fr_n=4;
+  $.when(
     $.get("/my_datas/teammate/",function(a) {
         var a = $($.parseHTML(a)).find(".list-teammate ul");
         adduid("ph_team",a,3*60);
         $(".btn_offer").show();
-        rrr_comp();
-      });
-
+      }),
     $.get("/my_datas/bds_frend_lists/", function(a) {
         var a = $($.parseHTML(a)).find(".list-myfriend ul");
         adduid("ph_myfriends",a,23*3600);
-        rrr_comp();
-      });
+      }),
     $.get("/my_datas/pend_lists/", function(a) {
         var a = $($.parseHTML(a)).find(".list-from_request ul");
         adduid("ph_requested",a,6*86400);
-        rrr_comp();
-      });
+      }),
     $.get("/t_infos/nice/", function(a) {
         var a = $($.parseHTML(a)).find("div.commentCol");
         add_nice(a);
-        rrr_comp();
-      });
-    function rrr_comp() {
-      if(--fr_n>0) return;
-      console.log("UNRESOLVED UIDS:");
-      console.log(unknown_uids);
-    }
-  }
+      }));
 
   function set_av_from_large(uid,a) {
     var av=uid_avs[uid];
