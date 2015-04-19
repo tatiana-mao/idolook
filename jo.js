@@ -1,7 +1,7 @@
 (function(){
   document.oncontextmenu=null;
   $(".btn_back").hide();
-  function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/\}$/)[1];}
+  function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
   function add_ht(flt,fn) {
     $(flt).append(hd(fn));
   }
