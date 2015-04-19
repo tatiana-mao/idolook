@@ -347,6 +347,39 @@ a:link {text-decoration:none;}
     }else{
       ul.addClass("small");
     }
+
+    var vs={};
+    $("#xacc>h2").each(function(){
+        var h2=new Object;
+        vs[$(this).text()]=h2;
+        $(this).next("div").find("h3").each(function(){
+            var h3=$(this).text();
+            var ul=$(this).next("ul");
+            var classes=ul.attr("class");
+            var view="";
+            if(classes){
+              classes=classes.split(/\s+/);
+              if(classes.indexOf("verbose")>=0) view="verbose";
+              else if(classes.indexOf("small")>=0) view="small";
+            }
+            h2[h3]=view;
+          });
+      });
+    localStorage["views"]=JSON.stringify(vs);
+  }
+
+  if(localStorage["views"]){
+    var vs=JSON.parse(localStorage["views"]);
+    $("#xacc>h2").each(function(){
+        var h2=$(this).text();
+        if(!vs[h2])return;
+        $(this).next("div").find("h3").each(function(){
+            var h3=$(this).text();
+            var ul=$(this).next("ul");
+            ul.removeClass("verbose").removeClass("small");
+            if(vs[h2][h3])ul.addClass(vs[h2][h3]);
+          });
+      });
   }
 
   function xp_acc() {
