@@ -498,9 +498,10 @@ a:link {text-decoration:none;}
       $(cuid+" .name").text(name);
       var state="ひみつ";
       if(d&&d.st)state=d.st;
-      state=state.match(/(^[^都府県]+)([都府県]?)$/);
-      $(cuid+" .state").text(state[1]);
-      $(cuid+" .suf").text(state[2]);
+      var ss=state.match(/^(.+)([都府県])$/);
+      if(!ss)ss=[null,state,""];
+      $(cuid+" .state").text(ss[1]);
+      $(cuid+" .suf").text(ss[2]);
     }
     var av=get_av(uid);
     if(av)$(cuid+" .av img").attr("src",av.img);
