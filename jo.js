@@ -369,7 +369,7 @@ a:link {text-decoration:none;}
     localStorage["views"]=JSON.stringify(vs);
   }
 
-  if(localStorage["views"]){
+  function reset_view(){
     var vs=JSON.parse(localStorage["views"]);
     $("#xacc>h2").each(function(){
         var h2=$(this).text();
@@ -404,6 +404,7 @@ a:link {text-decoration:none;}
     $("#mode_hists_del").click(do_hists_del);
     $("#do_new_as_read").click(do_new_as_read);
     $("#xcol h3").click(change_view);
+    reset_view();
   }
 
   var uid_data={};
