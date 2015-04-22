@@ -45,7 +45,7 @@
 
   add_ht('#wrapCol', function(){/*
 <div id="xcol">
-  <div id="xacc">
+  <div id="xacc" class="xacc">
     <h2>Favorites</h2>
     <div>
       <h3>チームメイト</h3>
@@ -96,8 +96,7 @@
 </div>
 */});
   $("#ximp").hide();
-  var xp_acc_n=1;
-  $.getScript("https://code.jquery.com/jquery-migrate-1.2.1.js", xp_acc);
+  xp_acc();
 
   function upd_css() {
     add_ht("head", function(){/*<style type="text/css">
@@ -143,7 +142,7 @@ a:focus {outline:0;}
   font-size:3.5em;
 }
 #xcol h3 {
-  font-size:28pt;
+  font-size:36pt;
   padding-top:10px;
 }
 #xcol ul+h3 {
@@ -152,7 +151,7 @@ a:focus {outline:0;}
 }
 .xix {
   clear:both;
-  padding-top:3em;
+  padding: 3em 0em 2em 0em;
 }
 #ximp {height:100%;}
 #ximp div {font-size:24pt;}
@@ -165,6 +164,41 @@ a:focus {outline:0;}
 #xcol input {font-size:24pt;margin-left:3em;}
 
 #xcol .ui-widget {font-family:inherit;}
+
+.xacc {
+  height:100%;
+}
+
+.xacc>ul {
+}
+
+.xacc>ul>li {
+  display:inline-block;
+  padding: 4pt 18pt 0pt 18pt;
+  font-size:40pt;
+  background-color:lightgray;
+  border:inset;
+  border-bottom:none;
+}
+
+.xacc>ul>li a {
+  color:black
+}
+
+.xacc .active {
+  background:white;
+  border:outset;
+  border-bottom:none;
+}
+
+.xacc>div {
+  background:white;
+  height:96%;
+  padding: 1.5em 0px 0em 1.5em;
+  overflow:auto;
+  -webkit-overflow-scrolling:touch;
+  overflow-scrolling:touch;
+}
 
 .uid .name {
   font-weight:bold;
@@ -350,10 +384,10 @@ a:link {text-decoration:none;}
     }
 
     var vs={};
-    $("#xacc>h2").each(function(){
+    $("#xacc>ul>li>a").each(function(){
         var h2=new Object;
         vs[$(this).text()]=h2;
-        $(this).next("div").find("h3").each(function(){
+        $($(this).attr("href")).find("h3").each(function(){
             var h3=$(this).text();
             var ul=$(this).next("ul");
             var classes=ul.attr("class");
@@ -370,11 +404,13 @@ a:link {text-decoration:none;}
   }
 
   function reset_view(){
-    var vs=JSON.parse(localStorage["views"]);
-    $("#xacc>h2").each(function(){
+    var vs=localStorage["views"];
+    if(!vs)return;
+    vs=JSON.parse(vs);
+    $("#xacc>ul>li>a").each(function(){
         var h2=$(this).text();
         if(!vs[h2])return;
-        $(this).next("div").find("h3").each(function(){
+        $($(this).attr("href")).find("h3").each(function(){
             var h3=$(this).text();
             var ul=$(this).next("ul");
             ul.removeClass("verbose").removeClass("small");
@@ -384,10 +420,31 @@ a:link {text-decoration:none;}
   }
 
   function xp_acc() {
-    if(--xp_acc_n) return;
     console.log($('#wrapCol').innerHeight());
-    $('#xcol').height($('#wrapCol').innerHeight()-338-110);
-    $('#xacc').accordion({fillSpace:true,icons:{}});
+    var xcol=$("#xcol");
+    var xcolm=xcol.outerHeight(true)-xcol.height();
+    xcol.height($('#wrapCol').innerHeight()-338-110);
+    var navs="";
+    var i=0;
+    $("#xcol h2").each(function(){
+        $(this).next("div").attr("id","x"+i);
+        navs+='<li><a href="#x'+i+'">'+$(this).text()+'</a></li>';
+        $(this).remove();
+        i++;
+      });
+    $(".xacc").prepend('<ul>'+navs+'</ul>');
+    $(".xacc>ul>li:eq(0)").addClass("active");
+    $(".xacc>div:gt(0)").hide();
+    var xacc=$(".xacc>div:first");
+    var xm=xacc.outerHeight(true)-xacc.height();
+    $(".xacc>div").height($(".xacc").innerHeight()-$(".xacc>ul").outerHeight(true)-xm);
+    $(".xacc>ul>li a").click(function(){
+        $(".xacc>ul>li").removeClass("active");
+        $(".xacc>div").hide();
+        $(this).parent("li").addClass("active");
+        $($(this).attr("href")).show();
+        return false;
+      });
     $("#mode_favs_imp").click(function(){
         $("#xacc").hide();
         $("#ximp").show();
