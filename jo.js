@@ -131,6 +131,7 @@ a:focus {outline:0;}
 #xcol {
   clear: both;
   width: 100%;
+  line-height:1.3;
   padding-top:4px;
   padding-left:0px;
 }
