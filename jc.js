@@ -35,18 +35,18 @@
   var cookies=load_cookies();
 
   var cc=[
-	  "39",
-	  "59",
-	  "55",
-	  "32","33","44","45","46","47","48","49","50",
+          "39",
+          "59",
+          "55",
+          "32","33","44","45","46","47","48","49","50",
 
-	  "51","34","40",
-	  "27","29","28","30",
+          "51","34","40",
+          "27","29","28","30",
 
-	  "35","36","37","60","61","62","63","64","65",
+          "35","36","37","60","61","62","63","64","65",
 
-	  "54",
-	  ];
+          "54",
+          ];
 
   function img_n(img) {
     return img.attr('src').substr(14).split('_')[0];
@@ -55,8 +55,8 @@
   function find_new(s) {
     var ary=[];
     s.each(function(){
-	var n=img_n($(this));
-	if(cc.indexOf(n)<0&&ary.indexOf(n)<0) ary.push(n);
+        var n=img_n($(this));
+        if(cc.indexOf(n)<0&&ary.indexOf(n)<0) ary.push(n);
       });
     console.log(ary);
     return ary;
@@ -85,22 +85,22 @@
       $(".btn_charms a").hide();
     } else {
       if(a.length==1) {
-	p.find(".SetCharmsName").append("<span id='xc_"+n+"' class='icon-set'>.</span>");
-	ss[n]=-1-Number(a);
+        p.find(".SetCharmsName").append("<span id='xc_"+n+"' class='icon-set'>.</span>");
+        ss[n]=-1-Number(a);
       } else {
-	p.find(".SelectCharmsEffect").append("<span id='xc_"+n+"' class='icon-set'>.</span>");
-	ss[n]=Number($(this).attr('href').split('/')[3]);
+        p.find(".SelectCharmsEffect").append("<span id='xc_"+n+"' class='icon-set'>.</span>");
+        ss[n]=Number($(this).attr('href').split('/')[3]);
       }
       n=cs.push(n);
       if(n>3){
-	n=cs.shift();
-	$(".playerDateCol #xc_"+n).remove();
+        n=cs.shift();
+        $(".playerDateCol #xc_"+n).remove();
       }
       if(n>=3) {
-	if(ss[cs[0]]<0&&ss[cs[1]]<0&&ss[cs[2]]<0)
-	  $(".btn_charms a").hide();
-	else
-	  $(".btn_charms a").show();
+        if(ss[cs[0]]<0&&ss[cs[1]]<0&&ss[cs[2]]<0)
+          $(".btn_charms a").hide();
+        else
+          $(".btn_charms a").show();
       }
     }
     return false;
@@ -115,13 +115,13 @@
     ns.find("a").click(cl2_override);
     var nd=na.find(".charms-list2 li");
     nd.sort(function(a,b){
-	var ai=img_n($(a).find("img"));
-	var bi=img_n($(b).find("img"));
-	var ac=cc.indexOf(ai);
-	var bc=cc.indexOf(bi);
-	if(ac<0&&bc<0) return ai-bi;
-	if(ac>=0&&bc>=0) return ac-bc;
-	return bc-ac;
+        var ai=img_n($(a).find("img"));
+        var bi=img_n($(b).find("img"));
+        var ac=cc.indexOf(ai);
+        var bc=cc.indexOf(bi);
+        if(ac<0&&bc<0) return ai-bi;
+        if(ac>=0&&bc>=0) return ac-bc;
+        return bc-ac;
       });
     $(".charms-list2").html(nd);
     $(".charms-list2 a").click(cl2_override);
@@ -133,53 +133,53 @@
       $(".btn_charms a").hide();
 
       function cs3fin() {
-	$.get("https://idolook.aikatsu.com/charms/",
-	      function(na) {
-		var nd = $($.parseHTML(na));
-		$(".charms-set").replaceWith(nd.find(".charms-set"));
-		$(".charms-set li").css('position','relative');
-		cs=[];
-		ss=new Object;
-		sort_c2(nd);
-	      });
+        $.get("https://idolook.aikatsu.com/charms/",
+              function(na) {
+                var nd = $($.parseHTML(na));
+                $(".charms-set").replaceWith(nd.find(".charms-set"));
+                $(".charms-set li").css('position','relative');
+                cs=[];
+                ss=new Object;
+                sort_c2(nd);
+              });
       }
 
       var n=3;
       var bk_cs=cs.concat();
       function set_cs(dummy) {
-	if(n<1||cs.length==0) {
-	  set_cookie("JSJCJK_charms", cc.join('.'));
-	  return cs3fin();
-	}
-	var m=-1;
-	var i;
-	for(var i=cs.length-1;i>=0;i--)
-	  if(ss[cs[i]]==-n) {
-	    var m=cs.splice(i,1)[0];
-	    var j=cc.indexOf(m);
-	    if(j>=0) cc.splice(j,1);
-	    cc.unshift(m);
-	    n--;
-	    return set_cs(null);
-	  } else if(m<0&&ss[cs[i]]>=0) {
-	    m=i;
-	  }
-	m=cs.splice(m,1)[0];
-	var j=cc.indexOf(m);
-	if(j>=0) cc.splice(j,1);
-	cc.unshift(m);
-	m=ss[m];
-	m="https://idolook.aikatsu.com/charms/comp/"+n--+"/"+m+"/"+m+"/";
-	return $.ajax({type: "GET",
-	      url: m,
-	      async: false,
-	      success: set_cs,
-	      error: function(x,s,t) {
-	      $(".btn_charms a").show();
-	      cs=bk_cs;
-	      window.open("https://idolook.aikatsu.com/charms/","_blank");
-	    },
-	      });
+        if(n<1||cs.length==0) {
+          set_cookie("JSJCJK_charms", cc.join('.'));
+          return cs3fin();
+        }
+        var m=-1;
+        var i;
+        for(var i=cs.length-1;i>=0;i--)
+          if(ss[cs[i]]==-n) {
+            var m=cs.splice(i,1)[0];
+            var j=cc.indexOf(m);
+            if(j>=0) cc.splice(j,1);
+            cc.unshift(m);
+            n--;
+            return set_cs(null);
+          } else if(m<0&&ss[cs[i]]>=0) {
+            m=i;
+          }
+        m=cs.splice(m,1)[0];
+        var j=cc.indexOf(m);
+        if(j>=0) cc.splice(j,1);
+        cc.unshift(m);
+        m=ss[m];
+        m="https://idolook.aikatsu.com/charms/comp/"+n--+"/"+m+"/"+m+"/";
+        return $.ajax({type: "GET",
+              url: m,
+              async: false,
+              success: set_cs,
+              error: function(x,s,t) {
+              $(".btn_charms a").show();
+              cs=bk_cs;
+              window.open("https://idolook.aikatsu.com/charms/","_blank");
+            },
+              });
       }
       set_cs(null);
       return false;
