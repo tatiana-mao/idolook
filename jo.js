@@ -1,6 +1,4 @@
 (function(){
-  document.oncontextmenu=null;
-
   var my_uid;
   var hide_self=function(){
     if(my_uid)
@@ -52,6 +50,23 @@
     else if(!localStorage[uid+".name"])load_uid(uid);
   }
 
+  if(typeof window.JSJCJK=="object"){
+    console.log("********JO the Object");
+     hide_self=function(){
+      if(window.JSJCJK.my_uid)
+        $(".cls_"+window.JSJCJK.my_uid).hide();
+    }
+    window.JSJCJK.jo={
+    load:do_load,
+    reload:do_reload,
+    ready:do_ready
+    }
+    return;
+  }
+
+  console.log("********JO: RUNNING AS STANDALONE");
+  document.oncontextmenu=null;
+
   $.get("/m_members/edit/",function(a){
       my_uid=$($.parseHTML(a)).find("#fe_text").val().match(/\/([0-9A-Z_a-z]{16})\//);
       if(my_uid) {
@@ -79,6 +94,23 @@
   function do_load(){
     $(".btn_back").hide();
     upd_css();
+  }
+
+  function do_reload(){
+    var objs={
+    team:$.get("/my_datas/teammate/"),
+    myfriends:$.get("/my_datas/bds_frend_lists/"),
+    requested:$.get("/my_datas/pend_lists/"),
+    nice:$.get("/t_infos/nice/")
+    };
+    $(".btn_offer").hide();
+    load_objs(objs);
+    $.get("/offers/", function(a) {
+        var a=$($.parseHTML(a));
+        console.log(a.find(".offerlistWrap"));
+        $(".offerlistWrap").replaceWith(a.find(".offerlistWrap"));
+        do_ofl();
+      });
   }
 
   function do_ready(objs){
