@@ -6,29 +6,11 @@
     $(flt).append(hd(fn));
   }
 
-  function load_cookies() {
-    var cookies=new Object;
-    var cs=document.cookie.split('; ');
-    for(var i=0;i<cs.length;i++) {
-      var c=cs[i].split('=');
-      cookies[c[0]]=decodeURIComponent(c[1]);
-    }
-    return cookies;
-  }
-
-  function set_cookie(k,v) {
-    var xp=new Date();
-    xp.setTime(xp.getTime() + 1000*86400*60);
-    document.cookie=k+"="+v+"; path=/; expires="+xp.toUTCString();
-  }
-
   var my_uid=null;
   function hide_self(){
     if(my_uid)
       $(".cls_"+my_uid).hide();
   }
-
-  var cookies=load_cookies();
 
   upd_css();
   $.get("/m_members/edit/",function(a){
