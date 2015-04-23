@@ -363,9 +363,9 @@ a:link {text-decoration:none;}
 .verbose .name+span {display:none;}
 .verbose .pref {width:100pt;font-size:20pt;}
 .verbose .pref span.suf {display:inline;}
-.verbose .charms {position:static;width:6.5em;}
+.verbose .charms {width:6.5em;top:0px;left:0px;height:auto;}
 .verbose .charms img {width:60px;}
-.verbose .coord {position:static;}
+.verbose .coord {top:0px;left:0px;height:auto;}
 .verbose .coord .TBS img {width:54px;height:auto;}
 .verbose .coord .A img {width:auto;height:54px;}
 
