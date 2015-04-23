@@ -129,7 +129,8 @@ a:focus {outline:0;}
 }
 #xcol {
   clear: both;
-  width: 100%;
+  width: 1200px;
+  overflow:hidden;
   line-height:1.3;
   padding-top:4px;
   padding-left:0px;
