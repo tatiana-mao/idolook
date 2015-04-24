@@ -8,6 +8,45 @@
       $(".cls_"+my_uid).hide();
   }
 
+  var uid_data={};
+  var uid_avs={};
+
+  var offer_state="";
+  var ofl_uids=[];
+  var orig_uids=[];
+  var hidden_uids=[];
+  var offer_sers=[];
+  var offer_workers=new Array(3);
+  for(var i=0;i<offer_workers.length;i++){
+    offer_workers[i]=$.Deferred();
+    offer_workers[i].resolve();
+  }
+
+  var favs;
+  var new_favs;
+  var hists;
+
+  favs=localStorage["favorites"];
+  favs=favs?favs.split("/"):[];
+
+  new_favs=localStorage["favorites_new"];
+  new_favs=(new_favs!=null?new_favs.split("/"):favs.slice(0));
+
+  hists=localStorage["histories"];
+  hists=hists?hists.split("/"):[];
+
+  var unknown_uids=[];
+  var load_uids_workers=new Array(4);
+  for(var i=0;i<load_uids_workers.length;i++){
+    load_uids_workers[i]=$.Deferred();
+    load_uids_workers[i].resolve();
+  }
+
+  for(var i=0;i<hists.length;++i){
+    var uid=hists[i];
+    if(favs.indexOf(uid)>=0)hists.splice(i,1);
+  }
+
   upd_css();
   add_xcol();
   $.get("/m_members/edit/",function(a){
@@ -449,31 +488,9 @@ a:link {text-decoration:none;}
     reset_view();
   }
 
-  var uid_data={};
-  var uid_avs={};
-
-  var offer_state="";
-  var offer_workers=new Array(3);
-  for(var i=0;i<offer_workers.length;i++){
-    offer_workers[i]=$.Deferred();
-    offer_workers[i].resolve();
-  }
-
   function ofl_ph(i) {return '<li id="ofl_'+i+'"><a><span class="av"></span></a></li>';}
 
-  var favs;
-  var new_favs;
-  var hists;
-
-  favs=localStorage["favorites"];
-  favs=favs?favs.split("/"):[];
-
-  new_favs=localStorage["favorites_new"];
-  new_favs=(new_favs!=null?new_favs.split("/"):favs.slice(0));
   if(new_favs.length==0)$("#do_new_as_read").hide();
-
-  hists=localStorage["histories"];
-  hists=hists?hists.split("/"):[];
 
   function do_new_as_read(){
     new_favs=[];
@@ -490,11 +507,6 @@ a:link {text-decoration:none;}
       if(favs.indexOf(hists[i])>=0)hists.splice(i,1);
     localStorage["histories"]=hists.join("/");
   }
-
-  var ofl_uids=[];
-  var orig_uids=[];
-  var hidden_uids=[];
-  var offer_sers=[];
 
   function cre_li(uid){
     var li=$($.parseHTML(hd(function(){/*
@@ -585,13 +597,6 @@ a:link {text-decoration:none;}
     upd_li(uid);
   }
 
-  var load_uids_workers=new Array(4);
-  for(var i=0;i<load_uids_workers.length;i++){
-    load_uids_workers[i]=$.Deferred();
-    load_uids_workers[i].resolve();
-  }
-
-  var unknown_uids=[];
   function load_uid(uid,sec) {
     if(unknown_uids.indexOf(uid)>=0)return;
     var d=uid_data[uid];
@@ -638,12 +643,8 @@ a:link {text-decoration:none;}
 
   for(var i=0;i<hists.length;++i){
     var uid=hists[i];
-    if(favs.indexOf(uid)>=0){
-      hists.splice(i,1);
-    }else{
-      append_li("#hists",uid);
-      if(!localStorage[uid+".name"])load_uid(uid);
-    }
+    append_li("#hists",uid);
+    if(!localStorage[uid+".name"])load_uid(uid);
   }
 
   hide_self();
