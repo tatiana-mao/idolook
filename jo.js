@@ -42,9 +42,15 @@
     load_uids_workers[i].resolve();
   }
 
+  for(var i=0;i<favs.length;i++){
+    var uid=favs[i];
+    load_uid(uid,23*3600);
+  }
+
   for(var i=0;i<hists.length;++i){
     var uid=hists[i];
     if(favs.indexOf(uid)>=0)hists.splice(i,1);
+    else if(!localStorage[uid+".name"])load_uid(uid);
   }
 
   upd_css();
@@ -631,7 +637,6 @@ a:link {text-decoration:none;}
   for(var i=0;i<favs.length;i++){
     var uid=favs[i];
     append_li("#favorites", uid);
-    load_uid(uid,23*3600);
   }
 
   function hists_prune(uid){
@@ -644,7 +649,6 @@ a:link {text-decoration:none;}
   for(var i=0;i<hists.length;++i){
     var uid=hists[i];
     append_li("#hists",uid);
-    if(!localStorage[uid+".name"])load_uid(uid);
   }
 
   hide_self();
