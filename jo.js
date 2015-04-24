@@ -13,6 +13,7 @@
   }
 
   upd_css();
+  add_xcol();
   $.get("/m_members/edit/",function(a){
       my_uid=$($.parseHTML(a)).find("#fe_text").val().match(/\/([0-9A-Z_a-z]{16})\//);
       if(my_uid) {
@@ -25,7 +26,8 @@
       }
     });
 
-  add_ht('#wrapCol', function(){/*
+  function add_xcol(){
+    add_ht('#wrapCol', function(){/*
 <div id="xcol">
   <div id="xacc" class="xacc">
     <h2>Favorites</h2>
@@ -77,8 +79,9 @@
   </div>
 </div>
 */});
-  $("#ximp").hide();
-  xp_acc();
+    $("#ximp").hide();
+    xp_acc();
+  }
 
   function upd_css() {
     add_ht("head", function(){/*<style type="text/css">
