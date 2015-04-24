@@ -1,10 +1,6 @@
 (function(){
   document.oncontextmenu=null;
   $(".btn_back").hide();
-  function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
-  function add_ht(flt,fn) {
-    $(flt).append(hd(fn));
-  }
 
   var my_uid;
   var hide_self=function(){
@@ -25,6 +21,9 @@
         console.log(a);
       }
     });
+
+  function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
+  function add_ht(flt,fn){$(flt).append(hd(fn));}
 
   function add_xcol(){
     add_ht('#wrapCol', function(){/*
