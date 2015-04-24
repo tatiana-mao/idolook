@@ -6,8 +6,8 @@
     $(flt).append(hd(fn));
   }
 
-  var my_uid=null;
-  function hide_self(){
+  var my_uid;
+  var hide_self=function(){
     if(my_uid)
       $(".cls_"+my_uid).hide();
   }
