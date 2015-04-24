@@ -66,6 +66,15 @@
 
   do_load();
 
+  var objs={
+  team:$.get("/my_datas/teammate/"),
+  myfriends:$.get("/my_datas/bds_frend_lists/"),
+  requested:$.get("/my_datas/pend_lists/"),
+  nice:$.get("/t_infos/nice/")
+  };
+
+  do_ready(objs);
+
   function do_load(){
     $(".btn_back").hide();
     upd_css();
@@ -79,6 +88,30 @@
       append_li("#hists",uid);
     }
     if(new_favs.length==0)$("#do_new_as_read").hide();
+  }
+
+  function do_ready(objs){
+    $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
+    $(".btn_offer").click(do_offer);
+
+    do_ofl();
+
+    objs.team.then(function(a){
+        var a = $($.parseHTML(a)).find(".list-teammate ul");
+        adduid("ph_team",a,3*60);
+      });
+    objs.myfriends.then(function(a){
+        var a = $($.parseHTML(a)).find(".list-myfriend ul");
+        adduid("ph_myfriends",a,23*3600);
+      });
+    objs.requested.then(function(a){
+        var a = $($.parseHTML(a)).find(".list-from_request ul");
+        adduid("ph_requested",a,6*86400);
+      });
+    objs.nice.then(function(a){
+        var a = $($.parseHTML(a)).find("div.commentCol");
+        add_nice(a);
+      });
   }
 
   function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
@@ -664,12 +697,6 @@ a:link {text-decoration:none;}
     hists_prune(uid);
   }
 
-  $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
-  $(".btn_offer").hide();
-  $(".btn_offer").click(do_offer);
-
-  do_ofl();
-
   function do_ofl() {
     ofl_uids.length=0;
     orig_uids.length=0;
@@ -698,25 +725,6 @@ a:link {text-decoration:none;}
     $(".btn_offer").show();
     offer_job();
   }
-
-  $.when(
-    $.get("/my_datas/teammate/",function(a) {
-        var a = $($.parseHTML(a)).find(".list-teammate ul");
-        adduid("ph_team",a,3*60);
-        $(".btn_offer").show();
-      }),
-    $.get("/my_datas/bds_frend_lists/", function(a) {
-        var a = $($.parseHTML(a)).find(".list-myfriend ul");
-        adduid("ph_myfriends",a,23*3600);
-      }),
-    $.get("/my_datas/pend_lists/", function(a) {
-        var a = $($.parseHTML(a)).find(".list-from_request ul");
-        adduid("ph_requested",a,6*86400);
-      }),
-    $.get("/t_infos/nice/", function(a) {
-        var a = $($.parseHTML(a)).find("div.commentCol");
-        add_nice(a);
-      }));
 
   function set_av_from_large(uid,a) {
     var av=get_av(uid);
