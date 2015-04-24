@@ -1,6 +1,5 @@
 (function(){
   document.oncontextmenu=null;
-  $(".btn_back").hide();
 
   var my_uid;
   var hide_self=function(){
@@ -53,8 +52,6 @@
     else if(!localStorage[uid+".name"])load_uid(uid);
   }
 
-  upd_css();
-  add_xcol();
   $.get("/m_members/edit/",function(a){
       my_uid=$($.parseHTML(a)).find("#fe_text").val().match(/\/([0-9A-Z_a-z]{16})\//);
       if(my_uid) {
@@ -66,6 +63,23 @@
         console.log(a);
       }
     });
+
+  do_load();
+
+  function do_load(){
+    $(".btn_back").hide();
+    upd_css();
+    add_xcol();
+    for(var i=0;i<favs.length;i++){
+      var uid=favs[i];
+      append_li("#favorites", uid);
+    }
+    for(var i=0;i<hists.length;++i){
+      var uid=hists[i];
+      append_li("#hists",uid);
+    }
+    if(new_favs.length==0)$("#do_new_as_read").hide();
+  }
 
   function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
   function add_ht(flt,fn){$(flt).append(hd(fn));}
@@ -496,8 +510,6 @@ a:link {text-decoration:none;}
 
   function ofl_ph(i) {return '<li id="ofl_'+i+'"><a><span class="av"></span></a></li>';}
 
-  if(new_favs.length==0)$("#do_new_as_read").hide();
-
   function do_new_as_read(){
     new_favs=[];
     $("#xcol span.new").remove();
@@ -634,24 +646,12 @@ a:link {text-decoration:none;}
     return av;
   }
 
-  for(var i=0;i<favs.length;i++){
-    var uid=favs[i];
-    append_li("#favorites", uid);
-  }
-
   function hists_prune(uid){
     var i=hists.indexOf(uid);
     if(i<0)return;
     hists.splice(i,1);
     $("#hists .cls_"+uid).remove();
   }
-
-  for(var i=0;i<hists.length;++i){
-    var uid=hists[i];
-    append_li("#hists",uid);
-  }
-
-  hide_self();
 
   function fav_prepend(uid){
     console.log("FAV:"+uid);
