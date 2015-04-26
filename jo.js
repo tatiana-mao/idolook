@@ -201,6 +201,7 @@ a:focus {outline:0;}
 .btnWrapCol {display:none;}
 .offerlistWrap {
   padding-top: 20px;
+  margin-bottom:0;
 }
 #xoffer {
   clear: both;
