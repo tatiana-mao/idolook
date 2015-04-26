@@ -26,12 +26,6 @@
     return cookies;
   }
 
-  function set_cookie(k,v) {
-    var xp=new Date();
-    xp.setTime(xp.getTime() + 1000*86400*60);
-    document.cookie=k+"="+v+"; path=/; expires="+xp.toUTCString();
-  }
-
   var cookies=load_cookies();
 
   var cc=[
@@ -62,9 +56,14 @@
     return ary;
   }
 
-  if(cookies["JSJCJK_charms"]) {
+  if(localStorage["charms"]){
+    cc=localStorage["charms"].split(".");
+    cc=find_new($(".playerDateCol li dt img")).concat(cc);
+    localStorage["charms"]=cc.join('.');
+  }else if(cookies["JSJCJK_charms"]){
     cc=cookies["JSJCJK_charms"].split(".");
     cc=find_new($(".playerDateCol li dt img")).concat(cc);
+    localStorage["charms"]=cc.join('.');
   } else {
     cc=cc.concat(find_new($(".playerDateCol li dt img")));
     console.log(cc);
@@ -148,7 +147,7 @@
       var bk_cs=cs.concat();
       function set_cs(dummy) {
         if(n<1||cs.length==0) {
-          set_cookie("JSJCJK_charms", cc.join('.'));
+          localStorage["charms"]=cc.join('.');
           return cs3fin();
         }
         var m=-1;
