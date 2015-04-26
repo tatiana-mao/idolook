@@ -18,15 +18,7 @@
 
   var cookies=load_cookies();
 
-  $('#footer').css('position','absolute').css('bottom','0px');
-  $('#container').css('position','absolute').css('top','85px').css('bottom','87px');
-  $('#wrapCol').css('position','absolute').css('top','0px').css('bottom','0px').height('auto');
-  $('#wrapCol > .contents').css('position','absolute').css('top','0px').css('bottom','0px').css('left','268px');
-  $('.contentsGreenCol').css('position','absolute').css('top','75px').css('bottom','0px').height('auto');
-  $('#dateCol').css('position','absolute').css('top','0px').css('bottom','0px').css('left','10px');
-  $('#dateCol > .playerDateCol').css('position','absolute').css('top','0px').css('bottom','0px');
-  $('.charms-list').css('position','absolute').css('top','230px').css('bottom','0px').height('auto');
-  $('.charms-listCol').height($('.charms-list').innerHeight()-48).css('position','absolute').css('top','25px').css('bottom','0px').css('overflow','auto').css('-webkit-overflow-scrolling','touch').css('width','900px');
+  do_load();
 
   $(".scrollCol").hide();
 
@@ -34,6 +26,13 @@
 
   $("#gnavi ul").prepend('<li class="btn_charms"><a href="/charms/">チャームをかえる</a></li>');
   $(".btn_charms a").css('background-position-y','-200px').css('background-image', 'url(/images/myprofile/navi-btn.png)').hide();
+
+  $("#wrapCol").addClass("xcharms");
+  do_ready();
+
+  function do_load(){
+    upd_css();
+  }
 
   function do_reload(){
     $(".btn_charms a").hide();
@@ -46,6 +45,81 @@
             ss=new Object;
             sort_c2(nd);
           });
+  }
+
+  function do_ready(){
+    $(".xcharms").append('<div id="xcharms"></div>');
+    var cl=$(".charms-list:first").clone();
+    $(".charms-list").remove();
+    $("#xcharms").append(cl);
+    console.log($('#wrapCol').innerHeight());
+    var xcol=$("#xcharms");
+    var xcolm=xcol.outerHeight(true)-xcol.height();
+    xcol.height($('#wrapCol').innerHeight()-338-110);
+  }
+
+  function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
+  function add_ht(flt,fn){$(flt).append(hd(fn));}
+
+  function upd_css(){
+    add_ht("head", function(){/*<style type="text/css">
+#footer {
+  position: absolute;
+  bottom: 0px;
+}
+#container {
+  position: absolute;
+  top: 85px;
+  bottom: 87px;
+  width: 100%
+}
+#gnavi {
+  height: 338px !important;
+}
+#wrapCol {
+  height: 100% !important
+}
+.contentsGreenCol {
+  position: relative;
+  top: 0px;
+  bottom: 0px;
+}
+#xcharms {
+  clear: both;
+  width: 1200px;
+  overflow:hidden;
+  line-height:1.3;
+  padding-top:4px;
+  padding-left:0px;
+}
+.contentsGreenCol {
+  position:relative;
+  top:0;
+  bottom:0px;
+  height:auto;
+}
+#xcharms .charms-list {
+  background: white;
+  width: 100%;
+  height: 100%;
+  margin: 0px 0px 0px 0px;
+  padding: 0px 0px 0px 14px;
+}
+#xcharms .charms-listCol {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+}
+#xcharms .charms-list2 {
+  width:100%;
+  margin: 8px 20px 0 0;
+}
+#xcharms .charms-list2 li {
+  margin: 8px 20px 0 0;
+}
+</style>*/});
   }
 
   function load_cookies() {
