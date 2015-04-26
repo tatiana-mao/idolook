@@ -40,6 +40,7 @@
   }
 
   function do_ready(){
+    $(".btn_back").hide();
     $(".scrollCol").hide();
 
     $(".playerDateCol li").css('position','relative');
