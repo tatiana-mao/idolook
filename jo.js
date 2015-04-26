@@ -64,6 +64,7 @@
       }
     });
 
+  $("#wrapCol").attr("class","xoffer");
   do_load();
 
   var objs={
@@ -118,7 +119,7 @@
   function add_ht(flt,fn){$(flt).append(hd(fn));}
 
   function add_xcol(){
-    add_ht('#wrapCol', function(){/*
+    add_ht('.xoffer', function(){/*
 <div id="xoffer">
   <div id="xacc">
     <h2>Favorites</h2>
