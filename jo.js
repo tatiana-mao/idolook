@@ -210,12 +210,6 @@ a:focus {outline:0;}
   padding-left:0px;
 }
 #xcol ul {margin-left:4em;}
-#xcol h2+div {
-  background:white;
-}
-#xcol h2 {
-  font-size:3.5em;
-}
 #xcol h3 {
   font-size:36pt;
   padding-top:10px;
@@ -238,13 +232,8 @@ a:focus {outline:0;}
 #xifn {display:none;}
 #xcol input {font-size:24pt;margin-left:3em;}
 
-#xcol .ui-widget {font-family:inherit;}
-
 .xacc {
   height:100%;
-}
-
-.xacc>ul {
 }
 
 .xacc>ul>li {
