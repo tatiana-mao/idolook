@@ -42,6 +42,7 @@
   function do_ready(){
     $(".btn_back").hide();
     $(".scrollCol").hide();
+    $(".btn_popup").removeClass("btn_popup").removeClass("fancybox.iframe");
 
     $(".playerDateCol li").css('position','relative');
 
