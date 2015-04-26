@@ -120,7 +120,7 @@
   function add_xcol(){
     add_ht('#wrapCol', function(){/*
 <div id="xoffer">
-  <div id="xacc" class="xacc">
+  <div id="xacc">
     <h2>Favorites</h2>
     <div>
       <h3>チームメイト</h3>
@@ -232,11 +232,11 @@ a:focus {outline:0;}
 #xifn {display:none;}
 #xoffer input {font-size:24pt;margin-left:3em;}
 
-.xacc {
+#xacc {
   height:100%;
 }
 
-.xacc>ul>li {
+#xacc>ul>li {
   display:inline-block;
   padding: 4pt 18pt 0pt 18pt;
   font-size:40pt;
@@ -245,17 +245,17 @@ a:focus {outline:0;}
   border-bottom:none;
 }
 
-.xacc>ul>li a {
+#xacc>ul>li a {
   color:black
 }
 
-.xacc .active {
+#xacc .active {
   background:white;
   border:outset;
   border-bottom:none;
 }
 
-.xacc>div {
+#xacc>div {
   background:white;
   height:96%;
   padding: 1.5em 0px 0em 1.5em;
@@ -496,15 +496,15 @@ a:link {text-decoration:none;}
         $(this).remove();
         i++;
       });
-    $(".xacc").prepend('<ul>'+navs+'</ul>');
-    $(".xacc>ul>li:eq(0)").addClass("active");
-    $(".xacc>div:gt(0)").hide();
-    var xacc=$(".xacc>div:first");
+    $("#xacc").prepend('<ul>'+navs+'</ul>');
+    $("#xacc>ul>li:eq(0)").addClass("active");
+    $("#xacc>div:gt(0)").hide();
+    var xacc=$("#xacc>div:first");
     var xm=xacc.outerHeight(true)-xacc.height();
-    $(".xacc>div").height($(".xacc").innerHeight()-$(".xacc>ul").outerHeight(true)-xm);
-    $(".xacc>ul>li a").click(function(){
-        $(".xacc>ul>li").removeClass("active");
-        $(".xacc>div").hide();
+    $("#xacc>div").height($("#xacc").innerHeight()-$("#xacc>ul").outerHeight(true)-xm);
+    $("#xacc>ul>li a").click(function(){
+        $("#xacc>ul>li").removeClass("active");
+        $("#xacc>div").hide();
         $(this).parent("li").addClass("active");
         $($(this).attr("href")).show();
         return false;
