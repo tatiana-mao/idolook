@@ -35,6 +35,19 @@
   $("#gnavi ul").prepend('<li class="btn_charms"><a href="/charms/">チャームをかえる</a></li>');
   $(".btn_charms a").css('background-position-y','-200px').css('background-image', 'url(/images/myprofile/navi-btn.png)').hide();
 
+  function do_reload(){
+    $(".btn_charms a").hide();
+    $.get("/charms/",
+          function(na) {
+            var nd = $($.parseHTML(na));
+            $(".charms-set").replaceWith(nd.find(".charms-set"));
+            $(".charms-set li").css('position','relative');
+            cs=[];
+            ss=new Object;
+            sort_c2(nd);
+          });
+  }
+
   function load_cookies() {
     var cookies=new Object;
     var cs=document.cookie.split('; ');
@@ -131,24 +144,12 @@
   $(".btn_charms a").click(function(){
       $(".btn_charms a").hide();
 
-      function cs3fin() {
-        $.get("/charms/",
-              function(na) {
-                var nd = $($.parseHTML(na));
-                $(".charms-set").replaceWith(nd.find(".charms-set"));
-                $(".charms-set li").css('position','relative');
-                cs=[];
-                ss=new Object;
-                sort_c2(nd);
-              });
-      }
-
       var n=3;
       var bk_cs=cs.concat();
       function set_cs(dummy) {
         if(n<1||cs.length==0) {
           localStorage["charms"]=cc.join('.');
-          return cs3fin();
+          return do_reload();
         }
         var m=-1;
         var i;
