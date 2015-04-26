@@ -18,6 +18,17 @@
 
   var cookies=load_cookies();
 
+  if(typeof window.JSJCJK=="object"){
+    console.log("********JC the Object");
+    window.JSJCJK.jc={
+    load:do_load,
+    reload:do_reload,
+    ready:do_ready
+    }
+    return;
+  }
+
+  console.log("********JC: RUNNING AS STANDALONE");
   do_load();
   $("#wrapCol").addClass("xcharms");
   do_ready();
