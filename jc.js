@@ -171,7 +171,7 @@
         m="https://idolook.aikatsu.com/charms/comp/"+n--+"/"+m+"/"+m+"/";
         return $.ajax({type: "GET",
               url: m,
-              async: false,
+              async: true,
               success: set_cs,
               error: function(x,s,t) {
               $(".btn_charms a").show();
