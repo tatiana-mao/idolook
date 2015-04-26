@@ -119,7 +119,7 @@
 
   function add_xcol(){
     add_ht('#wrapCol', function(){/*
-<div id="xcol">
+<div id="xoffer">
   <div id="xacc" class="xacc">
     <h2>Favorites</h2>
     <div>
@@ -201,7 +201,7 @@ a:focus {outline:0;}
 .offerlistWrap {
   padding-top: 20px;
 }
-#xcol {
+#xoffer {
   clear: both;
   width: 1200px;
   overflow:hidden;
@@ -209,12 +209,12 @@ a:focus {outline:0;}
   padding-top:4px;
   padding-left:0px;
 }
-#xcol ul {margin-left:4em;}
-#xcol h3 {
+#xoffer ul {margin-left:4em;}
+#xoffer h3 {
   font-size:36pt;
   padding-top:10px;
 }
-#xcol ul+h3 {
+#xoffer ul+h3 {
   clear: both;
   padding-top:1em;
 }
@@ -230,7 +230,7 @@ a:focus {outline:0;}
   margin-top:8px;
 }
 #xifn {display:none;}
-#xcol input {font-size:24pt;margin-left:3em;}
+#xoffer input {font-size:24pt;margin-left:3em;}
 
 .xacc {
   height:100%;
@@ -485,12 +485,12 @@ a:link {text-decoration:none;}
 
   function xp_acc() {
     console.log($('#wrapCol').innerHeight());
-    var xcol=$("#xcol");
+    var xcol=$("#xoffer");
     var xcolm=xcol.outerHeight(true)-xcol.height();
     xcol.height($('#wrapCol').innerHeight()-338-110);
     var navs="";
     var i=0;
-    $("#xcol h2").each(function(){
+    $("#xoffer h2").each(function(){
         $(this).next("div").attr("id","x"+i);
         navs+='<li><a href="#x'+i+'">'+$(this).text()+'</a></li>';
         $(this).remove();
@@ -524,7 +524,7 @@ a:link {text-decoration:none;}
     $("#mode_favs_del").click(do_favs_del);
     $("#mode_hists_del").click(do_hists_del);
     $("#do_new_as_read").click(do_new_as_read);
-    $("#xcol h3").click(change_view);
+    $("#xoffer h3").click(change_view);
     reset_view();
   }
 
@@ -532,7 +532,7 @@ a:link {text-decoration:none;}
 
   function do_new_as_read(){
     new_favs=[];
-    $("#xcol span.new").remove();
+    $("#xoffer span.new").remove();
     $("#do_new_as_read").hide();
   }
 
