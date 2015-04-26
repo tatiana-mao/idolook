@@ -141,48 +141,49 @@
 
   sort_c2($("body"));
 
-  $(".btn_charms a").click(function(){
-      $(".btn_charms a").hide();
+  $(".btn_charms a").click(do_set_charms);
 
-      var n=3;
-      var bk_cs=cs.concat();
-      function set_cs(dummy) {
-        if(n<1||cs.length==0) {
-          localStorage["charms"]=cc.join('.');
-          return do_reload();
-        }
-        var m=-1;
-        var i;
-        for(var i=cs.length-1;i>=0;i--)
-          if(ss[cs[i]]==-n) {
-            var m=cs.splice(i,1)[0];
-            var j=cc.indexOf(m);
-            if(j>=0) cc.splice(j,1);
-            cc.unshift(m);
-            n--;
-            return set_cs(null);
-          } else if(m<0&&ss[cs[i]]>=0) {
-            m=i;
-          }
-        m=cs.splice(m,1)[0];
-        var j=cc.indexOf(m);
-        if(j>=0) cc.splice(j,1);
-        cc.unshift(m);
-        m=ss[m];
-        m="/charms/comp/"+n--+"/"+m+"/"+m+"/";
-        return $.ajax({type: "GET",
-              url: m,
-              async: true,
-              success: set_cs,
-              error: function(x,s,t) {
-              $(".btn_charms a").show();
-              cs=bk_cs;
-              window.open("/charms/","_blank");
-            },
-              });
+  function do_set_charms(){
+    $(".btn_charms a").hide();
+
+    var n=3;
+    var bk_cs=cs.concat();
+    function set_cs(dummy) {
+      if(n<1||cs.length==0) {
+        localStorage["charms"]=cc.join('.');
+        return do_reload();
       }
-      set_cs(null);
-      return false;
-    });
-
+      var m=-1;
+      var i;
+      for(var i=cs.length-1;i>=0;i--)
+        if(ss[cs[i]]==-n) {
+          var m=cs.splice(i,1)[0];
+          var j=cc.indexOf(m);
+          if(j>=0) cc.splice(j,1);
+          cc.unshift(m);
+          n--;
+          return set_cs(null);
+        } else if(m<0&&ss[cs[i]]>=0) {
+          m=i;
+        }
+      m=cs.splice(m,1)[0];
+      var j=cc.indexOf(m);
+      if(j>=0) cc.splice(j,1);
+      cc.unshift(m);
+      m=ss[m];
+      m="/charms/comp/"+n--+"/"+m+"/"+m+"/";
+      return $.ajax({type: "GET",
+            url: m,
+            async: true,
+            success: set_cs,
+            error: function(x,s,t) {
+            $(".btn_charms a").show();
+            cs=bk_cs;
+            window.open("/charms/","_blank");
+          },
+            });
+    }
+    set_cs(null);
+    return false;
+  }
  })()
