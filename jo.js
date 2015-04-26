@@ -164,8 +164,6 @@
     <textarea id="imp_text"></textarea>
     <div id="xifn">
       <iframe id="xif0"></iframe>
-      <iframe id="xif1"></iframe>
-      <iframe id="xif2"></iframe>
     </div>
   </div>
 </div>
