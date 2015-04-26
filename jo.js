@@ -92,7 +92,7 @@
   }
 
   function do_ready(objs){
-    $("#gnavi ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
+    $(".xoffer nav ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
     $(".btn_offer").click(do_offer);
 
     do_ofl();
