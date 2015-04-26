@@ -1,4 +1,23 @@
 (function(){
+  var cc=
+    [
+     "39",
+     "59",
+     "55",
+     "32","33","44","45","46","47","48","49","50",
+
+     "51","34","40",
+     "27","29","28","30",
+
+     "35","36","37","60","61","62","63","64","65",
+
+     "54",
+     ];
+  var ss=new Object;
+  var cs=[];
+
+  var cookies=load_cookies();
+
   $('#footer').css('position','absolute').css('bottom','0px');
   $('#container').css('position','absolute').css('top','85px').css('bottom','87px');
   $('#wrapCol').css('position','absolute').css('top','0px').css('bottom','0px').height('auto');
@@ -26,22 +45,6 @@
     return cookies;
   }
 
-  var cookies=load_cookies();
-
-  var cc=[
-          "39",
-          "59",
-          "55",
-          "32","33","44","45","46","47","48","49","50",
-
-          "51","34","40",
-          "27","29","28","30",
-
-          "35","36","37","60","61","62","63","64","65",
-
-          "54",
-          ];
-
   function img_n(img) {
     return img.attr('src').substr(14).split('_')[0];
   }
@@ -68,9 +71,6 @@
     cc=cc.concat(find_new($(".playerDateCol li dt img")));
     console.log(cc);
   }
-
-  var ss=new Object;
-  var cs=[];
 
   function cl2_override(){
     var a=$(this).attr('href');
