@@ -19,14 +19,6 @@
   var cookies=load_cookies();
 
   do_load();
-
-  $(".scrollCol").hide();
-
-  $(".playerDateCol li").css('position','relative');
-
-  $("#gnavi ul").prepend('<li class="btn_charms"><a href="/charms/">チャームをかえる</a></li>');
-  $(".btn_charms a").css('background-position-y','-200px').css('background-image', 'url(/images/myprofile/navi-btn.png)').hide();
-
   $("#wrapCol").addClass("xcharms");
   do_ready();
 
@@ -48,6 +40,26 @@
   }
 
   function do_ready(){
+    $(".scrollCol").hide();
+
+    $(".playerDateCol li").css('position','relative');
+
+    $(".xcharms nav ul").prepend('<li class="btn_charms"><a href="/charms/">チャームをかえる</a></li>');
+    $(".btn_charms a").css('background-position-y','-200px').css('background-image', 'url(/images/myprofile/navi-btn.png)').hide();
+
+    if(localStorage["charms"]){
+      cc=localStorage["charms"].split(".");
+      cc=find_new($(".playerDateCol li dt img")).concat(cc);
+      localStorage["charms"]=cc.join('.');
+    }else if(cookies["JSJCJK_charms"]){
+      cc=cookies["JSJCJK_charms"].split(".");
+      cc=find_new($(".playerDateCol li dt img")).concat(cc);
+      localStorage["charms"]=cc.join('.');
+    } else {
+      cc=cc.concat(find_new($(".playerDateCol li dt img")));
+      console.log(cc);
+    }
+    $(".btn_charms a").click(do_set_charms);
     $(".xcharms").append('<div id="xcharms"></div>');
     var cl=$(".charms-list:first").clone();
     $(".charms-list").remove();
@@ -56,6 +68,7 @@
     var xcol=$("#xcharms");
     var xcolm=xcol.outerHeight(true)-xcol.height();
     xcol.height($('#wrapCol').innerHeight()-338-110);
+    sort_c2($(".xcharms"));
   }
 
   function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
@@ -146,19 +159,6 @@
     return ary;
   }
 
-  if(localStorage["charms"]){
-    cc=localStorage["charms"].split(".");
-    cc=find_new($(".playerDateCol li dt img")).concat(cc);
-    localStorage["charms"]=cc.join('.');
-  }else if(cookies["JSJCJK_charms"]){
-    cc=cookies["JSJCJK_charms"].split(".");
-    cc=find_new($(".playerDateCol li dt img")).concat(cc);
-    localStorage["charms"]=cc.join('.');
-  } else {
-    cc=cc.concat(find_new($(".playerDateCol li dt img")));
-    console.log(cc);
-  }
-
   function cl2_override(){
     var a=$(this).attr('href');
     var n=img_n($(this).find('img'));
@@ -212,10 +212,6 @@
     $(".charms-list2").html(nd);
     $(".charms-list2 a").click(cl2_override);
   }
-
-  sort_c2($("body"));
-
-  $(".btn_charms a").click(do_set_charms);
 
   function do_set_charms(){
     $(".btn_charms a").hide();
