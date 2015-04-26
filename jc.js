@@ -14,7 +14,7 @@
   $(".playerDateCol li").css('position','relative');
 
   $("#gnavi ul").prepend('<li class="btn_charms"><a href="/charms/">チャームをかえる</a></li>');
-  $(".btn_charms a").css('background-position-y','-200px').css('background-image', 'url(https://idolook.aikatsu.com/images/myprofile/navi-btn.png)').hide();
+  $(".btn_charms a").css('background-position-y','-200px').css('background-image', 'url(/images/myprofile/navi-btn.png)').hide();
 
   function load_cookies() {
     var cookies=new Object;
@@ -132,7 +132,7 @@
       $(".btn_charms a").hide();
 
       function cs3fin() {
-        $.get("https://idolook.aikatsu.com/charms/",
+        $.get("/charms/",
               function(na) {
                 var nd = $($.parseHTML(na));
                 $(".charms-set").replaceWith(nd.find(".charms-set"));
@@ -168,7 +168,7 @@
         if(j>=0) cc.splice(j,1);
         cc.unshift(m);
         m=ss[m];
-        m="https://idolook.aikatsu.com/charms/comp/"+n--+"/"+m+"/"+m+"/";
+        m="/charms/comp/"+n--+"/"+m+"/"+m+"/";
         return $.ajax({type: "GET",
               url: m,
               async: true,
@@ -176,7 +176,7 @@
               error: function(x,s,t) {
               $(".btn_charms a").show();
               cs=bk_cs;
-              window.open("https://idolook.aikatsu.com/charms/","_blank");
+              window.open("/charms/","_blank");
             },
               });
       }
