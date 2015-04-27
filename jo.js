@@ -95,25 +95,31 @@
 
     $(".xoffer nav ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
     $(".btn_offer").click(do_offer);
-
+    load_objs(objs);
     do_ofl();
+  }
 
-    objs.team.then(function(a){
-        var a = $($.parseHTML(a)).find(".list-teammate ul");
-        adduid("ph_team",a,3*60);
-      });
-    objs.myfriends.then(function(a){
-        var a = $($.parseHTML(a)).find(".list-myfriend ul");
-        adduid("ph_myfriends",a,23*3600);
-      });
-    objs.requested.then(function(a){
-        var a = $($.parseHTML(a)).find(".list-from_request ul");
-        adduid("ph_requested",a,6*86400);
-      });
-    objs.nice.then(function(a){
-        var a = $($.parseHTML(a)).find("div.commentCol");
-        add_nice(a);
-      });
+  function load_objs(objs){
+    if(objs.team)
+      objs.team.then(function(a){
+          var a = $($.parseHTML(a)).find(".list-teammate ul");
+          adduid("ph_team",a,3*60);
+        });
+    if(objs.myfriends)
+      objs.myfriends.then(function(a){
+          var a = $($.parseHTML(a)).find(".list-myfriend ul");
+          adduid("ph_myfriends",a,23*3600);
+        });
+    if(objs.requested)
+      objs.requested.then(function(a){
+          var a = $($.parseHTML(a)).find(".list-from_request ul");
+          adduid("ph_requested",a,6*86400);
+        });
+    if(objs.nice)
+      objs.nice.then(function(a){
+          var a = $($.parseHTML(a)).find("div.commentCol");
+          add_nice(a);
+        });
   }
 
   function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
