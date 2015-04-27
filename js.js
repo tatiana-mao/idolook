@@ -86,6 +86,7 @@
   }
 
   function do_relogin(){
+    var clicked=false;
     var d_uid=$.Deferred().resolve();
     window.JSJCJK.my_uid=undefined;
 
@@ -131,6 +132,8 @@
     }
     $("#ls").hide().css("width","100%").css("height","70%").load(login);
     $("#users a").click(function(){
+        if(clicked){console.log("Disabled");return false;}
+        clicked=true;
         var uid=$(this).attr("href");
         console.log("Click:"+uid);
         window.JSJCJK.my_uid=uid;
@@ -140,6 +143,10 @@
         $("#spad .MMemberPassword").val(creds[uid]["passwd"]);
         $("#spad").submit();
         return false;
+      });
+    $("#creds").submit(function(){
+        if(clicked){console.log("Disabled");return false;}
+        clicked=true;
       });
     return false;
 
