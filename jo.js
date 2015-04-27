@@ -79,6 +79,9 @@
   function do_load(){
     $(".btn_back").hide();
     upd_css();
+  }
+
+  function do_ready(objs){
     add_xcol();
     for(var i=0;i<favs.length;i++){
       var uid=favs[i];
@@ -89,9 +92,7 @@
       append_li("#hists",uid);
     }
     if(new_favs.length==0)$("#do_new_as_read").hide();
-  }
 
-  function do_ready(objs){
     $(".xoffer nav ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
     $(".btn_offer").click(do_offer);
 
