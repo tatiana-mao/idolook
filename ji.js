@@ -3,6 +3,7 @@
 
   var b=window.JSJCJK;
   window.JSJCJK=new Object;
+  b="https://rawgit.com/tatiana-mao/idolook/dev/";
 
   var active_class="";
 
