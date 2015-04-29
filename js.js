@@ -80,6 +80,11 @@
   margin-left: 1em;
 }
 </style>*/});
+
+    if(location.pathname=="/"){
+      $("#container-nologin").replaceWith('<div id="container">');
+      $("#container").css("padding-top","1px");
+    }
   }
 
   function do_ready(){

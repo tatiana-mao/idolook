@@ -6,40 +6,82 @@
 
   var active_class="";
 
-  var obj_jo=null;
-  var d_jo=$.Deferred().resolve();
-  var obj_jc=null;
-  var d_jc=$.Deferred().resolve();
+  var jc=window.JSJCJK.jc={
+  path:"/charms/",
+  cls:".xcharms",
+  link:css("charms"),
+  btn:{
+    py: "-200px",
+    bg:"/images/myprofile/navi-btn.png"
+  },
+  toggle_btn:function(){return get_btn(jo);},
+  js:load_script("jc")
+  };
 
-  if(location.pathname=="/offers/"){
-    obj_jo=$("#wrapCol").addClass("xoffer");
-  }else if(location.pathname=="/charms/"){
-    obj_jc=$("#wrapCol").addClass("xcharms");
+  var jo=window.JSJCJK.jo={
+  path:"/offers/",
+  cls:".xoffer",
+  link:css("offer"),
+  res:function(){
+      return {
+      myfriends:$.get("/my_datas/bds_frend_lists/"),
+      requested:$.get("/my_datas/pend_lists/"),
+      nice:$.get("/t_infos/nice/"),
+      team:$.get("/my_datas/teammate/")};
+    },
+  btn:{
+    py: "-300px",
+    bg:"/images/myfriend/navi-btn.png"
+  },
+  toggle_btn:function(){return get_btn(jc);},
+  js:load_script("jo")
+  };
+
+  window.JSJCJK.get_my_uid=get_my_uid;
+  window.JSJCJK.login_completed=login_completed;
+  window.JSJCJK.reload=reload_user;
+
+  var d_js_js=$.getScript(b+"js.js");
+
+  if(location.pathname=="/"){
+    window.JSJCJK.reload=reload_first_login;
+    d_js_js.then(function(){
+        window.JSJCJK.js.load();
+        window.JSJCJK.js.ready();
+      });
+    return;
+  }
+
+  d_js_js.then(function(){
+      window.JSJCJK.js.load();
+      $("#nickname").click(window.JSJCJK.js.ready);
+    });
+
+  if(location.pathname==jo.path){
+    jo.obj=$("#wrapCol").addClass(jo.cls.substr(1));
+  }else if(location.pathname==jc.path){
+    jc.obj=$("#wrapCol").addClass(jc.cls.substr(1));
   }else{
     $("#wrapCol").remove();
   }
 
-  var d_jc_link=css("charms");
-  if(!obj_jc){
-    d_jc=$.get("/charms/",function(a){
-        obj_jc=$($.parseHTML('<div class="xcharms">'+a+'</div>'));
-        obj_jc.find(".btn_back").hide();
-        $("#container").append(obj_jc);
-        $(".xcharms").hide();
+  in_login();
+
+  function in_login(){
+    jc.d=jc.obj?$.Deferred().resolve():get_obj(jc);
+    jo.d=jo.obj?$.Deferred().resolve():get_obj(jo);
+    $.get("/m_members/edit/",window.JSJCJK.get_my_uid);
+    var s=(location.pathname=="/charms/" ? jc : jo);
+    $.when(s.d).then(function(){kick(s);});
+  }
+
+  function load_script(jk){
+    return $.getScript(b+jk+".js").then(function(){
+        window.JSJCJK[jk].load();
       });
   }
 
-  var d_jo_link=css("offer");
-  if(!obj_jo){
-    d_jo=$.get("/offers/",function(a){
-        obj_jo=$($.parseHTML('<div class="xoffer">'+a+'</div>'));
-        obj_jo.find(".btn_back").hide();
-        $("#container").append(obj_jo);
-        $(".xoffer").hide();
-      });
-  }
-
-  window.JSJCJK.get_my_uid=function(a){
+  function get_my_uid(a){
     var d=$($.parseHTML(a));
     var my_uid=d.find("#fe_text").val().match(/\/([0-9A-Z_a-z]{16})\//);
     if(my_uid) {
@@ -50,88 +92,46 @@
       console.log(my_uid);
       console.log(a);
     }
-  };
+  }
 
-  $.get("/m_members/edit/",window.JSJCJK.get_my_uid);
+  function get_obj(s){
+    return $.get(s.path,function(a){
+        var obj=$($.parseHTML('<div class="'+s.cls.substr(1)+'">'+a+'</div>'));
+        obj.find(".btn_back").remove();
+        $("#container").append(obj);
+        $(s.cls).hide();
+      });
+  }
 
-  var d_jc_js=$.when(d_jc_link,$.getScript(b+"jc.js")).then(function(){
-      var jc=window.JSJCJK.jc;
-      console.log(jc);
-      jc.load();
-    });
-
-  var d_jo_js=$.when(d_jo_link,$.getScript(b+"jo.js")).then(function(){
-      var jo=window.JSJCJK.jo;
-      jo.load();
-    });
-
-  var d_js_js=$.getScript(b+"js.js").then(function(){
-      window.JSJCJK.js.load();
-      $("#nickname").click(window.JSJCJK.js.ready);
-      window.JSJCJK.reload=reload_user;
-      window.JSJCJK.login_completed=login_completed;
-    });
-
-  var f_jc=false;
-  var f_jo=false;
-
-  if(location.pathname=="/charms/")
-    $.when(d_jc).then(kick_jc);
-  else
-    $.when(d_jo).then(kick_jo);
-
-  function kick_jc(){
-    console.log("***KICK_JC");
+  function kick(s){
+    console.log("***KICK("+s.path+")");
     $("#container>div").removeAttr("id").hide();
-    $(active_class=".xcharms").attr("id","wrapCol").show();;
-    if(f_jc)return false;
-    f_jc=true;
-    $.when(d_jc,d_jc_js).then(function(){
-        var jc=window.JSJCJK.jc;
-        console.log(jc);
-        jc.ready({});
-        $("#wrapCol>article").show();
-        var btn_jo=$('<li><a href="/offers/">Offer</a></li>')
-          .css("position","absolute")
-          .css("bottom","0px");
-        btn_jo.find("a")
-          .css("background","url(/images/myfriend/navi-btn.png)")
-          .css("background-position-y", "-300px")
-          .click(kick_jo);
-        $(".xcharms nav ul").append(btn_jo);
+    $(active_class=s.cls).attr("id","wrapCol").show();
+    if(s.f)return false;
+    s.f=true;
+    var res=s.res?s.res():{};
+    $.when(s.link,s.d,s.js).then(function(){
+        s.ready(res);
+        $(s.cls+" nav ul").append(s.toggle_btn());
       });
     return false;
   }
 
-  function kick_jo(){
-    console.log("***KICK_JO");
-    $("#container>div").removeAttr("id").hide();
-    $(active_class=".xoffer").attr("id","wrapCol").show();
-    if(f_jo)return false;
-    f_jo=true;
+  function get_btn(s){
+      var btn=$('<li><a href="'+s.path+'">Toggle</a></li>')
+      .css("position","absolute")
+      .css("bottom","0px");
+      btn.find("a")
+      .css("background","url("+s.btn.bg+")")
+      .css("background-position-y", s.btn.py)
+      .click(function(){return kick(s);});
+      return btn;
+  }
 
-    var jo_res={
-    team:$.get("/my_datas/teammate/"),
-    myfriends:$.get("/my_datas/bds_frend_lists/"),
-    requested:$.get("/my_datas/pend_lists/"),
-    nice:$.get("/t_infos/nice/")
-    };
-
-    $.when(d_jo,d_jo_js).then(function(){
-        var jo=window.JSJCJK.jo;
-        console.log("JIJIJIJIJIJIJIJI");
-        console.log(jo);
-        jo.ready(jo_res);
-        var btn_jc=$('<li><a href="/charms/">Charm</a></li>')
-          .css("position","absolute")
-          .css("bottom","0px");
-        btn_jc.find("a")
-          .css("background","url(/images/myprofile/navi-btn.png)")
-          .css("background-position-y", "-200px")
-          .click(kick_jc);
-        $(".xoffer nav ul").append(btn_jc);
-      });
-    return false;
+  function reload_first_login(){
+    $(".jslogin").removeAttr("id").hide();
+    in_login();
+    window.JSJCJK.reload=reload_user;
   }
 
   function reload_user(){
