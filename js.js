@@ -154,6 +154,8 @@
       console.log(window.ls.document);
       console.log(ls.find("script").text());
       if(ls.find("div:first").length==0)return;
+      var fb=ls.find("iframe.fancybox-iframe").contents().find(".pointCol");
+      if(fb.length>0)alert(fb.html());
       var coin=ls.find("#coinCun span");
       if(coin.length==0){
         ls=$("#ls");
