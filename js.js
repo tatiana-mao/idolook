@@ -15,6 +15,7 @@
       var d=$($.parseHTML(a));
       var my_uid=d.find("#fe_text").val().match(/\/([0-9A-Z_a-z]{16})\//);
       if(my_uid)window.JSJCJK.my_uid=my_uid[1];
+      console.log(my_uid);
     },
   reload:function(){
       console.log("Reloading...");
@@ -153,19 +154,32 @@
       console.log(window.ls.document);
       console.log(ls.find("script").text());
       if(ls.find("div:first").length==0)return;
-      var name=ls.find("#nickname span").text().replace(/\s/g,"");
-      console.log(name);
-      if(!name){
-        alert("ログインできませんでした。");
-        alert(ls.find("html").html());
+      var coin=ls.find("#coinCun span");
+      if(coin.length==0){
+        ls=$("#ls");
+        if(ls.attr("src")=="/m_members/edit/"){
+          alert("困った。");
+          alert(ls.find("html").html());
+          return;
+        }
+        console.log("Reloading...");
+        ls.attr("src","/m_members/edit/");
         return;
       }
+      var ncoin=Number(coin.text());
+      console.log(ncoin);
+      var name=ls.find("#nickname span").text().replace(/\s/g,"");
+      console.log(name);
+
       $("#header").replaceWith(ls.find("#header"));
       $("#footer").replaceWith(ls.find("#footer"));
-      var ncoin=Number($("#coinCun span").text());
-      console.log(ncoin);
       var uid=window.JSJCJK.my_uid;
-      d_uid=$.get("/m_members/edit/",window.JSJCJK.get_my_uid);
+      if(ls.find("#fe_text").length==1){
+        window.JSJCJK.get_my_uid(ls.find("body").html());
+        d_uid=$.Deferred().resolve();
+      }else{
+        d_uid=$.get("/m_members/edit/",window.JSJCJK.get_my_uid);
+      }
       //FIXME: Reconfirm uid.
       window.JSJCJK.reload();
       $.when(d_uid).then(login_completed);
