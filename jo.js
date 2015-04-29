@@ -56,11 +56,12 @@
       if(window.JSJCJK.my_uid)
         $(".cls_"+window.JSJCJK.my_uid).hide();
     }
-    window.JSJCJK.jo={
+    h={
     load:do_load,
     reload:do_reload,
     ready:do_ready
     }
+    window.JSJCJK.jo=$.extend(window.JSJCJK.jo,h);
     return;
   }
 

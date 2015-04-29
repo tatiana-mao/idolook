@@ -20,11 +20,12 @@
 
   if(typeof window.JSJCJK=="object"){
     console.log("********JC the Object");
-    window.JSJCJK.jc={
+    var h={
     load:do_load,
     reload:do_reload,
     ready:do_ready
-    }
+    };
+    window.JSJCJK.jc=$.extend(window.JSJCJK.jc,h);
     return;
   }
 
