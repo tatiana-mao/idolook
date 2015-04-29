@@ -100,10 +100,8 @@
     add_ht("#wrapCol",function(){/*
 <iframe id="ls" name="ls" width=100% height=70%></iframe>
 <div id="xusers">
-  <base href="/idolooks/index/">
-    <ul id="users">
-    </ul>
-  </base>
+  <ul id="users">
+  </ul>
   <form id="spad" target="ls" action="/" method="POST">
     <input type="hidden" name="_method" value="POST"/>
     <input type="hidden" name="data[MMember][mail]" class="MMemberMail"/>
@@ -128,13 +126,13 @@
       if(!name)name="？？？";
       var av=localStorage[uid+".av"];
       av=av?JSON.parse(av):{img:"/images/icon/chara/1.png"};
-      $("#users").append('<li id="'+uid+'" class="uid"><a href="'+uid+'"><span class="av"><img src="'+av.img+'"></span><span class="name_row">'+name+'</span></a></li>');
+      $("#users").append('<li id="'+uid+'" class="uid"><a id="'+uid+'" href="/idolooks/index/'+uid+'/"><span class="av"><img src="'+av.img+'"></span><span class="name_row">'+name+'</span></a></li>');
     }
     $("#ls").hide().css("width","100%").css("height","70%").load(login);
     $("#users a").click(function(){
         if(clicked){console.log("Disabled");return false;}
         clicked=true;
-        var uid=$(this).attr("href");
+        var uid=$(this).attr("id");
         console.log("Click:"+uid);
         window.JSJCJK.my_uid=uid;
         console.log(creds);
