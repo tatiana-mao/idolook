@@ -204,7 +204,7 @@
     </div>
     <textarea id="imp_text"></textarea>
     <div id="xifn">
-      <iframe id="xif0"></iframe>
+      <iframe id="xif0" sandbox="allow-forms allow-same-origin"></iframe>
     </div>
   </div>
 </div>
@@ -893,7 +893,7 @@ a:link {text-decoration:none;}
             save_favs();
             load_uid(uid,5*60);
           }
-          $(xn).replaceWith('<iframe id="xif0"></iframe>');
+          $(xn).replaceWith('<iframe id="xif0" sandbox="allow-forms allow-same-origin"></iframe>');
           console.log("FIN");
           console.log(unknown_uids);
           offer_workers[0].resolve();
