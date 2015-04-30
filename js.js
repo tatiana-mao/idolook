@@ -92,7 +92,7 @@
   }
 
   function do_relogin(){
-    var clicked=false;
+    var disabled=false;
     var d_uid=$.Deferred().resolve();
     window.JSJCJK.my_uid=undefined;
 
@@ -136,8 +136,7 @@
     }
     $("#ls").hide().css("width","100%").css("height","70%").load(login);
     $("#users a").click(function(){
-        if(clicked){console.log("Disabled");return false;}
-        clicked=true;
+        if(!set_disabled())return false;
         var uid=$(this).attr("id");
         console.log("Click:"+uid);
         window.JSJCJK.my_uid=uid;
@@ -148,11 +147,15 @@
         $("#spad").submit();
         return false;
       });
-    $("#creds").submit(function(){
-        if(clicked){console.log("Disabled");return false;}
-        clicked=true;
-      });
+    $("#creds").submit(set_disabled);
     return false;
+
+    function set_disabled(){
+      if(disabled){console.log("Disabled");return false;}
+      $("#wrapCol").css("opacity","0.5");
+      disabled=true;
+      return true;
+    }
 
     function login(){
       var ls=$("#ls").contents();
