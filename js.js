@@ -124,6 +124,13 @@
   </form>
 </div>
 */});
+    set_disabled();
+    $.get("/m_member_logins/logout/",function(){
+        $("#wrapCol").css("opacity","");
+        $("#header p").hide();
+        disabled=false;
+      });
+
     for(var i=0;i<users.length;i++){
       var uid=users[i];
       if(!creds[uid])continue;
