@@ -169,7 +169,7 @@
           alert(ls.find("html").html());
           return;
         }
-        console.log("Reloading...");
+        console.log("Redirecting to /edit/...");
         ls.attr("src","/m_members/edit/");
         return;
       }
