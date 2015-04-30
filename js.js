@@ -104,7 +104,7 @@
     $("#container>div").removeAttr("id").hide();
     $("#container").append('<div id="wrapCol" class="jslogin"></div>');
     add_ht("#wrapCol",function(){/*
-<iframe id="ls" name="ls" width=100% height=70%></iframe>
+<iframe id="ls" name="ls" width=100% height=70% sandbox="allow-same-origin"></iframe>
 <div id="xusers">
   <ul id="users">
   </ul>
@@ -162,8 +162,6 @@
       console.log(window.ls.document);
       console.log(ls.find("script").text());
       if(ls.find("div:first").length==0)return;
-      var fb=ls.find("iframe.fancybox-iframe").contents().find(".pointCol");
-      if(fb.length>0)alert(fb.html());
       var coin=ls.find("#coinCun span");
       if(coin.length==0){
         ls=$("#ls");
