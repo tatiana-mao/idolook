@@ -729,6 +729,8 @@ a:link {text-decoration:none;}
   function do_ofl() {
     ofl_uids.length=0;
     orig_uids.length=0;
+    $(".img_offer").removeClass("img_offer");
+    $(".half_offer").removeClass("half_offer");
     adduid("offerlistWrap",$(".offerlistWrap").clone(),1*60);
     var ofl=$(".offerlistWrap li");
     console.log(ofl);
