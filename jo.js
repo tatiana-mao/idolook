@@ -7,6 +7,7 @@
 
   var uid_data={};
   var uid_avs={};
+  var msgs={};
 
   var offer_state="";
   var ofl_uids=[];
@@ -388,6 +389,10 @@ a:link {text-decoration:none;}
   bottom:60%;
 }
 
+span.message {
+  display:none;
+}
+
 .name_row {
   font-size:18pt;
   display:block;
@@ -458,19 +463,31 @@ a:link {text-decoration:none;}
   height: auto;
   margin-top: 17%;
 }
+.verbose span.message {
+  display:block;
+  color:darkred;
+  font-size:14pt;
+}
+.verbose img.imgstamp{width:auto;height:16pt;}
 .verbose span.ph_new  {display:block;}
 .verbose span.ph_offer {
   display: block;
   top: -80px;
 }
 .verbose span.img_webfriend {display:block;bottom:73%;}
-.verbose .name_row {width:144pt;text-align:initial;font-size:24pt;}
+.verbose .name_row {width:144pt;text-align:initial;font-size:28pt;}
 .verbose .name+span {display:none;}
-.verbose .pref {width:100pt;font-size:20pt;}
+.verbose .pref {width:100pt;font-size:24pt;}
 .verbose .pref span.suf {display:inline;}
-.verbose .charms {width:6.5em;top:0px;left:0px;height:auto;}
-.verbose .charms img {width:60px;}
-.verbose .coord {top:0px;left:0px;height:auto;}
+.verbose .charms {
+  width:184px;
+  top:0px;
+  left:0px;
+  height:56px;
+  margin-left: 3.5em;
+}
+.verbose .charms img {width:auto;height:56px;}
+.verbose .coord {top:0px;left:0px;height:auto;margin-left: 1em;}
 .verbose .coord .TBS img {width:54px;height:auto;}
 .verbose .coord .A img {width:auto;height:54px;}
 
@@ -597,14 +614,16 @@ a:link {text-decoration:none;}
       <span class="ph_offer"></span>
       <span class="ph_new"></span>
     </span>
-    <span class="name_row">
-      <span class="name">？？？</span><span>(<span class="state">---</span>)</span>
+    <span>
+      <span class="message"></span>
+      <span class="name_row">
+        <span class="name">？？？</span><span>(<span class="state">---</span>)</span>
       </span>
+      <span class="pref">
+        <span class="state">---</span><span class="suf"></span>
+      </span>
+      <span class="data charms"></span>
     </span>
-    <span class="pref">
-      <span class="state">---</span><span class="suf"></span>
-    </span>
-    <span class="data charms"></span>
     <span class="data coord">
       <span class="TBS"></span><span class="A"></span>
     </span>
@@ -638,6 +657,9 @@ a:link {text-decoration:none;}
       if(!ss)ss=[null,state,""];
       $(cuid+" .state").text(ss[1]);
       $(cuid+" .suf").text(ss[2]);
+    }
+    if(msgs[uid]){
+      $(cuid+" .message").html(msgs[uid]);
     }
     var av=get_av(uid);
     if(av)$(cuid+" .av img").attr("src",av.img);
@@ -1013,6 +1035,14 @@ a:link {text-decoration:none;}
         if(av.match(/chara|iface_imouth/))return;
         localStorage[uid+".name"]=name.substr(2,name.length-17);
         set_av(uid,av);
+        var msg=texts.text().match(/「([^「」]*)」/);
+        if(msg){
+          msgs[uid]=msg[1];
+          var stamp=dl.find("img.imgstamp").attr("src");
+          if(stamp){
+            msgs[uid]+=' <img src="'+stamp+'" class="imgstamp">';
+          }
+        }
         append_li(".ph_nice",uid);
         load_uid(uid,12*3600);
       });
