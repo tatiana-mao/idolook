@@ -1199,6 +1199,7 @@ a:link {text-decoration:none;}
   }
 
   function do_favs_del(){
+    do_favs_exp();
     if(!window.confirm("Favoritesを全削除します。\n削除前の内容はHistoryに移動します。"))
       return;
     new_favs=[];
