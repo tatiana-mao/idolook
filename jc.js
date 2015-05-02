@@ -52,7 +52,7 @@
   }
 
   function do_ready(){
-    $(".btn_back").hide();
+    $(".btn_back").remove();
     $(".scrollCol").hide();
     $(".btn_popup").removeClass("btn_popup").removeClass("fancybox.iframe");
 

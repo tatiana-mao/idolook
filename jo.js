@@ -94,7 +94,7 @@
   do_ready(objs);
 
   function do_load(){
-    $(".btn_back").hide();
+    $(".btn_back").remove();
     upd_css();
   }
 
