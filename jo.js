@@ -1004,6 +1004,8 @@ a:link {text-decoration:none;}
         var dl=$(this);
         var uid=dl.find("a:first").attr("href").split("/")[3];
         console.log(uid);
+        // 古いものは処理しない
+        if($(".ph_nice .cls_"+uid).length>0)return;
         var texts=dl.find(".title").contents();
         var name=texts.eq(0).text();
         var av=dl.find("img:first").attr("src");
