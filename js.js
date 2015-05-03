@@ -224,7 +224,7 @@
           creds[uid]={
           mailto:$("#creds .MMemberMail").val(),
           passwd:$("#creds .MMemberPassword").val()
-        };
+          };
         }
         localStorage["creds"]=JSON.stringify(creds);
         window.JSJCJK.login_completed(uid);
