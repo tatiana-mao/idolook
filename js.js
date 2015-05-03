@@ -227,6 +227,38 @@
           };
         }
         localStorage["creds"]=JSON.stringify(creds);
+        var spad=localStorage[uid+".spad"];
+        spad=spad?spad=JSON.parse(spad):{};
+        var oc=spad.ncoin;
+        if(!oc)oc=0;
+        var ac=ncoin-oc;
+        console.log("NCOIN:"+ncoin+"(+"+ac+")");
+        if(ac){
+          var acd=$('<span id="acd">+'+ac+'</span>')
+            .css({
+              right:29,
+              bottom:4,
+              opacity:1,
+              color:"yellow",
+              "text-shadow":"4px 4px 4px black",
+              display:"inline-block",
+              position:"absolute"})
+            .animate({
+              bottom:32,
+              },{
+              duration:1500,
+              easing:"easeOutQuint"})
+            .animate({
+              bottom:72,
+              opacity:0
+              },{
+              duration:3000,
+              easing:"easeInQuad",
+              complete:function(s){acd.remove();}});
+          $("#coinCun").append(acd);
+        }
+        spad.ncoin=ncoin;
+        localStorage[uid+".spad"]=JSON.stringify(spad);
         window.JSJCJK.login_completed(uid);
         if(script){
           try{
