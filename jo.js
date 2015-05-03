@@ -128,8 +128,11 @@
     }
     if(new_favs.length==0)$("#do_new_as_read").hide();
 
-    $(".xoffer nav ul").prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
+    $(".xoffer nav ul")
+      .prepend('<li class="btn_nice"><a href="./">いいね!</a></li>')
+      .prepend('<li class="btn_offer"><a href="/offers/">オファー</a></li>');
     $(".btn_offer").click(do_offer);
+    $(".btn_nice").hide().click(do_nice);
     load_objs(objs);
     do_ofl();
   }
@@ -230,6 +233,10 @@ a:focus {outline:0;}
 }
 #gnavi {
   height: 338px !important;
+}
+#gnavi ul li.btn_nice a {
+  background: url(/images/top/navi-btn-others.png) no-repeat;
+  background-position: 0 -100px;
 }
 #wrapCol {
   height: 100% !important
@@ -640,6 +647,10 @@ span.message {
     var t=$(".cls_"+uid+" .ph_offer");
     t.removeClass("img_offer").removeClass("half_offer");
     if(f)t.addClass(orig_uids.indexOf(uid)>=0?"img_offer":"half_offer");
+    if($(".img_offer,.half_offer").length>0)
+      $(".btn_nice").show();
+    else
+      $(".btn_nice").hide();
   }
 
   function upd_li(uid){
@@ -1180,6 +1191,99 @@ span.message {
                 var a = $($.parseHTML(a)).find(".list-teammate ul");
                 adduid("ph_team",a,3*60);
               });
+  }
+
+  function do_nice(){
+    var arg={
+      'width':1160,
+      'height':700,
+      'prevEffect':'none',
+      'nextEffect':'none',
+      'autoSize':true,
+      'closeBtn':false,
+      'scrolling':'no',
+      'centerOnScroll':false,
+      'padding':0,
+      'margin':[50,0,0,49],
+      'helpers':{
+        'overlay':{
+          'closeClick':false
+        }
+      },
+      'afterShow':function(){
+        var fb=$("iframe.fancybox-iframe").contents();
+        var btn=fb.find("#TNiceDetailSubmit");
+        btn.unbind("click").removeAttr("onclick").click(function(){
+            var uid;
+            var form={};
+            var res={};
+            var ds=[];
+            var a=fb.find("#TNiceDetailForm").serializeArray();
+            for(var i=0;i<a.length;i++){
+              if(!a[i].value)continue;
+              form[a[i].name]=a[i].value;
+            }
+            if(!form["data[TNice][nice_comment_id]"])return false;
+            console.log(form);
+            for(var i=0;i<ofl_uids.length;i++){
+              uid=ofl_uids[i];
+              if(!uid)continue;
+              console.log(uid);
+              ds.push(send_nice(uid,form,res));
+            }
+            $.when.apply($,ds).then(function(){
+                var article=false;
+                var successful="";
+                var error=false;
+                for(var i=0;i<ofl_uids.length;i++){
+                  var uid=ofl_uids[i];
+                  if(!uid)continue;
+                  var a=$($.parseHTML("<div>"+res[uid]+"</div>"));
+                  if(!article){
+                    console.log(res[uid]);
+                    console.log(a);
+                    fb.find("article").replaceWith(a.find("article").clone());
+                    fb.find(".niceCol").html("");
+                    article=true;
+                  }
+                  if(res[uid].match(/error[0-9]+/)){
+                    a=a.find(".txt_popup-nice");
+                    var av=get_av(uid);
+                    if(av)a.prepend('<img src="'+av.img+'" width=200>');
+                    a.css({"text-align":"left","padding-top":"1em","padding-bottom":"1em"});
+                    fb.find(".niceCol").append(a);
+                    error=true;
+                  }else{
+                    if(a.find(".img_coin").length>0||!successful)
+                      successful=a.find(".niceCol").html();
+                  }
+                }
+                if(successful)fb.find(".niceCol").prepend(successful);
+                if(error){
+                  fb.find("article a").unbind("click").removeAttr("onclick")
+                    .click(function(){
+                        console.log("Closing...");
+                        $.fancybox.close();
+                        return false;
+                      });
+                }else{
+                  fb.find(".popup-close").hide();
+                  $.fancybox.close();
+                }
+              });
+            return false;
+          });
+      },
+      'type': "iframe",
+      'href': "/nices/detail/1/YibaYLPkFhMTp3Uc/"
+    };
+    $.fancybox(arg);
+    return false;
+  }
+
+  function send_nice(uid,form,res){
+    var xf=$.extend(form,{"data[TNice][rand_number]":uid});
+    return $.post("/nices/in_nice/",xf,function(a){res[uid]=a;},"html");
   }
 
   function do_imp() {
