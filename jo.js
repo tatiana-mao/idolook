@@ -99,6 +99,7 @@
   }
 
   function do_reload(){
+    msgs={};
     var objs={
     team:$.get("/my_datas/teammate/"),
     myfriends:$.get("/my_datas/bds_frend_lists/"),
