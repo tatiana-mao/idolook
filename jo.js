@@ -1213,6 +1213,11 @@ span.msg {
       },
       'afterShow':function(){
         var fb=$("iframe.fancybox-iframe").contents();
+        fb.find(".choiceCol").css({
+            "overflow-y":"auto",
+              "-webkit-overflow-scrolling":"touch",
+              "overflow-scrolling":"touch"
+          });
         var btn=fb.find("#TNiceDetailSubmit");
         btn.unbind("click").removeAttr("onclick").click(function(){
             var uid;
