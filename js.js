@@ -146,10 +146,12 @@
     <input type="submit" value="ログイン" />
   </form>
   <form action="/m_member_logins/logout/">
+    <input id="soshage" type="submit" value="みんなでソシャゲ!"/>
     <input type="submit" value="完全にログアウトする..."/>
   </form>
 </div>
 */});
+    $("#soshage").click(do_soshage_all);
     set_disabled();
     $.get("/m_member_logins/logout/",function(){
         $("#wrapCol").css("opacity","");
@@ -186,6 +188,7 @@
     return false;
 
     function set_disabled(){
+      if($("#soshage").prop("disabled"))return false;
       if(disabled){console.log("Disabled");return false;}
       $("#wrapCol").css("opacity","0.5");
       disabled=true;
@@ -309,5 +312,193 @@
     $(sel).append(acd);
     spad.ncoin=ncoin;
     localStorage[uid+".spad"]=JSON.stringify(spad);
+  }
+
+  function getJSTDate(dt){
+    var dt9=new Date(dt.getTime());
+    dt9.setHours(dt9.getHours()+9);
+    return dt9.getUTCFullYear()
+      +"-"+("0"+(1+dt9.getUTCMonth())).slice(-2)
+      +"-"+("0"+dt9.getUTCDate()).slice(-2);
+  }
+
+  function do_soshage_all(){
+    var users=localStorage["users"];
+    users=users?users.split('/'):[];
+    $("#soshage").prop("disabled",true);
+    var d=null;
+    for(var i=0;i<users.length;i++){
+      var uid=users[i];
+      if(!d)
+        d=do_soshage(uid);
+      else
+        (function(uid){d=d.then(function(){return do_soshage(uid);});}(uid));
+    }
+    if(d)d.then(function(){
+        return $.get("/m_member_logins/logout/",function(){
+            $("#soshage").prop("disabled",false);
+          });
+      });
+    return false;
+  }
+
+  function do_soshage(uid){
+    var d=$.Deferred();
+    var ncoin='';
+    var creds=localStorage["creds"];
+    creds=creds?JSON.parse(creds):{};
+    var form={
+      "data[MMember][mail]":creds[uid]["mailto"],
+      "data[MMember][password]":creds[uid]["passwd"],
+      "_method":"POST"
+    };
+
+    dance_av($("#"+uid+" .av img"));
+
+    $.post("/",form,function(){
+        console.log(uid+":LOGGED IN:"+ncoin);
+        $.when(do_nice(),do_avatar(),do_myroom())
+          .then(function(){
+              do_sched(uid).then(function(){
+                  console.log(uid+":SOSHAGE COMP:"+ncoin);
+                  upd_ncoin(uid,ncoin,"#"+uid+" .ncoin");
+                  d.resolve();
+                });
+            });
+      },"html");
+    return d.promise();
+
+    function dance_av(obj){
+      obj
+        .animate({"width":"90%","margin-top":"13%","margin-left":"5%"},
+                 {duration:200,easing:"linear"})
+        .animate({"width":"100%","margin-top":"17%","margin-left":"0%"},
+                 {duration:200,easing:"linear",complete:dance_av_comp});
+
+      function dance_av_comp(){
+        if(d.state()=="pending")dance_av(obj);
+      }
+    }
+
+    function do_nice(){
+      var form={
+        "data[TNice][rand_number]":"YibaYLPkFhMTp3Uc",
+        "data[TNice][nice_comment_id]":6,
+        "_method":"POST"
+      }
+      return $.post("/nices/in_nice/",form,function(a){console.log(a)},"html");
+    }
+
+    function do_avatar(){
+      var d=$.Deferred();
+      $.post("/avatars/reset_chara/",{},function(a){
+          var form={"_method":"POST"};
+          a=a.replace(/<img[^>]+>/g,"");
+          a=$($.parseHTML("<form>"+a));
+          a.find("input").each(function(){
+              form[$(this).attr("name")]=$(this).val();
+            });
+          $.post("/avatars/in_chara",form,function(a){d.resolve();},"html");
+        },"html");
+      return d.promise();
+    }
+
+    function do_myroom(){
+      var d=$.Deferred();
+      $.get("/myrooms/change_parts/1301/",function(a){
+          a=a.replace(/<img[^>]+>/g,"");
+          a=$($.parseHTML(a));
+          console.log(a.find("#TMyroomMa1").val());
+          $.get("/myrooms/upd_myroom/"+a.find("#TMyroomMa1").val(),function(a){
+              d.resolve();
+            });
+        });
+      return d.promise();
+    }
+
+    function do_sched(){
+      var d=$.Deferred();
+      var cal2={}
+      var sched_n=7;
+      var dt=new Date();
+      dt.setDate(dt.getDate()+7);
+      sched_dstoken(dt);
+      return d.promise();
+
+      function sched_dstoken(dt){
+        if(--sched_n<0){
+          d.resolve();
+          return;
+        }
+        var ymd=getJSTDate(dt);
+        console.log("SCHED:"+ymd);
+        var form={
+          "_method":"POST",
+          "data[MScheduleStamp][stamp_id]":2,
+          "data[TSchedule][date]":ymd,
+          "data[MScheduleStamp][action]":1
+        };
+        return $.post("/schedules/comment_select",form,sched_submit,"html");
+
+        function sched_submit(a){
+          a=a.replace(/<img[^>]+>/g,"");
+          a=$($.parseHTML(a));
+          reset_ls();
+          var ls=$("#ls").contents();
+          console.log(a.find("#TScheduleDstoken").val());
+          if(a.find("#TScheduleDstoken").length==0){
+            console.log("Unable to register:"+ymd);
+            $("#ls").hide()
+              .load(sched_comp)
+              .attr("src","/schedules/");
+            return;
+          }
+
+          var body=ls.find("body");
+          if(body.length==0)body=ls;
+          body.html('<form action="/schedules/schedule_add_comp" id="MScheduleTypeCommentSelectForm" method="post" accept-charset="utf-8">');
+          var form=ls.find("#MScheduleTypeCommentSelectForm");
+          form.append(a.find("form input"));
+          form.find("#TScheduleScheduleComment")
+            .attr({type:"hidden"})
+            .val("アイカツ!させる予定!");
+          $("#ls").hide().load(sched_comp);
+          form.submit();
+        }
+
+        function sched_comp(){
+          var ls=$("#ls").contents();
+          var scs=ls.find("ul.calendar>li>a");
+          if(scs.length==0){
+            console.log("ERROR");
+            d.resolve();
+            return;
+          }
+          var coin=ls.find("#coinCun span");
+          if(coin.length==1)ncoin=Number(coin.text());
+          scs.each(function(){
+              var ymd=$(this).attr("href").match(/\d{4}-\d\d-\d\d/);
+              if(!ymd)return;
+              if($(this).find('img[src="/images/schedule/stamp/02.png"]').length>0){
+                cal2[ymd]=true;
+              }
+            });
+          console.log(cal2);
+          var dt=new Date;
+          for(var i=1;i<=7;i++){
+            dt.setDate(dt.getDate()+1);
+            if(!cal2[getJSTDate(dt)]){
+              sched_dstoken(new Date(dt.getTime()));
+              return;
+            }
+            console.log("Done -- "+getJSTDate(dt));
+          }
+          reset_ls();
+          console.log("SCHED COMPLETED");
+          d.resolve();
+          return;
+        }
+      }
+    }
   }
  })()
