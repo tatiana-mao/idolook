@@ -475,6 +475,7 @@ span.msg {
   display:block;
   color:darkred;
   font-size:14pt;
+  line-height:1;
 }
 .verbose img.imgstamp{width:auto;height:16pt;}
 .verbose span.ph_new  {display:block;}
@@ -491,7 +492,7 @@ span.msg {
   width:184px;
   top:0px;
   left:0px;
-  height:56px;
+  height:48px;
   margin-left: 3.5em;
 }
 .verbose .charms img {width:auto;height:56px;}
