@@ -143,10 +143,10 @@
     <input type="hidden" name="_method" value="POST"/>
     <input type="text" name="data[MMember][mail]" class="MMemberMail"/>
     <input type="password" name="data[MMember][password]" class="MMemberPassword"/>
-    <input type="submit" value="ログイン" />
+    <input id="cred" class="forlogin" type="submit" value="ログイン" />
   </form>
   <form action="/m_member_logins/logout/">
-    <input id="soshage" type="submit" value="みんなでソシャゲ!"/>
+    <input id="soshage" class="forlogin" type="submit" value="みんなでソシャゲ!"/>
     <input type="submit" value="完全にログアウトする..."/>
   </form>
 </div>
@@ -189,7 +189,7 @@
     return false;
 
     function set_disabled(){
-      if($("#soshage").prop("disabled"))return false;
+      if($("#cred").prop("disabled"))return false;
       if(disabled){console.log("Disabled");return false;}
       $("#wrapCol").css("opacity","0.5");
       disabled=true;
@@ -326,7 +326,7 @@
   function do_soshage_all(){
     var users=localStorage["users"];
     users=users?users.split('/'):[];
-    $("#soshage").prop("disabled",true);
+    $(".forlogin").prop("disabled",true);
     var d=null;
     for(var i=0;i<users.length;i++){
       var uid=users[i];
@@ -337,7 +337,7 @@
     }
     if(d)d.then(function(){
         return $.get("/m_member_logins/logout/",function(){
-            $("#soshage").prop("disabled",false);
+            $(".forlogin").prop("disabled",false);
           });
       });
     return false;
