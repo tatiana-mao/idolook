@@ -75,8 +75,8 @@
 #xusers form .MMemberPassword {
   width: 12em;
 }
-#xusers form input[type="submit"] {
-  padding: 0 1em 0 1em;
+#xusers input[type="submit"] {
+  padding: 8pt 1em 8pt 1em;
   margin-left: 1em;
 }
 </style>*/});
