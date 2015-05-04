@@ -159,6 +159,7 @@
         disabled=false;
       });
 
+    if(users.length==0)$("#soshage").prop("disabled",true);
     for(var i=0;i<users.length;i++){
       var uid=users[i];
       if(!creds[uid])continue;
