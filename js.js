@@ -64,6 +64,25 @@
   text-align:center;
   font-weight:bold;
 }
+#xusers .coinbg{
+  font-size: 190%;
+  font-weight: bold;
+  position: relative;
+  display: inline-block;
+  background: url(/images/common/bg_headercol.png) no-repeat center top;
+  background-position: -645px -39px;
+  width: 160px;
+  height: 36px;
+  color: white;
+  line-height: 1.6;
+  bottom: 83px;
+  left: 23px;
+}
+#xusers .ncoin{
+  text-align: right;
+  display: inline-block;
+  width: 90%;
+}
 #xusers form {
   clear: both;
   padding-top: 2em;
@@ -140,7 +159,10 @@
       if(!name)name="？？？";
       var av=localStorage[uid+".av"];
       av=av?JSON.parse(av):{img:"/images/icon/chara/1.png"};
-      $("#users").append('<li id="'+uid+'" class="uid"><a id="'+uid+'" href="/idolooks/index/'+uid+'/"><span class="av"><img src="'+av.img+'"></span><span class="name_row">'+name+'</span></a></li>');
+      var spad=localStorage[uid+".spad"];
+      spad=spad?spad=JSON.parse(spad):{};
+      if(!spad.ncoin)spad.ncoin="???";
+      $("#users").append('<li id="'+uid+'" class="uid"><a id="'+uid+'" href="/idolooks/index/'+uid+'/"><span class="av"><img src="'+av.img+'"></span><span class="name_row">'+name+'</span><span class="coinbg"><span class="ncoin">'+spad.ncoin+'</span></span></a></li>');
     }
     $("#ls").hide().css("width","100%").css("height","70%").load(login);
     $("#users a").click(function(){
