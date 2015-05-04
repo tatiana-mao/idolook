@@ -65,12 +65,12 @@
     $("#wrapCol").remove();
   }
 
+  $.get("/m_members/edit/",window.JSJCJK.get_my_uid);
   in_login();
 
   function in_login(){
     jc.d=jc.obj?$.Deferred().resolve():get_obj(jc);
     jo.d=jo.obj?$.Deferred().resolve():get_obj(jo);
-    $.get("/m_members/edit/",window.JSJCJK.get_my_uid);
     var s=(location.pathname=="/charms/" ? jc : jo);
     $.when(s.d).then(function(){kick(s);});
   }
