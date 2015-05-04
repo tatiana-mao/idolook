@@ -110,6 +110,12 @@
     do_relogin();
   }
 
+  function reset_ls(){
+    $("#ls").unbind("load");
+    $("#ls").replaceWith('<iframe id="ls" name="ls" width=100% height=70% sandbox="allow-same-origin allow-forms"></iframe>');
+    $("#ls").hide();
+  }
+
   function do_relogin(){
     var disabled=false;
     var d_uid=$.Deferred().resolve();
@@ -124,7 +130,7 @@
     $("#container>div").removeAttr("id").hide();
     $("#container").append('<div id="wrapCol" class="jslogin"></div>');
     add_ht("#wrapCol",function(){/*
-<iframe id="ls" name="ls" width=100% height=70% sandbox="allow-same-origin"></iframe>
+<iframe id="ls"></iframe>
 <div id="xusers">
   <ul id="users">
   </ul>
@@ -164,7 +170,6 @@
       if(!spad.ncoin)spad.ncoin="???";
       $("#users").append('<li id="'+uid+'" class="uid"><a id="'+uid+'" href="/idolooks/index/'+uid+'/"><span class="av"><img src="'+av.img+'"></span><span class="name_row">'+name+'</span><span class="coinbg"><span class="ncoin">'+spad.ncoin+'</span></span></a></li>');
     }
-    $("#ls").hide().css("width","100%").css("height","70%").load(login);
     $("#users a").click(function(){
         if(!set_disabled())return false;
         var uid=$(this).attr("id");
@@ -184,6 +189,8 @@
       if(disabled){console.log("Disabled");return false;}
       $("#wrapCol").css("opacity","0.5");
       disabled=true;
+      reset_ls();
+      $("#ls").load(login);
       return true;
     }
 
