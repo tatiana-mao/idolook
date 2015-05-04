@@ -397,7 +397,7 @@ a:link {text-decoration:none;}
   bottom:60%;
 }
 
-span.message {
+span.msg {
   display:none;
 }
 
@@ -471,7 +471,7 @@ span.message {
   height: auto;
   margin-top: 17%;
 }
-.verbose span.message {
+.verbose span.msg {
   display:block;
   color:darkred;
   font-size:14pt;
@@ -623,7 +623,7 @@ span.message {
       <span class="ph_new"></span>
     </span>
     <span>
-      <span class="message"></span>
+      <span class="msg"></span>
       <span class="name_row">
         <span class="name">？？？</span><span>(<span class="state">---</span>)</span>
       </span>
@@ -671,7 +671,7 @@ span.message {
       $(cuid+" .suf").text(ss[2]);
     }
     if(msgs[uid]){
-      $(cuid+" .message").html(msgs[uid]);
+      $(cuid+" .msg").html(msgs[uid]);
     }
     var av=get_av(uid);
     if(av)$(cuid+" .av img").attr("src",av.img);
