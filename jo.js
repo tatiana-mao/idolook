@@ -174,14 +174,17 @@
         <input type="button" id="mode_favs_del" value="全削除"/>
       </div>
     </div>
-    <h2>マイフレンド</h2>
+    <h2>いいね!</h2>
+    <div>
+      <h3>いいね!</h3>
+      <ul class="ph_nice verbose"><li>Loading...</li></ul>
+    </div>
+    <h2>マイフレ</h2>
     <div>
       <h3>チームメイト</h3>
       <ul class="ph_team verbose"><li>Loading...</li></ul>
       <h3>マイフレンド</h3>
       <ul class="ph_myfriends small"><li>Loading...</li></ul>
-      <h3>いいね!</h3>
-      <ul class="ph_nice verbose"><li>Loading...</li></ul>
       <h3>ウェブとも候補</h3>
       <ul class="ph_requested verbose"><li>Loading...</li></ul>
     </div>
