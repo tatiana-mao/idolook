@@ -106,8 +106,8 @@
     }
   }
 
-  function do_ready(){
-    do_relogin();
+  function do_ready(objs){
+    do_relogin(objs);
   }
 
   function reset_ls(){
@@ -116,7 +116,7 @@
     $("#ls").hide();
   }
 
-  function do_relogin(){
+  function do_relogin(objs){
     var disabled=false;
     var d_uid=$.Deferred().resolve();
     var script=null;
@@ -153,7 +153,10 @@
 */});
     $("#soshage").click(do_soshage_all);
     set_disabled();
-    $.get("/m_member_logins/logout/",function(){
+    var d_logout=(typeof objs=="object"&&objs.logout
+                  ?objs.logout
+                  :$.get("/m_member_logins/logout/"));
+    d_logout.then(function(){
         $("#wrapCol").css("opacity","");
         $("#header p").hide();
         disabled=false;

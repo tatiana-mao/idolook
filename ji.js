@@ -45,9 +45,10 @@
 
   if(location.pathname=="/"){
     window.JSJCJK.reload=reload_first_login;
+    var objs={logout:$.get("/m_member_logins/logout/")};
     d_js_js.then(function(){
         window.JSJCJK.js.load();
-        window.JSJCJK.js.ready();
+        window.JSJCJK.js.ready(objs);
       });
     return;
   }
