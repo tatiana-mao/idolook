@@ -154,10 +154,7 @@
           adduid("ph_requested",a,6*86400);
         });
     if(objs.nice)
-      objs.nice.then(function(a){
-          var a = $($.parseHTML(a)).find("div.commentCol");
-          add_nice(a);
-        });
+      objs.nice.then(add_nice);
   }
 
   function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
@@ -1034,6 +1031,7 @@ span.msg {
   }
 
   function add_nice(a) {
+    a = $($.parseHTML(a)).find("div.commentCol");
     $(".ph_nice").html("");
     a.find("dl.topics-aktphone").each(function(){
         var dl=$(this);
