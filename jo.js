@@ -106,7 +106,7 @@
     requested:$.get("/my_datas/pend_lists/"),
     nice:$.get("/t_infos/nice/")
     };
-    $(".btn_offer").hide();
+    $(".btn_offer").css("visibility","hidden");
     load_objs(objs);
     $.get("/offers/", function(a) {
         var a=$($.parseHTML(a));
@@ -788,7 +788,7 @@ span.msg {
       ofl_uids[i]=undefined;
     }
     save_favs();
-    $(".btn_offer").show();
+    $(".btn_offer").css("visibility","visible");
     offer_job();
   }
 
@@ -1128,7 +1128,7 @@ span.msg {
   }
 
   function do_offer() {
-    $(".btn_offer").hide();
+    $(".btn_offer").css("visibility","hidden");
     offer_state="do_rm";
     offer_job();
     return false;
