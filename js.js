@@ -350,6 +350,7 @@
     var d=$.Deferred();
     var ncoin='';
     var creds=localStorage["creds"];
+    var requires_relogin=false;
     creds=creds?JSON.parse(creds):{};
     var form={
       "data[MMember][mail]":creds[uid]["mailto"],
@@ -362,6 +363,9 @@
     $.post("/",form,function(){
         console.log(uid+":LOGGED IN:"+ncoin);
         $.when(do_nice(),do_avatar(),do_myroom())
+          .then(function(){
+              return requires_relogin?$.post("/",form):$.Deferred().resolve();
+            })
           .then(function(){
               do_sched(uid).then(function(){
                   console.log(uid+":SOSHAGE COMP:"+ncoin);
@@ -390,7 +394,14 @@
         "data[TNice][nice_comment_id]":6,
         "_method":"POST"
       }
-      return $.post("/nices/in_nice/",form,function(a){console.log(a)},"html");
+      return $.post("/nices/in_nice/",form,function(a){
+          if(a.match(/error[0-9]+/)){
+            console.log(a);
+          }else{
+            console.log("Nice sent!");
+            requires_relogin=true;
+          }
+        },"html");
     }
 
     function do_avatar(){
