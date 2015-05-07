@@ -140,16 +140,19 @@
   function load_objs(objs){
     if(objs.team)
       objs.team.then(function(a){
+          a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
           var a = $($.parseHTML(a)).find(".list-teammate ul");
           adduid("ph_team",a,3*60);
         });
     if(objs.myfriends)
       objs.myfriends.then(function(a){
+          a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
           var a = $($.parseHTML(a)).find(".list-myfriend ul");
           adduid("ph_myfriends",a,23*3600);
         });
     if(objs.requested)
       objs.requested.then(function(a){
+          a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
           var a = $($.parseHTML(a)).find(".list-from_request ul");
           adduid("ph_requested",a,6*86400);
         });
@@ -967,6 +970,7 @@ span.msg {
 
   function kick_load_uid(uid){
     return $.get("/idolooks/index/"+uid+"/", function(a){
+        a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
         var t=$($.parseHTML(a));
         var d={mt:Math.floor((new Date).getTime()/1000)};
         if(t.find(".leftCol").length){
@@ -975,15 +979,15 @@ span.msg {
           console.log(uid+":"+localStorage[uid+".name"]+"("+ar+")");
           d["st"]=ar;
           d["ch"]=t.find(".charmArea img").map(function(){
-              return $(this).attr("src").split("/")[3].match(/(.+)\.\w+$/)[1];
+              return $(this).attr("data-src").split("/")[3].match(/(.+)\.\w+$/)[1];
             }).get();
           d["co"]=t.find(".mycoordinate .vertically img").map(function(){
-              return $(this).attr("src").split("/")[4].match(/(.+)\.\w+$/)[1];
+              return $(this).attr("data-src").split("/")[4].match(/(.+)\.\w+$/)[1];
             }).get();
           d["ac"]=t.find(".mycoordinate .horizontally img").map(function(){
-              return $(this).attr("src").split("/")[4].match(/(.+)\.\w+$/)[1];
+              return $(this).attr("data-src").split("/")[4].match(/(.+)\.\w+$/)[1];
             }).get().join("/");
-          set_av_from_large(uid,t.find(".profImg img").attr("src"));
+          set_av_from_large(uid,t.find(".profImg img").attr("data-src"));
           localStorage[uid+".data"]=JSON.stringify(uid_data[uid]=d);
           upd_li(uid);
         } else {
@@ -1010,6 +1014,7 @@ span.msg {
 
   function kick_load_uid_offer(uid) {
     return $.get("/offer_members/offer/"+uid+"/",function(a){
+        a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
         var t=$($.parseHTML(a)).find(".profImg img,.offerCol p span");
         if(t.length>=2) {
           console.log(t);
@@ -1021,7 +1026,7 @@ span.msg {
           }
           if(!localStorage[uid+".name"])
             localStorage[uid+".name"]=name;
-          set_av_from_large(uid,t.eq(0).attr("src"));
+          set_av_from_large(uid,t.eq(0).attr("data-src"));
           upd_li(uid);
         }else{
           console.log(a);
@@ -1031,6 +1036,7 @@ span.msg {
   }
 
   function add_nice(a) {
+    a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
     a = $($.parseHTML(a)).find("div.commentCol");
     $(".ph_nice").html("");
     a.find("dl.topics-aktphone").each(function(){
@@ -1041,7 +1047,7 @@ span.msg {
         if($(".ph_nice .cls_"+uid).length>0)return;
         var texts=dl.find(".title").contents();
         var name=texts.eq(0).text();
-        var av=dl.find("img:first").attr("src");
+        var av=dl.find("img:first").attr("data-src");
         // 非プレイヤキャラは一覧から除外(すまん)
         if(av.match(/chara|iface_imouth/))return;
         localStorage[uid+".name"]=name.substr(2,name.length-17);
@@ -1049,7 +1055,7 @@ span.msg {
         var msg=texts.text().match(/「([^「」]*)」/);
         if(msg){
           msgs[uid]=msg[1];
-          var stamp=dl.find("img.imgstamp").attr("src");
+          var stamp=dl.find("img.imgstamp").attr("data-src");
           if(stamp){
             msgs[uid]+=' <img src="'+stamp+'" class="imgstamp">';
           }
@@ -1075,7 +1081,9 @@ span.msg {
     $("."+f).html("");
     a.find("li").each(function() {
         var li=$(this);
-        var av=li.find(".load_image img").attr("src");
+        var img=li.find(".load_image img");
+        var av=img.attr("data-src");
+        if(!av)av=img.attr("src");
         if(av.match(/chara|iface_imouth/)){
           // 非プレイヤキャラを選択不能にする
           li.find("a").click(function(e){e.preventDefault();});
@@ -1135,6 +1143,7 @@ span.msg {
   function kick_offer_cancel(uid){
     var a=$.get("/offer_members/offer_cancel/"+uid+"/");
     a.then(function(a){
+      a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
       var a=$(a);
       var id=a.find("#fromOfferMemberMemberId");
       var tk=a.find("#fromOfferMemberToken");
@@ -1157,6 +1166,7 @@ span.msg {
   function kick_offer(uid){
     var a=$.get("/offer_members/offer/"+uid+"/");
     a.then(function(a){
+        a=a.replace(/<img[^>]+>/g,"");
         var a=$(a);
         var id=a.find("#fromOfferMemberMemberId");
         var tk=a.find("#fromOfferMemberToken");
@@ -1180,6 +1190,7 @@ span.msg {
   function do_offer_comp(){
         console.log("ADD COMPLETED");
         $.get("/offers/", function(a) {
+            a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
             var a=$($.parseHTML(a));
             console.log(a.find(".offerlistWrap"));
             $(".offerlistWrap").replaceWith(a.find(".offerlistWrap"));
@@ -1187,6 +1198,7 @@ span.msg {
           });
         $.get("/my_datas/teammate/",
               function(a) {
+                a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
                 var a = $($.parseHTML(a)).find(".list-teammate ul");
                 adduid("ph_team",a,3*60);
               });

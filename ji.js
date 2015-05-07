@@ -83,6 +83,7 @@
   }
 
   function get_my_uid(a){
+    a=a.replace(/<img[^>]+>/g,"");
     var d=$($.parseHTML(a));
     var my_uid=d.find("#fe_text").val().match(/\/([0-9A-Z_a-z]{16})\//);
     if(my_uid) {
