@@ -40,17 +40,6 @@
     load_uids_workers[i].resolve();
   }
 
-  for(var i=0;i<favs.length;i++){
-    var uid=favs[i];
-    load_uid(uid,23*3600);
-  }
-
-  for(var i=0;i<hists.length;++i){
-    var uid=hists[i];
-    if(favs.indexOf(uid)>=0)hists.splice(i,1);
-    else if(!localStorage[uid+".name"])load_uid(uid);
-  }
-
   if(typeof window.JSJCJK=="object"){
     console.log("********JO the Object");
      hide_self=function(){
@@ -120,10 +109,14 @@
     add_xcol();
     for(var i=0;i<favs.length;i++){
       var uid=favs[i];
+      var j=hists.indexOf(uid);
+      if(j>=0)hists.splice(j,1);
       append_li("#favorites", uid);
+      load_uid(uid,23*3600);
     }
     for(var i=0;i<hists.length;++i){
       var uid=hists[i];
+      if(!localStorage[uid+".name"])load_uid(uid);
       append_li("#hists",uid);
     }
     if(new_favs.length==0)$("#do_new_as_read").hide();
