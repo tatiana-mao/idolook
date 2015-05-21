@@ -362,7 +362,9 @@
 
     $.post("/",form,function(){
         console.log(uid+":LOGGED IN:"+ncoin);
-        $.when(do_nice(),do_avatar(),do_myroom())
+        $.when(do_nice())
+          .then(function(){return do_avatar();})
+          .then(function(){return do_myroom();})
           .then(function(){
               return requires_relogin?$.post("/",form):$.Deferred().resolve();
             })
