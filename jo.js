@@ -956,8 +956,7 @@ span.msg {
         n++;
       }
     }
-    console.log("NEW_LOAD:"+n);
-    console.log("UNK_UIDS:"+unknown_uids.length);
+    console.log("NEW_LOAD:"+n+" / UNK_UIDS:"+unknown_uids.length);
     return $.Deferred().resolve();
   }
 
