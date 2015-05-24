@@ -7,6 +7,7 @@
 
   var uid_data={};
   var uid_avs={};
+  var obj_nice_dialog;
   var msgs={};
 
   var offer_state="";
@@ -106,6 +107,9 @@
   }
 
   function do_ready(objs){
+    $('<link href="/css/popup.css"/><link href="/css/nices.css"/>')
+      .attr({"rel":"stylesheet","type":"text/css"})
+      .insertBefore('link[rel="stylesheet"]:first');
     add_xcol();
     for(var i=0;i<favs.length;i++){
       var uid=favs[i];
@@ -151,6 +155,22 @@
         });
     if(objs.nice)
       objs.nice.then(add_nice);
+    $.get("/nices/detail/1/YibaYLPkFhMTp3Uc/",function(a){
+        a=a.replace(/^[\S\s]*(<article[\S\s]+<\/article>)[\S\s]*$/m,"$1")
+           .replace(/<link[^<>]+>/gm,"")
+          .replace(/<script[\S\s]+?<\/script>/gm,"");
+        console.log(a);
+        obj_nice_dialog=$($.parseHTML(a));
+        obj_nice_dialog.find(".niceCol")
+          .append(obj_nice_dialog.find(".stampCol-top"))
+          .append('<div id="stb" class="stampdetail"><div id="sti">');
+        obj_nice_dialog.find("#sti")
+          .append(obj_nice_dialog.find("ul.stampdetail"))
+        obj_nice_dialog.find("#stb")
+          .append(obj_nice_dialog.find(".stampCol-bottom"));
+        obj_nice_dialog.find(".choiceCol")
+          .css("max-height",$("body").innerHeight()-600);
+      });
   }
 
   function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
@@ -496,6 +516,71 @@ span.msg {
 .verbose .coord .TBS img {width:54px;height:auto;}
 .verbose .coord .A img {width:auto;height:54px;}
 
+.fancybox-inner article{
+  display:block;
+  width:1104px;
+  float:none;
+}
+.fancybox-inner .popup-inner{
+  height:auto;
+}
+.fancybox-inner .nice_choice{
+  display:inline-block;
+  height:auto;
+}
+.fancybox-inner .choiceCol{
+  width:auto;
+  height:auto;
+  min-height:300px;
+  margin: 3px 0 3px 0px;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  overflow-scrolling:touch;
+}
+.fancybox-inner .choiceCol-inner{
+  position:relative;
+  width:auto;
+}
+.fancybox-inner .choiceCol-inner #niceSelectMessage li {
+  width:auto;
+}
+.fancybox-inner  #niceSelectMessage li a {
+  width:auto;
+}
+.fancybox-inner  #niceSelectMessage li a label{
+  width:992px;
+}
+.fancybox-inner  #niceSelectMessage input[type=radio]:checked + label{
+  color:white;
+  background:url(/images/greeting_messages/bg_star.gif) no-repeat rgb(250,86,155) 8px 8px;
+
+}
+.fancybox-inner  .stampdetail li{
+  padding:0;
+}
+.fancybox-inner  .stampdetail li label{
+  padding:12px;
+  border:solid 3px white;
+}
+.fancybox-inner  .stampdetail input[type=radio]:checked + label{
+  border-color:rgb(250,86,155)
+}
+.fancybox-inner .scrollCol{
+  display:none;
+}
+.fancybox-inner #stb{
+}
+.fancybox-inner #sti{
+  width:931px;
+  margin-left:10px;
+  overflow-x:scroll;
+  -webkit-overflow-scrolling:touch;
+  overflow-scrolling:touch;
+}
+.fancybox-inner #sti ul{
+  display:inline-flex;
+  width:auto;
+}
 </style>*/});
   }
 
@@ -1217,11 +1302,10 @@ span.msg {
         }
       },
       'afterShow':function(){
-        var fb=$("iframe.fancybox-iframe").contents();
-        fb.find(".choiceCol").css({
-            "overflow-y":"auto",
-              "-webkit-overflow-scrolling":"touch",
-              "overflow-scrolling":"touch"
+        var fb=$("div.fancybox-inner");
+        fb.find(".popup-close").click(function(){
+            $.fancybox.close();
+            return false;
           });
         var btn=fb.find("#TNiceDetailSubmit");
         btn.unbind("click").removeAttr("onclick").click(function(){
@@ -1286,8 +1370,8 @@ span.msg {
           });
       },
       'type': "iframe",
-      'href': "/nices/detail/1/YibaYLPkFhMTp3Uc/"
     };
+    arg.content=obj_nice_dialog;
     $.fancybox(arg);
     return false;
   }
