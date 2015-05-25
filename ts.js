@@ -92,7 +92,7 @@ text-align: center;
      "074_1_DC_1_ファッションスクエア_Pretty Pretty",
      "075_2_DF_1_ネオンケージ_MY SHOW TIME",
      "076_2_  _1_サイレントプレイス_チュチュ・バレリーナ",
-     "077_1_DC_2_ウェルカムカフェ_Lovely Pary Collection",
+     "077_1_DC_2_ウェルカムカフェ_Lovely Party Collection",
      "078_1_AS_2_アフタヌーンティー_ハローニューワールド",
      "___________"];
   dts.pop();
