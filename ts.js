@@ -126,6 +126,7 @@ text-align: center;
       "st":Number(r[3]),
       "sn":r[4],
       "mn":r[5],
+      "i":i,
       "n":0
     };
     dts[i]=r[0];
@@ -160,6 +161,8 @@ text-align: center;
 
     dts.sort(function(a,b){
         var i=dt[a].n-dt[b].n;
+        if(i)return i;
+        i=dt[a].i-dt[b].i;
         if(i)return i;
         i=dt[a].st-dt[b].st;
         if(i)return i;
