@@ -47,9 +47,9 @@ text-align: center;
      "010_3_  _1_スターアニス_ヒラリ/ヒトリ/キラリ",
      "011_3_LM_2_プリンセス_Moonlight destiny",
      "012_1_AF_2_フェアリードリーム_同じ地球のしあわせに",
-     "015_1_AS_1_エリアルパーク_オリジナルスター☆彡",
+     "015_1_AS_1_エリアルパーク_オリジナルスター\u2606彡",
      "016_2_SR_1_ミュージックネオン_アイドル活動!(Ver.ROCK)",
-     "017_2_SR_2_ロックンロック_KIRA☆Power",
+     "017_2_SR_2_ロックンロック_KIRA\u2606Power",
      "018_4_MT_3_チョコポップ探偵事務所_新・チョコレート事件",
      "020_1_  _1_トリプルメロディ_カレンダーガール",
      "022_1_AS_3_ファンシーアクション_右回りWonderland",
@@ -73,13 +73,13 @@ text-align: center;
      "048_4_VK_2_シティーナイトロード_オトナモード",
      "049_4_VK_1_サンシャインビーチ_笑顔のSuncatcher",
      "050_3_BS_3_アラビアンドリーム_アラビアンロマンス",
-     "051_3_BS_1_ミステリアスジャングル_ダンシング☆ベイビー",
+     "051_3_BS_1_ミステリアスジャングル_ダンシング\u2606ベイビー",
      "052_1_XX_1_キュート＆クール_フレンド",
      "056_1_DC_1_ドリーミングキュート_Let's アイカツ!",
      "057_2_LG_1_秘密の森_タルト・タタン",
      "058_4_VK_1_トランプルーム_Good morning my dream",
      "059_1_DC_2_あおぞらレイク_Du-Du-Wa DO IT!!",
-     "060_3_SA_3_スクールアクション_ラブリー☆ボム",
+     "060_3_SA_3_スクールアクション_ラブリー\u2606ボム",
      "061_4_VK_1_ジングルツリータウン_はろー! Winter Love♪",
      "062_3_RO_2_ロマンティック回廊_Passion flower",
      "063_1_AS_1_スターナイトメロディー_輝きのエチュード",
@@ -178,7 +178,7 @@ text-align: center;
         o_n=dt[n].n;
         $("#tstable").append('<tr class="an"><td rowspan=2 colspan=2>x'+dt[n].n+'</tr><tr></tr>');
       }
-      var r=$('<tr><td class="im" rowspan=2><img src="/images/tickets/ticket/img_item_stage_'+n+'.jpg"></td><td class="sn">'+dt[n].sn+'</td><tr><td class="mn">♪'+dt[n].mn+'</td></tr>');
+      var r=$('<tr><td class="im" rowspan=2><img src="/images/tickets/ticket/img_item_stage_'+n+'.jpg"></td><td class="sn">'+dt[n].sn+'</td><tr><td class="mn">\u266A'+dt[n].mn+'</td></tr>');
       var br=brs[dt[n].br];
       if(br>0){
         if(dt[n].br=="XX"){
