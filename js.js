@@ -213,14 +213,21 @@
       if(ls.find("div:first").length==0)return;
       var coin=ls.find("#coinCun span");
       if(coin.length==0){
-        ls=$("#ls");
-        if(ls.attr("src")=="/m_members/edit/"){
+        if(ls.find("#authMessage").length>0){
+          alert("==ログイン失敗==\n\n"+ls.find("#authMessage").text());
+          $("#wrapCol").css("opacity","");
+          disabled=false;
+          reset_ls();
+          return;
+        }
+        var lsa=$("#ls");
+        if(lsa.attr("src")=="/m_members/edit/"){
           alert("困った。");
-          alert(ls.find("html").html());
+          alert(ls.find(".message").html());
           return;
         }
         console.log("Redirecting to /edit/...");
-        ls.attr("src","/m_members/edit/");
+        lsa.attr("src","/m_members/edit/");
         return;
       }
       var ncoin=Number(coin.text());
