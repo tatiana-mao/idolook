@@ -467,7 +467,7 @@
             console.log("Unable to register:"+ymd);
             $("#ls").hide()
               .load(sched_comp)
-              .attr("src","/schedules/");
+              .attr("src","/schedules/?month="+ymd.substr(0,7));
             return;
           }
 
