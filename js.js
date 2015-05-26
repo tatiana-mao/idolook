@@ -307,7 +307,8 @@
     var ac=ncoin-oc;
     console.log("NCOIN:"+ncoin+"(+"+ac+")");
     if(!ac)return;
-    var acd=$('<span id="acd">+'+ac+'</span>')
+    if(ac>=0)ac="+"+String(ac);
+    var acd=$('<span id="acd">'+ac+'</span>')
       .css({
         right:-640,
         bottom:-940,
