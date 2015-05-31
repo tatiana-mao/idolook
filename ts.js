@@ -37,7 +37,7 @@ text-align: center;
 </style>*/});
 
   var dts=
-    ["081_3_RO_1_ミスティック宮殿_Chica Chica",
+    ["081_3_RO_1_ミスティック宮殿_Chica\u00D7Chica",
      "082_4_VK_1_パイレーツマリーナ_サマー\u2606マジック",
      "083_4_RC_1_クッキー&amp;クローバー_恋するみたいなキャラメリゼ",
      "074_1_DC_1_ファッションスクエア_Pretty Pretty",
