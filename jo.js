@@ -152,6 +152,12 @@
           a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
           var a = $($.parseHTML(a)).find(".list-from_request ul");
           adduid("ph_requested",a,6*86400);
+          $(".ph_requested .uid").each(function() {
+              var uid=$(this).find("a:first").attr("href").split("/")[3];
+              var li=$(".cls_"+uid);
+              li.find(".img_webfriend").remove();
+              li.find(".av").append('<span class="img_webfriend img_requested"></span>');
+            });
         });
     if(objs.nice)
       objs.nice.then(add_nice);
@@ -412,6 +418,11 @@ a:link {text-decoration:none;}
   position: relative;
   left: 66%;
   bottom:60%;
+  opacity:1;
+}
+
+.uid .img_requested {
+  opacity:0.6;
 }
 
 span.msg {
