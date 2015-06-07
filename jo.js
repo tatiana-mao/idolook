@@ -245,7 +245,8 @@ a:focus {outline:0;}
   position: absolute;
   top: 85px;
   bottom: 87px;
-  width: 100%
+  width: 100%;
+  height: auto;
 }
 #gnavi {
   height: 338px !important;
