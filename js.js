@@ -192,7 +192,7 @@
           var uid=$(this).attr("id");
           var i=users.indexOf(uid);
           if(i<0)return false;
-          if(!window.confirm(name+" を一覧から削除します。\n\n- ソシャゲからは除外されます。\n- 再登録も可能です。"))
+          if(!window.confirm(localStorage[uid+".name"]+" を一覧から削除します。\n\n- ソシャゲからは除外されます。\n- 再登録も可能です。"))
             return false;
           users.splice(i,1);
           $("#"+uid).remove();
