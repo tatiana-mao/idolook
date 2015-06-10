@@ -178,6 +178,14 @@
           .append(obj_nice_dialog.find(".stampCol-bottom"));
         obj_nice_dialog.find(".choiceCol")
           .css("max-height",$("body").innerHeight()-600);
+        obj_nice_dialog.find(".nice_comment").each(function(){
+            console.log($(this).find("input:radio").val());
+            console.log($(this).find("label").text());
+          });
+        obj_nice_dialog.find(".stampdetail li").each(function(){
+            console.log($(this).find("input:radio").val());
+            console.log($(this).find("img").attr("src"));
+          });
       });
   }
 
@@ -290,6 +298,14 @@ a:focus {outline:0;}
   padding-top:10px;
 }
 #xoffer ul+h3 {
+  clear: both;
+  padding-top:1em;
+}
+#xoffer h4 {
+  font-size:24pt;
+  padding-top:10px;
+}
+#xoffer ul+h4 {
   clear: both;
   padding-top:1em;
 }
@@ -1131,13 +1147,22 @@ span.msg {
   function add_nice(a) {
     a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
     a = $($.parseHTML(a)).find("div.commentCol");
-    $(".ph_nice").html("");
+    var cc=".ph_nice .cur";
+    $(cc).html("");
+    var dt9=new Date;
+    dt9.setHours(dt9.getHours()+9);
+    console.log(dt9.getUTCFullYear());
+    console.log(1+dt9.getUTCMonth());
+    console.log(dt9.getUTCDate());
+    console.log(dt9.getUTCHours());
+    console.log(dt9.getUTCMinutes());
+    var cdt=10000*dt9.getUTCFullYear()+100+100*dt9.getUTCMonth()+dt9.getUTCDate();
+    var f_today=true;
+    console.log(cdt);
     a.find("dl.topics-aktphone").each(function(){
         var dl=$(this);
         var uid=dl.find("a:first").attr("href").split("/")[3];
         console.log(uid);
-        // 古いものは処理しない
-        if($(".ph_nice .cls_"+uid).length>0)return;
         var texts=dl.find(".title").contents();
         var name=texts.eq(0).text();
         var av=dl.find("img:first").attr("data-src");
@@ -1153,7 +1178,23 @@ span.msg {
             msgs[uid]+=' <img src="'+stamp+'" class="imgstamp">';
           }
         }
-        append_li(".ph_nice",uid);
+        var dt=dl.find(".time").text();
+        var da=dt.match(/^(\d{4})\D+(\d+)\D+(\d+)/);
+        var dd=10000*da[1]+100*da[2]+1*da[3];
+        if(cdt!=dd){
+          console.log(dd);
+          cdt=dd;
+          $(".ph_nice").append('<h4>'+dt+'</h4><ul class="verbose '+cdt+'"></ul>');
+          cc=".ph_nice ."+cdt;
+          f_today=false;
+        }
+        // 古いものは処理しない
+        if($(".ph_nice .cls_"+uid).length>0)return;
+        if(f_today){
+          $(".ph_nice").prepend('<h4>今日のいいね!</h4>');
+          f_today=false;
+        }
+        append_li(cc,uid);
         load_uid(uid,12*3600);
       });
   }
