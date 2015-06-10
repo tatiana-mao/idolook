@@ -935,7 +935,7 @@ span.msg {
       /* Remove -- serialized */
       for(var i=0;i<orig_uids.length;i++){
         var uid=orig_uids[i];
-        if(ofl_uids.indexOf(uid)>=0)continue;
+        /*if(ofl_uids.indexOf(uid)>=0)continue;*/
         console.log("Removing: "+uid);
         orig_uids.splice(i,1);
         offer_workers[0]=kick_offer_cancel(uid);
