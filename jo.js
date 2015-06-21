@@ -46,6 +46,8 @@
      hide_self=function(){
       if(window.JSJCJK.my_uid)
         $(".cls_"+window.JSJCJK.my_uid).hide();
+        if(window.JSJCJK.jo.av)
+          set_av_from_large(window.JSJCJK.my_uid,window.JSJCJK.jo.av);
     }
     h={
     load:do_load,

@@ -265,6 +265,14 @@
       var name=ls.find("#nickname span").text().replace(/\s/g,"");
       console.log(name);
 
+      if(window.JSJCJK.jo){
+        window.JSJCJK.jo.av=ls.find(".profImg img").attr("src");
+        console.log("********MYAV:"+window.JSJCJK.jo.av);
+      }else{
+        window.JSJCJK.jo.av=null;
+        console.log("********MYAV:NOTFOUND");
+      }
+
       $("#header").replaceWith(ls.find("#header"));
       $("#footer").replaceWith(ls.find("#footer"));
       var uid=window.JSJCJK.my_uid;
