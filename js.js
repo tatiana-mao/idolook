@@ -88,11 +88,20 @@
   padding-top: 2em;
   font-size: 20pt;
 }
-#xusers form .MMemberMail {
+.creds{
+  display:inline-block;
+}
+.creds img{
+  vertical-align:middle;
+}
+.creds .MMemberMail {
   width: 18em;
 }
-#xusers form .MMemberPassword {
-  width: 12em;
+.creds .MMemberPassword {
+  width: 18em;
+}
+#creds>input{
+  vertical-align:text-bottom;
 }
 #xusers input[type="submit"] {
   padding: 8pt 1em 8pt 1em;
@@ -141,8 +150,16 @@
   </form>
   <form id="creds" target="ls" action="/" method="POST">
     <input type="hidden" name="_method" value="POST"/>
-    <input type="text" name="data[MMember][mail]" class="MMemberMail"/>
-    <input type="password" name="data[MMember][password]" class="MMemberPassword"/>
+    <div class="creds">
+      <div>
+        <img src="/images/login/icon_mail.gif"/>
+        <input type="text" name="data[MMember][mail]" class="MMemberMail"/>
+      </div>
+      <div>
+        <img src="/images/login/icon_pass.gif"/>
+        <input type="password" name="data[MMember][password]" class="MMemberPassword"/>
+      </div>
+    </div>
     <input id="cred" class="forlogin" type="submit" value="ログイン" />
   </form>
   <form action="/m_member_logins/logout/">
