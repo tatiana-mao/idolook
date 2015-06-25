@@ -188,6 +188,10 @@
     add_ht('.xoffer', function(){/*
 <div id="xoffer">
   <div id="xacc">
+    <h2>いいね!</h2>
+    <div class="ph_nice">
+      <ul class="cur verbose"><li>Loading...</li></ul>
+    </div>
     <h2>Favorites</h2>
     <div>
       <h3>チームメイト</h3>
@@ -201,11 +205,6 @@
         <input type="button" id="do_new_as_read" value="全既読"/>
         <input type="button" id="mode_favs_del" value="全削除"/>
       </div>
-    </div>
-    <h2>いいね!</h2>
-    <div>
-      <h3>いいね!</h3>
-      <ul class="ph_nice verbose"><li>Loading...</li></ul>
     </div>
     <h2>マイフレ</h2>
     <div>
