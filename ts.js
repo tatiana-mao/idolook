@@ -1,20 +1,20 @@
 (function(){
+  $("#header").after('<div id="console"><input id="reload" type="button" value="Reload">');
   $("#footer").css({position:"absolute",bottom:0});
-  $("#container").css({position:"absolute",top:85,bottom:87,"overflow-x":"hidden","-webkit-overflow-scrolling":"touch","overflow-scrolling":"touch"}).prepend('<input id="reload" type="button" value="Reload"><table id="tstable">');
+  $("#container").css({position:"absolute",top:201,bottom:87,width:"100%","overflow-x":"hidden","-webkit-overflow-scrolling":"touch","overflow-scrolling":"touch"}).prepend('<table id="tstable">');
   var ts={};
 
   function hd(fn){return fn.toString().match(/[^]*\/\*([^]*)\*\/;?\}$/)[1];}
   function add_ht(flt,fn){$(flt).append(hd(fn));}
   add_ht("head", function(){/*<style type="text/css">
+#console {
+  position: absolute;
+  top: 80px;
+  bottom:201px;
+}
 #footer {
   position: absolute;
   bottom: 0px;
-}
-#container {
-  position: absolute;
-  top: 85px;
-  bottom: 87px;
-  width: 100%
 }
 #tstable {width:1200px;line-height:initial;}
 #tstable tr:nth-child(4n-3){background: floralwhite;}
