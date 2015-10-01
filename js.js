@@ -145,7 +145,7 @@
   </ul>
   <form id="spad" target="ls" action="/" method="POST">
     <input type="hidden" name="_method" value="POST"/>
-    <input type="hidden" name="data[MMember][mail]" class="MMemberMail"/>
+    <input type="hidden" name="data[MMember][login_mail]" class="MMemberMail"/>
     <input type="hidden" name="data[MMember][password]" class="MMemberPassword"/>
   </form>
   <form id="creds" target="ls" action="/" method="POST">
@@ -153,7 +153,7 @@
     <div class="creds">
       <div>
         <img src="/images/login/icon_mail.gif"/>
-        <input type="text" name="data[MMember][mail]" class="MMemberMail"/>
+        <input type="text" name="data[MMember][login_mail]" class="MMemberMail"/>
       </div>
       <div>
         <img src="/images/login/icon_pass.gif"/>
@@ -399,7 +399,7 @@
     var requires_relogin=false;
     creds=creds?JSON.parse(creds):{};
     var form={
-      "data[MMember][mail]":creds[uid]["mailto"],
+      "data[MMember][login_mail]":creds[uid]["mailto"],
       "data[MMember][password]":creds[uid]["passwd"],
       "_method":"POST"
     };
