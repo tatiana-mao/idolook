@@ -122,6 +122,7 @@ text-align: center;
   SC:42,
   DF:114,
   RC:124,
+  DD:144,
   XX:9999,
   "  ":-1
   }
