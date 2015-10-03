@@ -36,7 +36,6 @@
 </style>*/});
 
   $("#wrapCol").remove();
-  // $("#container").css({position:"absolute",top:85,bottom:87,width:"100%","overflow-x":"hidden","-webkit-overflow-scrolling":"touch","overflow-scrolling":"touch"}).prepend('<table id="tstable">');
   $("#container").css({position:"absolute",top:85,bottom:87,width:"100%","overflow-x":"hidden","-webkit-overflow-scrolling":"touch","overflow-scrolling":"touch"}).prepend('<div id="accordion">');
 
   var rr={
@@ -114,7 +113,7 @@
           if(pk!=ck){
             pk=ck;
             $("#accordion")
-            .append('<h3>'+pk+'</h3><div><table id="t_'+ck+'" class="cardlist"><tr><th>品番</th><th>名称</th><th>部位</th><th>タイプ</th><th>レア</th><th>ブランド</th></tr>');
+            .append('<h3>'+pk+'</h3><div><table id="t_'+ck+'" class="cardlist"><tr><th colspan=2>品番<th>名称<th>部位<th>タイプ<th>ブランド');
           }
           var r='<tr>';
           r += cs[ks[i]].html();
@@ -128,17 +127,27 @@
   function update_ref(a){
     var ref0cs=$($.parseHTML(a)).find("#sort_table tbody tr");
     ref0cs.each(function(){
-        var t=$(this).find("td:nth-child(3)");
-        if(t.text() in tb)t.text(tb[t.text()]);
-        var r=$(this).find("td:nth-child(5)");
-        if(r.text() in rr)r.text(rr[r.text()]);
+        var n=$(this).find("td:nth-child(2)").text();
+        var t=$(this).find("td:nth-child(3)").text();
+        if(t in tb)t=tb[t];
+        var r=$(this).find("td:nth-child(5)").text();
+        if(r in rr)r=rr[r];
+        if(r=='-')r='';
+        var p=$(this).find("td:nth-child(4)").text();
+        var b=$(this).find("td:nth-child(6)").text();
         var k=$(this).find("td:first").text();
         if(k=="PG-036"){
-          if(t.text()=="A")
+          if(t=="A")
             k="PG-036A";
         }
         if(!(k in cs)){
-          cs[k]=$(this);
+          cs[k]=$('<tr><td>'+k
+                  +'<td>'+r
+                  +'<td>'+n
+                  +'<td>'+t
+                  +'<td>'+p
+                  +'<td>'+b
+                  +'</td></tr>');
         }
       });
     console.log("--update_ref");
