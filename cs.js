@@ -99,8 +99,17 @@
         var ks=Object.keys(cs).sort(function(a,b){
             var as=a.split("-");
             var bs=b.split("-");
-            if(as[0]<bs[0])return -1;
-            else if(as[0]>bs[0])return 1;
+            var an=Number(as[0])==as[0]?1:0;
+            var bn=Number(bs[0])==bs[0]?1:0;
+            if(an<bn)return 1;
+            if(an>bn)return -1;
+            if(an){
+              if(as[0]<bs[0])return 1;
+              else if(as[0]>bs[0])return -1;
+            }else{
+              if(as[0]<bs[0])return -1;
+              else if(as[0]>bs[0])return 1;
+            }
             if(as[1]<bs[1])return -1;
             else if(as[1]>bs[1])return 1;
             console.log("???SORT:"+a+" -- "+b);
