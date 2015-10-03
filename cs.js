@@ -39,6 +39,21 @@
   // $("#container").css({position:"absolute",top:85,bottom:87,width:"100%","overflow-x":"hidden","-webkit-overflow-scrolling":"touch","overflow-scrolling":"touch"}).prepend('<table id="tstable">');
   $("#container").css({position:"absolute",top:85,bottom:87,width:"100%","overflow-x":"hidden","-webkit-overflow-scrolling":"touch","overflow-scrolling":"touch"}).prepend('<div id="accordion">');
 
+  var rr={
+    "ノーマル": "N",
+    "レア": "R",
+    "プレミアムレア": "PR",
+    "キャンペーンレア": "CP"
+  };
+
+  var tb={
+    "トップス": "T",
+    "ボトムス": "B",
+    "シューズ": "S",
+    "トップス＆ボトムス": "TB",
+    "アクセサリー": "A"
+  };
+
   var my_used_ks=[];
   var cs={};
 
@@ -99,7 +114,7 @@
           if(pk!=ck){
             pk=ck;
             $("#accordion")
-            .append('<h3>'+pk+'</h3><div><table id="t_'+ck+'" class="cardlist"><tr><th>品番</th><th>名称</th><th>部位</th><th>タイプ</th><th>レアリティ</th><th>ブランド</th></tr>');
+            .append('<h3>'+pk+'</h3><div><table id="t_'+ck+'" class="cardlist"><tr><th>品番</th><th>名称</th><th>部位</th><th>タイプ</th><th>レア</th><th>ブランド</th></tr>');
           }
           var r='<tr>';
           r += cs[ks[i]].html();
@@ -113,9 +128,13 @@
   function update_ref(a){
     var ref0cs=$($.parseHTML(a)).find("#sort_table tbody tr");
     ref0cs.each(function(){
+        var t=$(this).find("td:nth-child(3)");
+        if(t.text() in tb)t.text(tb[t.text()]);
+        var r=$(this).find("td:nth-child(5)");
+        if(r.text() in rr)r.text(rr[r.text()]);
         var k=$(this).find("td:first").text();
         if(k=="PG-036"){
-          if($(this).find("td:nth-child(3)").text()=="アクセサリー")
+          if(t.text()=="A")
             k="PG-036A";
         }
         if(!(k in cs)){
