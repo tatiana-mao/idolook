@@ -128,7 +128,6 @@
   function do_relogin(objs){
     var disabled=false;
     var d_uid=$.Deferred().resolve();
-    var script=null;
     window.JSJCJK.my_uid=undefined;
 
     var users=localStorage["users"];
@@ -235,11 +234,6 @@
       var ls=$("#ls").contents();
       console.log(window.ls.document);
       console.log(ls.find("script").text());
-      var s=ls.find("head script").text().match(/\$\.fancybox\(({[^{}]*})\)/m);
-      if(s&&s.length>=2){
-        script=s[1].replace(/(\w+)\s*:/g,'"$1":').replace(/'(\w+)'\s*:/g,'"$1":').replace(/:'([^\']+)'/g,':"$1"');
-        console.log(script);
-      }
       if(ls.find("div:first").length==0)return;
       var coin=ls.find("#coinCun span");
       if(coin.length==0){
@@ -308,15 +302,6 @@
         upd_ncoin(uid,ncoin,"#coinCun span");
         window.JSJCJK.login_completed(uid);
         console.log(uid+":LOGIN COMPLETED");
-        if(script){
-          try{
-            $.fancybox(JSON.parse(script));
-          }catch(e){
-            alert("意味わかんね通知。次のヤツをコピペして教えれ。");
-            alert(script);
-            alert(e);
-          }
-        }
       }
     }
   }
