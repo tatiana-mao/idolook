@@ -268,9 +268,6 @@
       if(window.JSJCJK.jo){
         window.JSJCJK.jo.av=ls.find(".profImg img").attr("src");
         console.log("********MYAV:"+window.JSJCJK.jo.av);
-      }else{
-        window.JSJCJK.jo.av=null;
-        console.log("********MYAV:NOTFOUND");
       }
 
       $("#header").replaceWith(ls.find("#header"));
