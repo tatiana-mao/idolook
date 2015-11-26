@@ -38,6 +38,9 @@ text-align: center;
 
   var dts=
     [
+     "127_2_  _1_エレクトロニックホール_アイドル活動!",
+     "103_2_LG_1_クイーンズガーデン_いばらの女王",
+     "102_4_MP_1_ぐるぐるモンスター_ミエルミエール",
      "097_3_DD_1_グローウィングハイヒール_lucky train!",
      "109_3_  _1_ダンスホール_Wake up my music",
      "115_3_  _1_フィーバーナイト_Take Me Higher",
@@ -75,25 +78,26 @@ text-align: center;
      "033_4_HR_1_カラフルフルーツ_Angel Snow",
      "007_4_MT_1_サニーパーク_ダイヤモンドハッピー",
      "052_1_XX_1_キュート＆クール_フレンド",
+     "104_4_VK_2_トロピカルビーチ_ハローハロー",
      "099_2_DF_2_ダンシングランウェイ_LOVE GAME",
      "098_1_DC_2_ドリームライン_START DASH SENSATION",
      "059_1_DC_2_あおぞらレイク_Du-Du-Wa DO IT!!",
-     "072_1_AS_2_スイーツチョコ_Growing for a dream",
      "078_1_AS_2_アフタヌーンティー_ハローニューワールド",
      "077_1_DC_2_ウェルカムカフェ_Lovely Party Collection",
      "025_1_AS_2_へヴンズランウェイ_Dance in the rain",
      "044_1_AF_2_フローラルガーデン_ハートのメロディ",
+     "072_1_AS_2_スイーツチョコ_Growing for a dream",
      "012_1_AF_2_フェアリードリーム_同じ地球のしあわせに",
-     "011_3_LM_2_プリンセス_Moonlight destiny",
-     "046_2_LG_2_ゴシックハウス_永遠の灯",
      "086_2_  _2_オープンエアミュージック_Hey! little girl",
      "085_2_LG_2_願いの道_エメラルドの魔法",
      "017_2_SR_2_ロックンロック_KIRA\u2606Power",
-     "042_2_FG_2_ミルキーウェイ_prism spiral",
+     "046_2_LG_2_ゴシックハウス_永遠の灯",
      "047_2_FG_2_エレクトリックタイム_stranger alien",
+     "042_2_FG_2_ミルキーウェイ_prism spiral",
      "062_3_RO_2_ロマンティック回廊_Passion flower",
      "024_3_BS_2_アラビアンパレス_Kira・pata・shining",
      "073_3_SA_2_ネオンロード_Trap of Love",
+     "011_3_LM_2_プリンセス_Moonlight destiny",
      "068_4_VK_2_ディープシーファンタジー_Poppin' Bubbles",
      "026_4_MT_2_トリックハウス_マジカルタイム",
      "037_4_HR_2_デザートランド_CHU-CHU RAINBOW",
@@ -109,6 +113,7 @@ text-align: center;
      "006_3_SA_3_スパイアクション_Thrilling Dream",
      "080_4_  _3_アイカツレストラン_Sweet Heart Restaurant",
      "018_4_MT_3_チョコポップ探偵事務所_新・チョコレート事件",
+     "105_1_  _3_ハピネストイズ_シアワセ方程式",
      "101_3_DD_3_トキメキカラット_約束カラット",
      "___________"];
   dts.pop();
@@ -131,6 +136,7 @@ text-align: center;
   DF:114,
   RC:124,
   DD:144,
+  MP:164,
   XX:9999,
   "  ":-1
   }
