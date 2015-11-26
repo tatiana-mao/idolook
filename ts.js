@@ -38,6 +38,7 @@ text-align: center;
 
   var dts=
     [
+     "118_3_  _2_クリスマス2016(ルミナス)_We wish you a merry Christmas",
      "127_2_  _1_エレクトロニックホール_アイドル活動!",
      "103_2_LG_1_クイーンズガーデン_いばらの女王",
      "102_4_MP_1_ぐるぐるモンスター_ミエルミエール",
@@ -81,6 +82,7 @@ text-align: center;
      "104_4_VK_2_トロピカルビーチ_ハローハロー",
      "099_2_DF_2_ダンシングランウェイ_LOVE GAME",
      "098_1_DC_2_ドリームライン_START DASH SENSATION",
+     "113_3_  _2_クリスマス2016_We wish you a merry Christmas",
      "059_1_DC_2_あおぞらレイク_Du-Du-Wa DO IT!!",
      "078_1_AS_2_アフタヌーンティー_ハローニューワールド",
      "077_1_DC_2_ウェルカムカフェ_Lovely Party Collection",
