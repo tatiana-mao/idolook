@@ -178,7 +178,7 @@ text-align: center;
     });
 
   function upd(){
-    for (var i=0;i<dts.length;i++)dts[i].n=0;
+    for (var i=0;i<dts.length;i++)dt[dts[i]].n=0;
     $(".myTicketWrap>dl").each(function(){
         var r=$(this);
         var n=r.find(".img img").attr("src").match(/_(\d+)\.jpg/);
