@@ -39,9 +39,14 @@ text-align: center;
   var dts=
     [
      "127_2_  _1_エレクトロニックホール_アイドル活動!",
+
+     "106_1_DC_1_クラウンアーチ_START DASH SENSATION",
      "103_2_LG_1_クイーンズガーデン_いばらの女王",
      "102_4_MP_1_ぐるぐるモンスター_ミエルミエール",
      "097_3_DD_1_グローウィングハイヒール_lucky train!",
+     "111_1_DC_1_アイカツ8 2015ステージ_Lovely Party Collection",
+     "117_1_DC_1_あおぞらレイク ライブVer_Du-Du-Wa DO IT!!",
+     "116_2_SR_1_スターダストミュージック_KIRA\u2606Power",
      "109_3_  _1_ダンスホール_Wake up my music",
      "115_3_  _1_フィーバーナイト_Take Me Higher",
      "110_4_  _1_スプリングスクール_G線上のShining Sky",
