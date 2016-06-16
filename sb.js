@@ -10,6 +10,14 @@
   var pts = ["トップス", "ボトムス", "シューズ"];
   var txs = ["\u2605", "\u2460", "\u2461", "\u2462"];
   var dcs = ["\u2605", "a", "b"];
+  var revs = {
+    "\u2605": 1,
+    "\u2460": 1,
+    "\u2461": 2,
+    "\u2462": 3,
+    "a": 1,
+    "b": 2,
+  };
   var m_N = {
   cute: 10,
   cool: 28,
@@ -212,8 +220,9 @@
                     var f_medal = (a.find(".is_medal").length > 0);
                     cache[name][id][fullname] = f_medal;
                     if (f_medal) {
-                      var tx = 1 + (i >> 1);
-                      var dc = 1 + (i & 1);
+                      var fn_td = fullname.match(/-([^-]+)-([^-]+)$/);
+                      var tx = revs[fn_td[1]];
+                      var dc = revs[fn_td[2]];
                       var fullid = ".sb_" + name + "-" + tx + "-" + dc;
                       $(fullid + " .m_dress_card_img").removeClass("is_none");
                       if (f_mine) {
