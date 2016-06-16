@@ -61,7 +61,6 @@
     localStorage.setItem("ids", JSON.stringify(ids));
   }
 
-  var dress_ids = [];
   var master = {};
   var cache = {};
   var dresses = {P:{}, R:{}, N:{}};
@@ -72,6 +71,83 @@
 
   var q = [];
   var q2 = [];
+
+  if ($("#sb_root").length == 0) {
+    my_dress.each(function() {
+        var a = $(this);
+        var name = a.find(".m_dress_card_name").text().trim();
+        a.attr("id", name);
+      });
+
+    $(".m_inner").prepend('<div id="sb_root"><h2>PR</h2></div>');
+
+    var m_prs = [1, 19, 37, 55];
+    for (var i in m_prs) {
+      var cls = "sb_pr-" + m_prs[i];
+      $("#sb_root").append('<ul class="' + cls + ' m_dress"></ul>');
+      for (var j = 0; j < 3; ++j) {
+        $("#1-" + (m_prs[i] + j).toString()).detach().appendTo("." + cls)
+          .addClass("sb_1-" + (m_prs[i] + j).toString());
+      }
+    }
+
+    for (var tp in m_N) {
+      for (var pt = 0; pt < 3; ++pt) {
+        $("#sb_root").append('<h2>' + tp + ':' + pts[pt] + '</h2><ul class="sb_R-' + tp + '-' + pt + '"></ul><ul class="sb_N-' + tp + '-' + pt + '"></ul>');
+      }
+    }
+
+    var m_rs = [4, 22, 40, 58];
+    for (var i in m_rs) {
+      for (var j = 0; j < 2; ++j) {
+        for (var k = 0; k < 3; ++k) {
+          var cls = "sb_R-" + tps[i] + "-" + k;
+          var n = m_rs[i] + 3 * j + k;
+          var a = $("#1-" + n);
+          var img = a.find("img:first").attr("src");
+          for (var tx = 1; tx <= 3; ++tx) {
+            var aa = a.clone();
+            aa.removeAttr("id");
+            aa.addClass("sb_1-" + n).addClass("sb_1-" + n + "-" + tx + "-1");
+            aa.find(".is_medal").detach();
+            aa.find(".m_dress_card_name").text("1-" + n + "-" + txs[tx] + "-\u2605");
+            aa.find(".m_dress_card_img").addClass("is_none");
+            aa.find("img:first").attr("src", img.replace(/^(.+)1(\.\w+)$/, "$1" + tx.toString() + "$2"));
+            aa.appendTo("." + cls);
+          }
+          a.hide();
+        }
+      }
+    }
+
+    for (var tp in m_N) {
+      for (var pt = 0; pt < 3; ++pt) {
+        var cls = "sb_N-" + tp + "-" + pt;
+        for (var dc = 1; dc <= 2; ++dc) {
+          for (var i = 0; i < 3; ++i) {
+            var n = m_N[tp] + 3 * i + pt;
+            var a = $("#1-" + n);
+            a.hide();
+            var img = a.find("img:first").attr("src");
+            for (var tx = 1; tx <= 3; ++tx) {
+              var aa = a.clone();
+              aa.removeAttr("id");
+              aa.addClass("sb_1-" + n).addClass("sb_1-" + n + "-" + tx + "-" + dc);
+              aa.find(".is_medal").detach();
+              aa.find(".m_dress_card_name").text("1-" + n + "-" + txs[tx] + "-" + dcs[dc]);
+              aa.find(".m_dress_card_img").addClass("is_none");
+              aa.find("img:first").attr("src", img.replace(/^(.+)1(\.\w+)$/, "$1" + (2 * tx + dc - 2).toString() + "$2"));
+              aa.appendTo("." + cls);
+              aa.show();
+            }
+          }
+        }
+      }
+    }
+
+    $("#sb_root").append('<h2>その他</h2>');
+  }
+
   for (var id in ids) {
     if (id == my_id && my_dress.length > 0) {
       console.log("****" + id);
@@ -96,108 +172,32 @@
         });
     });
 
-  function fetch(id) {
+  $("#sb_root").prepend('<input type="button" id="reload" value="Reload">');
+  $("#reload").click(function () {
+    fetch(my_id, true);
+  });
+
+  function fetch(id, f_mine) {
     return $.get("/mypages/digital_binders/" + id + "/", function (a) {
         a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
-        parse(id, $($.parseHTML(a)).find(".m_dress").children());
+        parse(id, $($.parseHTML(a)).find(".m_dress").children(), f_mine);
       });
   }
 
-  function parse(id, dresses, f_id) {
+  function parse(id, dresses, f_mine) {
     console.log("====" + id + ":" + ids[id]);
-
-    if (f_id)
-      dresses.each(function() {
-          var a = $(this);
-          var name = a.find(".m_dress_card_name").text().trim();
-          dress_ids.push(name);
-          a.attr("id", name);
-        });
-
-    if ($("#sb_root").length == 0) {
-      $(".m_inner").prepend('<div id="sb_root"><h2>PR</h2></div>');
-
-      var m_prs = [1, 19, 37, 55];
-      for (var i in m_prs) {
-        var cls = "sb_pr-" + m_prs[i];
-        $("#sb_root").append('<ul class="' + cls + ' m_dress"></ul>');
-        for (var j = 0; j < 3; ++j) {
-          $("#1-" + (m_prs[i] + j).toString()).detach().appendTo("." + cls);
-        }
-      }
-
-      for (var tp in m_N) {
-        for (var pt = 0; pt < 3; ++pt) {
-          $("#sb_root").append('<h2>' + tp + ':' + pts[pt] + '</h2><ul class="sb_R-' + tp + '-' + pt + '"></ul><ul class="sb_N-' + tp + '-' + pt + '"></ul>');
-        }
-      }
-
-      var m_rs = [4, 22, 40, 58];
-      for (var i in m_rs) {
-        for (var j = 0; j < 2; ++j) {
-          for (var k = 0; k < 3; ++k) {
-            var cls = "sb_R-" + tps[i] + "-" + k;
-            var n = m_rs[i] + 3 * j + k;
-            var a = $("#1-" + n);
-            var img = a.find("img:first").attr("src");
-            for (var tx = 1; tx <= 3; ++tx) {
-              var aa = a.clone();
-              aa.removeAttr("id");
-              aa.addClass("sb_1-" + n).addClass("sb_1-" + n + "-" + tx + "-1");
-              aa.find(".is_medal").detach();
-              aa.find(".m_dress_card_name").text("1-" + n + "-" + txs[tx] + "-\u2605");
-              aa.find(".m_dress_card_img").addClass("is_none");
-              aa.find("img:first").attr("src", img.replace(/^(.+)1(\.\w+)$/, "$1" + tx.toString() + "$2"));
-              aa.appendTo("." + cls);
-            }
-            a.hide();
-          }
-        }
-      }
-
-      for (var tp in m_N) {
-        for (var pt = 0; pt < 3; ++pt) {
-          var cls = "sb_N-" + tp + "-" + pt;
-          for (var dc = 1; dc <= 2; ++dc) {
-            for (var i = 0; i < 3; ++i) {
-              var n = m_N[tp] + 3 * i + pt;
-              var a = $("#1-" + n);
-              a.hide();
-              var img = a.find("img:first").attr("src");
-              for (var tx = 1; tx <= 3; ++tx) {
-                var aa = a.clone();
-                aa.removeAttr("id");
-                aa.addClass("sb_1-" + n).addClass("sb_1-" + n + "-" + tx + "-" + dc);
-                aa.find(".is_medal").detach();
-                aa.find(".m_dress_card_name").text("1-" + n + "-" + txs[tx] + "-" + dcs[dc]);
-                aa.find(".m_dress_card_img").addClass("is_none");
-                aa.find("img:first").attr("src", img.replace(/^(.+)1(\.\w+)$/, "$1" + (2 * tx + dc - 2).toString() + "$2"));
-                aa.appendTo("." + cls);
-                aa.show();
-              }
-            }
-          }
-        }
-      }
-
-      $("#sb_root").append('<h2>その他</h2>');
-    }
 
     dresses.each(function() {
         var a = $(this);
         var name = a.find(".m_dress_card_name").text().trim();
         var href = a.find(">a").attr("href");
-        if (f_id) {
-          dress_ids.push(name);
-          a.attr("id", name);
-        }
         if (!(name in cache)) cache[name] = {};
 
         if (a.find(".is_medal").length > 0) {
           cache[name][id] = {is_medal: true};
           update(name);
           $(".sb_" + name + " .m_dress_card_img").removeClass("is_none");
-          if (f_id)
+          if (f_mine)
             $(".sb_" + name + " .m_dress_card_img")
               .append('<img src="/images/binder/img_medal-comp.png" alt="" class="is_medal">');
         } else if (a.find(".is_none").length > 0) {
@@ -216,7 +216,7 @@
                       var dc = 1 + (i & 1);
                       var fullid = ".sb_" + name + "-" + tx + "-" + dc;
                       $(fullid + " .m_dress_card_img").removeClass("is_none");
-                      if (f_id) {
+                      if (f_mine) {
                         $(fullid + " .m_dress_card_img")
                           .append('<img src="/images/binder/img_medal-comp.png" alt="" class="is_medal">');
                       }
