@@ -1,4 +1,6 @@
 (function(){
+  document.oncontextmenu=null;
+
   var ids = {};
   var l_ids = localStorage.getItem("ids");
   if (l_ids) {
