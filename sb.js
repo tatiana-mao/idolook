@@ -64,7 +64,11 @@
   pop:  ["スマイル", "チェーン"],
   };
 
-  var my_id = $("div.fb-like").data("href").match(/\/([0-9A-Za-z]{16})\//)[1];
+  var my_id = $("div.fb-like").data("href").match(/\/([0-9A-Za-z]{16})\//);
+  if (!my_id && confirm("IDが取得できません。メニューからやりなおして。")) {
+    location.href = "http://mypage.aikatsu.com/menus/";
+  }
+  my_id = my_id[1];
   var my_name = $("div.m_login-name span").text().trim();
   if (my_id && my_name) {
     ids[my_id] = {name: my_name};
