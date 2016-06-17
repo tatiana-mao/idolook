@@ -82,6 +82,9 @@
   var q = [];
   var q2 = [];
 
+
+  $("head").append('<link rel="stylesheet" href="http://code.jquery.com/ui/1.11.3/themes/smoothness/jquery-ui.css">');
+
   if ($("#sb_root").length == 0) {
     my_dress.each(function() {
         var a = $(this);
@@ -89,12 +92,12 @@
         a.attr("id", name);
       });
 
-    $(".m_inner").prepend('<div id="sb_root"><h2>PR</h2></div>');
+    $(".m_inner").prepend('<div id="sb_root"><h3>PR</h3><div id="sb_pr"></div></div><h2>その他</h2>');
 
     var m_prs = [1, 19, 37, 55];
     for (var i in m_prs) {
       var cls = "sb_pr-" + m_prs[i];
-      $("#sb_root").append('<ul class="' + cls + ' m_dress"></ul>');
+      $("#sb_pr").append('<ul class="' + cls + ' m_dress"></ul>');
       for (var j = 0; j < 3; ++j) {
         $("#1-" + (m_prs[i] + j).toString()).detach().appendTo("." + cls)
           .addClass("sb_1-" + (m_prs[i] + j).toString());
@@ -103,7 +106,7 @@
 
     for (var tp in m_N) {
       for (var pt = 0; pt < 3; ++pt) {
-        $("#sb_root").append('<h2>' + tp + ':' + pts[pt] + '</h2><ul class="sb_R-' + tp + '-' + pt + '"></ul><ul class="sb_N-' + tp + '-' + pt + '"></ul>');
+        $("#sb_root").append('<h3>' + tp + ':' + pts[pt] + '</h3><div><ul class="sb_R-' + tp + '-' + pt + '"></ul><ul class="sb_N-' + tp + '-' + pt + '"></ul></div>');
       }
     }
 
@@ -155,7 +158,10 @@
       }
     }
 
-    $("#sb_root").append('<h2>その他</h2>');
+    $.when($.getScript("http://code.jquery.com/ui/1.11.3/jquery-ui.min.js"))
+      .then(function() {
+          $("#sb_root").accordion();
+        });
   }
 
   for (var id in ids) {
@@ -182,7 +188,7 @@
         });
     });
 
-  $("#sb_root").prepend('<input type="button" id="reload" value="Reload">');
+  $(".m_inner").prepend('<input type="button" id="reload" value="Reload">');
   $("#reload").click(function () {
     fetch(my_id, true);
   });
