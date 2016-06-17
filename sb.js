@@ -164,7 +164,9 @@
 
     $.when($.getScript("http://code.jquery.com/ui/1.11.3/jquery-ui.min.js"))
       .then(function() {
-          $("#sb_root").accordion();
+          $("#sb_root").accordion({
+	    heightStyle: "content",
+	    });
         });
   }
 
