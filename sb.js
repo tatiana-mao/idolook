@@ -8,6 +8,8 @@
     if (l_ids) ids = l_ids;
   }
 
+  var ser='391002';
+
   var tps = ["cute", "cool", "sexy", "pop"];
   var pts = ["トップス", "ボトムス", "シューズ"];
   var txs = ["\u2605", "\u2460", "\u2461", "\u2462"];
@@ -22,9 +24,9 @@
   };
   var m_N = {
   cute: 10,
-  cool: 28,
-  sexy: 46,
-  pop:  64,
+  cool: 25,
+  sexy: 43,
+  pop:  58,
   };
 
   var m_pt = {
@@ -98,13 +100,13 @@
 
     $(".m_inner").prepend('<div id="sb_root"><h3>PR</h3><div id="sb_pr"></div></div><h2>その他</h2>');
 
-    var m_prs = [1, 19, 37, 55];
+    var m_prs = [1, 19, 34, 52];
     for (var i in m_prs) {
       var cls = "sb_pr-" + m_prs[i];
       $("#sb_pr").append('<ul class="' + cls + ' m_dress"></ul>');
       for (var j = 0; j < 3; ++j) {
-        $("#1-" + (m_prs[i] + j).toString()).detach().appendTo("." + cls)
-          .addClass("sb_1-" + (m_prs[i] + j).toString());
+        $("#2-" + (m_prs[i] + j).toString()).detach().appendTo("." + cls)
+          .addClass("sb_2-" + (m_prs[i] + j).toString());
       }
     }
 
@@ -114,20 +116,21 @@
       }
     }
 
-    var m_rs = [4, 22, 40, 58];
+    var m_rs = [4, 22, 37, 55];
+    var m_rn = [2, 1, 2, 1];
     for (var i in m_rs) {
-      for (var j = 0; j < 2; ++j) {
+      for (var j = 0; j < m_rn[i]; ++j) {
         for (var k = 0; k < 3; ++k) {
           var cls = "sb_R-" + tps[i] + "-" + k;
           var n = m_rs[i] + 3 * j + k;
-          var a = $("#1-" + n);
+          var a = $("#2-" + n);
           var img = a.find("img:first").attr("src");
           for (var tx = 1; tx <= 3; ++tx) {
             var aa = a.clone();
             aa.removeAttr("id");
-            aa.addClass("sb_1-" + n).addClass("sb_1-" + n + "-" + tx + "-1");
+            aa.addClass("sb_2-" + n).addClass("sb_2-" + n + "-" + tx + "-1");
             aa.find(".is_medal").detach();
-            aa.find(".m_dress_card_name").text("1-" + n + "-" + txs[tx] + "-\u2605");
+            aa.find(".m_dress_card_name").text("2-" + n + "-" + txs[tx] + "-\u2605");
             aa.find(".m_dress_card_img").addClass("is_none");
             aa.find("img:first").attr("src", img.replace(/^(.+)1(\.\w+)$/, "$1" + tx.toString() + "$2"));
             aa.appendTo("." + cls);
@@ -143,15 +146,15 @@
         for (var dc = 1; dc <= 2; ++dc) {
           for (var i = 0; i < 3; ++i) {
             var n = m_N[tp] + 3 * i + pt;
-            var a = $("#1-" + n);
+            var a = $("#2-" + n);
             a.hide();
             var img = a.find("img:first").attr("src");
             for (var tx = 1; tx <= 3; ++tx) {
               var aa = a.clone();
               aa.removeAttr("id");
-              aa.addClass("sb_1-" + n).addClass("sb_1-" + n + "-" + tx + "-" + dc);
+              aa.addClass("sb_2-" + n).addClass("sb_2-" + n + "-" + tx + "-" + dc);
               aa.find(".is_medal").detach();
-              aa.find(".m_dress_card_name").text("1-" + n + "-" + txs[tx] + "-" + dcs[dc]);
+              aa.find(".m_dress_card_name").text("2-" + n + "-" + txs[tx] + "-" + dcs[dc]);
               aa.find(".m_dress_card_img").addClass("is_none");
               aa.find("img:first").attr("src", img.replace(/^(.+)1(\.\w+)$/, "$1" + (2 * tx + dc - 2).toString() + "$2"));
               aa.appendTo("." + cls);
@@ -165,8 +168,8 @@
     $.when($.getScript("http://code.jquery.com/ui/1.11.3/jquery-ui.min.js"))
       .then(function() {
           $("#sb_root").accordion({
-	    heightStyle: "content",
-	    });
+            heightStyle: "content",
+            });
         });
   }
 
@@ -200,7 +203,7 @@
   });
 
   function fetch(id, f_mine) {
-    return $.get("/mypages/digital_binders/" + id + "/", function (a) {
+    return $.get("/mypages/digital_binders/" + id + "/" + ser + "/", function (a) {
         a=a.replace(/(<img[^>]+)src=/g,'$1data-src=');
         parse(id, $($.parseHTML(a)).find(".m_dress").children(), f_mine);
       });
